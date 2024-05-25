@@ -102,8 +102,8 @@ jobs:
           name: wheels
           path: dist
 
-      - name: Publish to PyPI
+      - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-          verbose: true
+          password: ${{secrets.PYPI_API_TOKEN}}
