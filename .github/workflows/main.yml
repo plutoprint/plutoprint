@@ -37,9 +37,9 @@ jobs:
           install: >-
             mingw-w64-x86_64-expat
             mingw-w64-x86_64-icu
+            mingw-w64-x86_64-harfbuzz
             mingw-w64-x86_64-freetype
             mingw-w64-x86_64-fontconfig
-            mingw-w64-x86_64-harfbuzz
             mingw-w64-x86_64-cairo
             mingw-w64-x86_64-curl
             mingw-w64-x86_64-libjpeg-turbo
@@ -55,6 +55,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: plutoprint/plutobook
+          path: plutobook
       - name: Build plutobook
         run: |
           cd plutobook
