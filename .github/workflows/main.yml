@@ -56,9 +56,9 @@ jobs:
         with:
           repository: plutobook
       - name: Build plutobook
-          run: |
-            cd plutobook
-            meson setup build \
+        run: |
+          cd plutobook
+          meson setup build \
             --prefix='${{ github.workspace }}/plutobook-win-x64' \
             --buildtype=release \
             --wrap-mode=nodownload \
