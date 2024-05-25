@@ -54,7 +54,7 @@ jobs:
       - name: Checkout plutobook
         uses: actions/checkout@v4
         with:
-          repository: plutobook
+          repository: plutoprint/plutobook
       - name: Build plutobook
         run: |
           cd plutobook
