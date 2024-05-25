@@ -51,13 +51,14 @@ jobs:
             mingw-w64-x86_64-python-pip
             mingw-w64-x86_64-gcc
 
-      - name: Build plutobook
+      - name: Checkout plutobook
         uses: actions/checkout@v4
         with:
           repository: plutobook
-        run: |
-          cd plutobook
-          meson setup build \
+      - name: Build plutobook
+          run: |
+            cd plutobook
+            meson setup build \
             --prefix='${{ github.workspace }}/plutobook-win-x64' \
             --buildtype=release \
             --wrap-mode=nodownload \
