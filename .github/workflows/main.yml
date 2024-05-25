@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -25,21 +24,17 @@ jobs:
 
   build_wheels:
     runs-on: windows-latest
-    env:
-      MSYS: "winjitdebug"
-
     defaults:
       run:
         shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
       - name: Setup MSYS2
-        uses: msys2/setup-msys2@cf96e00c0aab3788743aaf63b64146f0d383cee9 # v2
+        uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           update: true
           install: >-
-            git
             mingw-w64-x86_64-expat
             mingw-w64-x86_64-icu
             mingw-w64-x86_64-freetype
@@ -55,42 +50,58 @@ jobs:
             mingw-w64-x86_64-python
             mingw-w64-x86_64-python-pip
             mingw-w64-x86_64-gcc
-            
-      - name: Build windows deps
+
+      - name: Build plutobook
+        uses: actions/checkout@v4
+        with:
+          repository: plutobook
         run: |
-          cd windows-build
-          meson setup build --prefix='${{ github.workspace }}/windows'
-          meson compile -C build
+          cd plutobook
+          meson setup build \
+            --prefix='${{ github.workspace }}/plutobook-win-x64' \
+            --buildtype=release \
+            --wrap-mode=nodownload \
+            --prefer-static \
+            -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -lstdc++' \
+            -Dcpp_args='-DCURL_STATICLIB -DCAIRO_WIN32_STATIC_BUILD'
+          meson compile -v -C build
           meson install -C build
 
-      - name: Copy pkg-config
-        run: cp /mingw64/bin/pkgconf.exe '${{ github.workspace }}/windows'
+      - name: Copy pkgconf
+        run: |
+          sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
+          cp -v /mingw64/bin/libpkgconf-5.dll plutobook-win-x64/bin
+          cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
+
       - uses: actions/upload-artifact@v4
         with:
-          name: plutobook-build-x86
-          path: windows/
-          
+          name: plutobook-win-x64
+          path: plutobook-win-x64/
+
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.16
+        uses: pypa/cibuildwheel@v2.18.1
         env:
           CIBW_BUILD: 'cp310-win_amd64 cp311-win_amd64 cp312-win_amd64'
-          CIBW_ENVIRONMENT_WINDOWS: PKG_CONFIG='D:\a\_temp\msys64\mingw64\bin/pkg-config.EXE' PKG_CONFIG_PATH='${{ github.workspace }}/windows/lib/pkgconfig'
-          
+          CIBW_ENVIRONMENT_WINDOWS: PKG_CONFIG='${{ github.workspace }}/plutobook-win-x64/bin/pkgconf.exe' PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win-x64/lib/pkgconfig'
+          CIBW_BEFORE_BUILD_WINDOWS: pip install delvewheel
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
+
       - uses: actions/upload-artifact@v4
         with:
           name: wheels
           path: ./wheelhouse/*.whl
 
   upload_pypi:
-    needs: [build_wheels]
+    needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
+          name: wheels
           path: dist
-          merge-multiple: true
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.4.2
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: ${{secrets.PYPI_API_TOKEN}}
+          repository-url: https://test.pypi.org/legacy/
+          verbose: true

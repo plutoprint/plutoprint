@@ -6,15 +6,10 @@
 
 typedef struct {
     PyObject_HEAD
-    float width;
-    float height;
+    plutobook_page_size_t size;
 } PageSize_Object;
 
-static PyObject* PageSize_Create2(float width, float height);
-static PyObject* PageSize_Create(plutobook_page_size_t size)
-{
-    return PageSize_Create2(size.width, size.height);
-}
+static PyObject* PageSize_Create(plutobook_page_size_t size);
 
 static PyObject* PageSize_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 {
@@ -37,23 +32,54 @@ static void PageSize_dealloc(PageSize_Object* self)
 static PyObject* PageSize_repr(PageSize_Object* self)
 {
     char buf[256];
-    PyOS_snprintf(buf, sizeof(buf), "plutobook.PageSize(%g, %g)", self->width, self->height);
+    PyOS_snprintf(buf, sizeof(buf), "plutobook.PageSize(%g, %g)", self->size.width, self->size.height);
     return PyUnicode_FromString(buf);
 }
 
 static PyObject* PageSize_landscape(PageSize_Object* self, PyObject* args)
 {
-    if(self->width < self->height)
-        return PageSize_Create2(self->height, self->width);
-    return PageSize_Create2(self->width, self->height);
+    plutobook_page_size_t size = self->size;
+    if(size.width < size.height) {
+        size.width = self->size.height;
+        size.height = self->size.width;
+    }
+
+    return PageSize_Create(size);
 }
 
 static PyObject* PageSize_portrait(PageSize_Object* self, PyObject* args)
 {
-    if(self->width > self->height)
-        return PageSize_Create2(self->height, self->width);
-    return PageSize_Create2(self->width, self->height);
+    plutobook_page_size_t size = self->size;
+    if(size.width > size.height){
+        size.width = self->size.height;
+        size.height = self->size.width;
+    }
+
+    return PageSize_Create(size);
 }
+
+static Py_ssize_t PageSize_length(PageSize_Object* self)
+{
+    return 2;
+}
+
+static PyObject* PageSize_item(PageSize_Object* self, Py_ssize_t index)
+{
+    switch(index) {
+    case 0:
+        return Py_BuildValue("f", self->size.width);
+    case 1:
+        return Py_BuildValue("f", self->size.height);
+    default:
+        PyErr_SetString(PyExc_IndexError, "PageSize index out of range");
+        return NULL;
+    }
+}
+
+static PySequenceMethods PageSize_as_sequence = {
+    .sq_length = (lenfunc)PageSize_length,
+    .sq_item = (ssizeargfunc)PageSize_item
+};
 
 static PyMethodDef PageSize_methods[] = {
     {"landscape", (PyCFunction)PageSize_landscape, METH_NOARGS},
@@ -62,8 +88,8 @@ static PyMethodDef PageSize_methods[] = {
 };
 
 static PyMemberDef PageSize_members[] = {
-    {"width", T_FLOAT, offsetof(PageSize_Object, width), 0, NULL},
-    {"height", T_FLOAT, offsetof(PageSize_Object, height), 0, NULL},
+    {"width", T_FLOAT, offsetof(PageSize_Object, size.width), READONLY, NULL},
+    {"height", T_FLOAT, offsetof(PageSize_Object, size.height), READONLY, NULL},
     {NULL}
 };
 
@@ -73,26 +99,23 @@ static PyTypeObject PageSize_Type = {
     .tp_basicsize = sizeof(PageSize_Object),
     .tp_dealloc = (destructor)PageSize_dealloc,
     .tp_repr = (reprfunc)PageSize_repr,
+    .tp_as_sequence = &PageSize_as_sequence,
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_methods = PageSize_methods,
     .tp_members = PageSize_members,
     .tp_new = (newfunc)PageSize_new
 };
 
-static PyObject* PageSize_Create2(float width, float height)
+static PyObject* PageSize_Create(plutobook_page_size_t size)
 {
     PageSize_Object* size_ob = PyObject_New(PageSize_Object, &PageSize_Type);
-    size_ob->width = width;
-    size_ob->height = height;
+    size_ob->size = size;
     return (PyObject*)size_ob;
 }
 
 typedef struct {
     PyObject_HEAD
-    float top;
-    float right;
-    float bottom;
-    float left;
+    plutobook_page_margins_t margins;
 } PageMargins_Object;
 
 static PyObject* PageMargins_Create(plutobook_page_margins_t margins);
@@ -123,15 +146,42 @@ static void PageMargins_dealloc(PageMargins_Object* self)
 static PyObject* PageMargins_repr(PageMargins_Object* self)
 {
     char buf[256];
-    PyOS_snprintf(buf, sizeof(buf), "plutobook.PageMargins(%g, %g, %g, %g)", self->top, self->right, self->bottom, self->left);
+    PyOS_snprintf(buf, sizeof(buf), "plutobook.PageMargins(%g, %g, %g, %g)", self->margins.top, self->margins.right, self->margins.bottom, self->margins.left);
     return PyUnicode_FromString(buf);
 }
 
+static Py_ssize_t PageMargins_length(PageMargins_Object* self)
+{
+    return 4;
+}
+
+static PyObject* PageMargins_item(PageMargins_Object* self, Py_ssize_t index)
+{
+    switch(index) {
+    case 0:
+        return Py_BuildValue("f", self->margins.top);
+    case 1:
+        return Py_BuildValue("f", self->margins.right);
+    case 2:
+        return Py_BuildValue("f", self->margins.bottom);
+    case 3:
+        return Py_BuildValue("f", self->margins.left);
+    default:
+        PyErr_SetString(PyExc_IndexError, "PageMargins index out of range");
+        return NULL;
+    }
+}
+
+static PySequenceMethods PageMargins_as_sequence = {
+    .sq_length = (lenfunc)PageMargins_length,
+    .sq_item = (ssizeargfunc)PageMargins_item
+};
+
 static PyMemberDef PageMargins_members[] = {
-    {"top", T_FLOAT, offsetof(PageMargins_Object, top), 0, NULL},
-    {"right", T_FLOAT, offsetof(PageMargins_Object, right), 0, NULL},
-    {"bottom", T_FLOAT, offsetof(PageMargins_Object, bottom), 0, NULL},
-    {"left", T_FLOAT, offsetof(PageMargins_Object, left), 0, NULL},
+    {"top", T_FLOAT, offsetof(PageMargins_Object, margins.top), READONLY, NULL},
+    {"right", T_FLOAT, offsetof(PageMargins_Object, margins.right), READONLY, NULL},
+    {"bottom", T_FLOAT, offsetof(PageMargins_Object, margins.bottom), READONLY, NULL},
+    {"left", T_FLOAT, offsetof(PageMargins_Object, margins.left), READONLY, NULL},
     {NULL}
 };
 
@@ -141,6 +191,7 @@ static PyTypeObject PageMargins_Type = {
     .tp_basicsize = sizeof(PageMargins_Object),
     .tp_dealloc = (destructor)PageMargins_dealloc,
     .tp_repr = (reprfunc)PageMargins_repr,
+    .tp_as_sequence = &PageMargins_as_sequence,
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_members = PageMargins_members,
     .tp_new = (newfunc)PageMargins_new
@@ -149,10 +200,7 @@ static PyTypeObject PageMargins_Type = {
 static PyObject* PageMargins_Create(plutobook_page_margins_t margins)
 {
     PageMargins_Object* margins_ob = PyObject_New(PageMargins_Object, &PageMargins_Type);
-    margins_ob->top = margins.top;
-    margins_ob->right = margins.right;
-    margins_ob->bottom = margins.bottom;
-    margins_ob->left = margins.left;
+    margins_ob->margins = margins;
     return (PyObject*)margins_ob;
 }
 
@@ -318,6 +366,487 @@ static PyObject* ImageFormat_Create(plutobook_image_format_t value)
 
 typedef struct {
     PyObject_HEAD
+    plutobook_canvas_t* canvas;
+    PyObject* data;
+} Canvas_Object;
+
+static void Canvas_dealloc(Canvas_Object* self)
+{
+    plutobook_canvas_destroy(self->canvas);
+    Py_XDECREF(self->data);
+    PyObject_Del(self);
+}
+
+static PyObject* MemoryError_Object;
+static PyObject* LoadError_Object;
+static PyObject* WriteError_Object;
+static PyObject* CanvasError_Object;
+
+#define RETURN_NULL_IF_ERROR(status) \
+    do { \
+    switch(status) { \
+    case PLUTOBOOK_STATUS_MEMORY_ERROR: \
+        PyErr_SetObject(MemoryError_Object, NULL);\
+        return NULL; \
+    case PLUTOBOOK_STATUS_LOAD_ERROR: \
+        PyErr_SetObject(LoadError_Object, NULL);\
+        return NULL; \
+    case PLUTOBOOK_STATUS_WRITE_ERROR: \
+        PyErr_SetObject(WriteError_Object, NULL);\
+        return NULL; \
+    case PLUTOBOOK_STATUS_CANVAS_ERROR: \
+        PyErr_SetObject(CanvasError_Object, NULL);\
+        return NULL; \
+    default: \
+        break; \
+    } \
+    } while(0)
+
+#define RETURN_NULL_IF_CANVAS_ERROR(canvas) RETURN_NULL_IF_ERROR(plutobook_canvas_get_status(canvas))
+
+static PyObject* Canvas_flush(Canvas_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_canvas_flush(self->canvas);
+    Py_END_ALLOW_THREADS
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_finish(Canvas_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_canvas_finish(self->canvas);
+    Py_END_ALLOW_THREADS
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_translate(Canvas_Object* self, PyObject* args)
+{
+    float tx, ty;
+    if(!PyArg_ParseTuple(args, "ff", &tx, &ty)) {
+        return NULL;
+    }
+
+    plutobook_canvas_translate(self->canvas, tx, ty);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_scale(Canvas_Object* self, PyObject* args)
+{
+    float sx, sy;
+    if(!PyArg_ParseTuple(args, "ff", &sx, &sy)) {
+        return NULL;
+    }
+
+    plutobook_canvas_scale(self->canvas, sx, sy);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_rotate(Canvas_Object* self, PyObject* args)
+{
+    float angle;
+    if(!PyArg_ParseTuple(args, "f", &angle)) {
+        return NULL;
+    }
+
+    plutobook_canvas_rotate(self->canvas, angle);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_transform(Canvas_Object* self, PyObject* args)
+{
+    float a, b, c, d, e, f;
+    if(!PyArg_ParseTuple(args, "ffffff", &a, &b, &c, &d, &e, &f)) {
+        return NULL;
+    }
+
+    plutobook_canvas_transform(self->canvas, a, b, c, d, e, f);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_set_matrix(Canvas_Object* self, PyObject* args)
+{
+    float a, b, c, d, e, f;
+    if(!PyArg_ParseTuple(args, "ffffff", &a, &b, &c, &d, &e, &f)) {
+        return NULL;
+    }
+
+    plutobook_canvas_set_matrix(self->canvas, a, b, c, d, e, f);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_reset_matrix(Canvas_Object* self, PyObject* args)
+{
+    plutobook_canvas_reset_matrix(self->canvas);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_clip_rect(Canvas_Object* self, PyObject* args)
+{
+    float x, y, width, height;
+    if(!PyArg_ParseTuple(args, "ffff", &x, &y, &width, &height)) {
+        return NULL;
+    }
+
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_canvas_clip_rect(self->canvas, x, y, width, height);
+    Py_END_ALLOW_THREADS
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_clear_surface(Canvas_Object* self, PyObject* args)
+{
+    float red, green, blue, alpha = 1.f;
+    if(!PyArg_ParseTuple(args, "fff|f", &red, &green, &blue, &alpha)) {
+        return NULL;
+    }
+
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_canvas_clear_surface(self->canvas, red, blue, green, alpha);
+    Py_END_ALLOW_THREADS
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_save_state(Canvas_Object* self, PyObject* args)
+{
+    plutobook_canvas_save_state(self->canvas);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas_restore_state(Canvas_Object* self, PyObject* args)
+{
+    plutobook_canvas_restore_state(self->canvas);
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Canvas__enter__(Canvas_Object* self, PyObject* args)
+{
+    Py_INCREF(self);
+    return (PyObject*)self;
+}
+
+static PyObject* Canvas__exit__(Canvas_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_canvas_finish(self->canvas);
+    Py_END_ALLOW_THREADS
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef Canvas_methods[] = {
+    {"flush", (PyCFunction)Canvas_flush, METH_NOARGS},
+    {"finish", (PyCFunction)Canvas_finish, METH_NOARGS},
+    {"translate", (PyCFunction)Canvas_translate, METH_VARARGS},
+    {"scale", (PyCFunction)Canvas_scale, METH_VARARGS},
+    {"rotate", (PyCFunction)Canvas_rotate, METH_VARARGS},
+    {"transform", (PyCFunction)Canvas_transform, METH_VARARGS},
+    {"set_matrix", (PyCFunction)Canvas_set_matrix, METH_VARARGS},
+    {"reset_matrix", (PyCFunction)Canvas_reset_matrix, METH_NOARGS},
+    {"clip_rect", (PyCFunction)Canvas_clip_rect, METH_VARARGS},
+    {"clear_surface", (PyCFunction)Canvas_clear_surface, METH_VARARGS},
+    {"save_state", (PyCFunction)Canvas_save_state, METH_NOARGS},
+    {"restore_state", (PyCFunction)Canvas_restore_state, METH_NOARGS},
+    {"__enter__", (PyCFunction)Canvas__enter__, METH_NOARGS},
+    {"__exit__", (PyCFunction)Canvas__exit__, METH_VARARGS},
+    {NULL}
+};
+
+static PyTypeObject Canvas_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "plutobook.Canvas",
+    .tp_basicsize = sizeof(Canvas_Object),
+    .tp_dealloc = (destructor)Canvas_dealloc,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_methods = Canvas_methods
+};
+
+typedef Canvas_Object ImageCanvas_Object;
+
+static PyObject* ImageCanvas_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+{
+    int width, height;
+    ImageFormat_Object* format_ob = NULL;
+    if(!PyArg_ParseTuple(args, "ii|O!:ImageCanvas.__init__", &width, &height, &ImageFormat_Type, &format_ob))
+        return NULL;
+    plutobook_image_format_t format = PLUTOBOOK_IMAGE_FORMAT_ARGB32;
+    if(format_ob) {
+        format = format_ob->value;
+    }
+
+    plutobook_canvas_t* canvas = plutobook_image_canvas_create(width, height, format);
+    if(canvas == NULL) {
+        PyErr_SetObject(CanvasError_Object, NULL);
+        return NULL;
+    }
+
+    ImageCanvas_Object* canvas_ob = PyObject_New(ImageCanvas_Object, type);
+    canvas_ob->canvas = canvas;
+    canvas_ob->data = NULL;
+    return (PyObject*)canvas_ob;
+}
+
+static PyObject* ImageCanvas_create_for_data(PyTypeObject* type, PyObject* args)
+{
+    PyObject* data;
+    int width, height, stride;
+    ImageFormat_Object* format_ob = NULL;
+    if(!PyArg_ParseTuple(args, "Oiii|O!", &data, &width, &height, &stride, &ImageFormat_Type, &format_ob))
+        return NULL;
+    plutobook_image_format_t format = PLUTOBOOK_IMAGE_FORMAT_ARGB32;
+    if(format_ob) {
+        format = format_ob->value;
+    }
+
+    Py_buffer buffer;
+    if(PyObject_GetBuffer(data, &buffer, PyBUF_WRITABLE) == -1)
+        return NULL;
+    if(height * stride > buffer.len) {
+        PyBuffer_Release(&buffer);
+        PyErr_SetString(PyExc_ValueError, "buffer is not long enough");
+        return NULL;
+    }
+
+    plutobook_canvas_t* canvas = plutobook_image_canvas_create_for_data(buffer.buf, width, height, stride, format);
+    if(canvas == NULL) {
+        PyBuffer_Release(&buffer);
+        PyErr_SetObject(CanvasError_Object, NULL);
+        return NULL;
+    }
+
+    ImageCanvas_Object* canvas_ob = PyObject_New(ImageCanvas_Object, type);
+    canvas_ob->canvas = canvas;
+    canvas_ob->data = data;
+    Py_INCREF(canvas_ob->data);
+    PyBuffer_Release(&buffer);
+    return (PyObject*)canvas_ob;
+}
+
+static PyObject* ImageCanvas_get_data(ImageCanvas_Object* self, PyObject* args)
+{
+    return PyMemoryView_FromObject((PyObject*)self);
+}
+
+static PyObject* ImageCanvas_get_width(ImageCanvas_Object* self, PyObject* args)
+{
+    return PyLong_FromLong(plutobook_image_canvas_get_width(self->canvas));
+}
+
+static PyObject* ImageCanvas_get_height(ImageCanvas_Object* self, PyObject* args)
+{
+    return PyLong_FromLong(plutobook_image_canvas_get_height(self->canvas));
+}
+
+static PyObject* ImageCanvas_get_stride(ImageCanvas_Object* self, PyObject* args)
+{
+    return PyLong_FromLong(plutobook_image_canvas_get_stride(self->canvas));
+}
+
+static PyObject* ImageCanvas_get_format(ImageCanvas_Object* self, PyObject* args)
+{
+    return ImageFormat_Create(plutobook_image_canvas_get_format(self->canvas));
+}
+
+static plutobook_status_t stream_write_func(void* closure, const char* data, unsigned int length)
+{
+    PyGILState_STATE gstate = PyGILState_Ensure();
+    PyObject* result = PyObject_CallFunction((PyObject*)closure, "(y#)", data, length);
+    if(result == NULL) {
+        PyGILState_Release(gstate);
+        return PLUTOBOOK_STATUS_WRITE_ERROR;
+    }
+
+    Py_DECREF(result);
+    PyGILState_Release(gstate);
+    return PLUTOBOOK_STATUS_SUCCESS;
+}
+
+static int stream_write_conv(PyObject* ob, PyObject** target)
+{
+    if(PyObject_HasAttrString(ob, "write")) {
+        PyObject* write_method = PyObject_GetAttrString(ob, "write");
+        if(write_method && PyCallable_Check(write_method)) {
+            *target = write_method;
+            return 1;
+        }
+
+        Py_XDECREF(write_method);
+    }
+
+    PyErr_SetString(PyExc_TypeError, "stream must have a \"write\" method");
+    return 0;
+}
+
+static PyObject* ImageCanvas_write_to_png(ImageCanvas_Object* self, PyObject* args)
+{
+    PyObject* file_ob;
+    if(!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &file_ob)) {
+        return NULL;
+    }
+
+    const char* filename = PyBytes_AS_STRING(file_ob);
+    plutobook_status_t status;
+    Py_BEGIN_ALLOW_THREADS
+    status = plutobook_image_canvas_write_to_png(self->canvas, filename);
+    Py_END_ALLOW_THREADS
+    Py_DECREF(file_ob);
+    RETURN_NULL_IF_ERROR(status);
+    Py_RETURN_NONE;
+}
+
+static PyObject* ImageCanvas_write_to_png_stream(ImageCanvas_Object* self, PyObject* args)
+{
+    PyObject* write_ob;
+    if(!PyArg_ParseTuple(args, "O&", stream_write_conv, &write_ob)) {
+        return NULL;
+    }
+
+    plutobook_status_t status;
+    Py_BEGIN_ALLOW_THREADS
+    status = plutobook_image_canvas_write_to_png_stream(self->canvas, stream_write_func, write_ob);
+    Py_END_ALLOW_THREADS
+    Py_DECREF(write_ob);
+    RETURN_NULL_IF_ERROR(status);
+    Py_RETURN_NONE;
+}
+
+static int ImageCanvas_get_buffer(ImageCanvas_Object* self, Py_buffer* view, int flags)
+{
+    void* data = plutobook_image_canvas_get_data(self->canvas);
+    int height = plutobook_image_canvas_get_height(self->canvas);
+    int stride = plutobook_image_canvas_get_stride(self->canvas);
+    return PyBuffer_FillInfo(view, (PyObject*)self, data, height * stride, 0, flags);
+}
+
+static PyBufferProcs ImageCanvas_as_buffer = {
+    (getbufferproc)ImageCanvas_get_buffer,
+    NULL
+};
+
+static PyMethodDef ImageCanvas_methods[] = {
+    {"create_for_data", (PyCFunction)ImageCanvas_create_for_data, METH_VARARGS | METH_CLASS},
+    {"get_data", (PyCFunction)ImageCanvas_get_data, METH_NOARGS},
+    {"get_width", (PyCFunction)ImageCanvas_get_width, METH_NOARGS},
+    {"get_height", (PyCFunction)ImageCanvas_get_height, METH_NOARGS},
+    {"get_stride", (PyCFunction)ImageCanvas_get_stride, METH_NOARGS},
+    {"get_format", (PyCFunction)ImageCanvas_get_format, METH_NOARGS},
+    {"write_to_png", (PyCFunction)ImageCanvas_write_to_png, METH_VARARGS},
+    {"write_to_png_stream", (PyCFunction)ImageCanvas_write_to_png_stream, METH_VARARGS},
+    {NULL}
+};
+
+static PyTypeObject ImageCanvas_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "plutobook.ImageCanvas",
+    .tp_basicsize = sizeof(ImageCanvas_Object),
+    .tp_as_buffer = &ImageCanvas_as_buffer,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_methods = ImageCanvas_methods,
+    .tp_base = &Canvas_Type,
+    .tp_new = (newfunc)ImageCanvas_new
+};
+
+typedef Canvas_Object PDFCanvas_Object;
+
+static PyObject* PDFCanvas_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+{
+    PyObject* file_ob;
+    PageSize_Object* size_ob;
+    if(!PyArg_ParseTuple(args, "O&O!:PDFCanvas.__init__", PyUnicode_FSConverter, &file_ob, &PageSize_Type, &size_ob))
+        return NULL;
+    const char* filename = PyBytes_AS_STRING(file_ob);
+    plutobook_canvas_t* canvas = plutobook_pdf_canvas_create(filename, size_ob->size);
+    if(canvas == NULL) {
+        Py_DECREF(file_ob);
+        PyErr_SetObject(CanvasError_Object, NULL);
+        return NULL;
+    }
+
+    PDFCanvas_Object* canvas_ob = PyObject_New(PDFCanvas_Object, type);
+    canvas_ob->canvas = canvas;
+    canvas_ob->data = NULL;
+    Py_DECREF(file_ob);
+    return (PyObject*)canvas_ob;
+}
+
+static PyObject* PDFCanvas_create_for_stream(PyTypeObject* type, PyObject* args)
+{
+    PyObject* write_ob;
+    PageSize_Object* size_ob = NULL;
+    if(!PyArg_ParseTuple(args, "O&O!", stream_write_conv, &write_ob, &PageSize_Type, &size_ob))
+        return NULL;
+    plutobook_canvas_t* canvas = plutobook_pdf_canvas_create_for_stream(stream_write_func, write_ob, size_ob->size);
+    if(canvas == NULL) {
+        Py_DECREF(write_ob);
+        PyErr_SetObject(CanvasError_Object, NULL);
+        return NULL;
+    }
+
+    PDFCanvas_Object* canvas_ob = PyObject_New(PDFCanvas_Object, type);
+    canvas_ob->canvas = canvas;
+    canvas_ob->data = write_ob;
+    return (PyObject*)canvas_ob;
+}
+
+static PyObject* PDFCanvas_set_metadata(PDFCanvas_Object* self, PyObject* args)
+{
+    PDFMetadata_Object* metadata_ob;
+    const char* value;
+    if(!PyArg_ParseTuple(args, "O!s", &PDFMetadata_Type, &metadata_ob, &value))
+        return NULL;
+    plutobook_pdf_canvas_set_metadata(self->canvas, metadata_ob->value, value);
+    Py_RETURN_NONE;
+}
+
+static PyObject* PDFCanvas_set_size(PDFCanvas_Object* self, PyObject* args)
+{
+    PageSize_Object* size_ob;
+    if(!PyArg_ParseTuple(args, "O!", &PageSize_Type, &size_ob))
+        return NULL;
+    plutobook_pdf_canvas_set_size(self->canvas, size_ob->size);
+    Py_RETURN_NONE;
+}
+
+static PyObject* PDFCanvas_show_page(PDFCanvas_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_pdf_canvas_show_page(self->canvas);
+    Py_END_ALLOW_THREADS
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef PDFCanvas_methods[] = {
+    {"create_for_stream", (PyCFunction)PDFCanvas_create_for_stream, METH_VARARGS | METH_CLASS},
+    {"set_metadata", (PyCFunction)PDFCanvas_set_metadata, METH_VARARGS},
+    {"set_size", (PyCFunction)PDFCanvas_set_size, METH_VARARGS},
+    {"show_page", (PyCFunction)PDFCanvas_show_page, METH_NOARGS},
+    {NULL}
+};
+
+static PyTypeObject PDFCanvas_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "plutobook.PDFCanvas",
+    .tp_basicsize = sizeof(PDFCanvas_Object),
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_methods = PDFCanvas_methods,
+    .tp_base = &Canvas_Type,
+    .tp_new = (newfunc)PDFCanvas_new
+};
+
+typedef struct {
+    PyObject_HEAD
     plutobook_t* book;
 } Book_Object;
 
@@ -336,16 +865,12 @@ static PyObject* Book_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 
     plutobook_page_size_t size = PLUTOBOOK_PAGE_SIZE_A4;
     if(size_ob) {
-        size.width = size_ob->width;
-        size.height = size_ob->height;
+        size = size_ob->size;
     }
 
     plutobook_page_margins_t margins = PLUTOBOOK_PAGE_MARGINS_NORMAL;
     if(margins_ob) {
-        margins.top = margins_ob->top;
-        margins.right = margins_ob->right;
-        margins.bottom = margins_ob->bottom;
-        margins.left = margins_ob->left;
+        margins = margins_ob->margins;
     }
 
     plutobook_media_type_t media = PLUTOBOOK_MEDIA_TYPE_PRINT;
@@ -456,22 +981,6 @@ static PyObject* Book_get_metadata(Book_Object* self, PyObject* args)
     return PyUnicode_FromString(plutobook_get_metadata(self->book, metadata_ob->value));
 }
 
-#define RETURN_NULL_IF_ERROR(status) \
-    do { \
-    if(status == PLUTOBOOK_STATUS_MEMORY_ERROR) { \
-        PyErr_SetString(PyExc_MemoryError, "memory error");\
-        return NULL; \
-    } \
-    if(status == PLUTOBOOK_STATUS_LOAD_ERROR) { \
-        PyErr_SetString(PyExc_ValueError, "load error");\
-        return NULL; \
-    } \
-    if(status == PLUTOBOOK_STATUS_WRITE_ERROR) { \
-        PyErr_SetString(PyExc_IOError, "write error");\
-        return NULL; \
-    } \
-    } while(0)
-
 static PyObject* Book_load_url(Book_Object* self, PyObject* args, PyObject* kwds)
 {
     static char* kwlist[] = { "url", "user_style", "user_script", NULL };
@@ -575,27 +1084,72 @@ static PyObject* Book_load_html(Book_Object* self, PyObject* args, PyObject* kwd
 static PyObject* Book_write_to_pdf(Book_Object* self, PyObject* args, PyObject* kwds)
 {
     static char* kwlist[] = { "filename", "from_page", "to_page", "page_step", NULL };
-    const char* filename;
+    PyObject* file_ob;
     unsigned int from_page = PLUTOBOOK_MIN_PAGE_COUNT;
     unsigned int to_page = PLUTOBOOK_MAX_PAGE_COUNT;
-    unsigned int page_step = 1;
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|III", kwlist, &filename, &from_page, &to_page, &page_step)) {
+    int page_step = 1;
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, PyUnicode_FSConverter, &file_ob, &from_page, &to_page, &page_step)) {
+        return NULL;
+    }
+
+    const char* filename = PyBytes_AS_STRING(file_ob);
+    plutobook_status_t status;
+    Py_BEGIN_ALLOW_THREADS
+    status = plutobook_write_to_pdf_range(self->book, filename, from_page, to_page, page_step);
+    Py_END_ALLOW_THREADS
+    Py_DECREF(file_ob);
+    RETURN_NULL_IF_ERROR(status);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Book_write_to_pdf_stream(Book_Object* self, PyObject* args, PyObject* kwds)
+{
+    static char* kwlist[] = { "stream", "from_page", "to_page", "page_step", NULL };
+    PyObject* write_ob;
+    unsigned int from_page = PLUTOBOOK_MIN_PAGE_COUNT;
+    unsigned int to_page = PLUTOBOOK_MAX_PAGE_COUNT;
+    int page_step = 1;
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, stream_write_conv, &write_ob, &from_page, &to_page, &page_step)) {
         return NULL;
     }
 
     plutobook_status_t status;
     Py_BEGIN_ALLOW_THREADS
-    status = plutobook_write_to_pdf_range(self->book, filename, from_page, to_page, page_step);
+    status = plutobook_write_to_pdf_stream_range(self->book, stream_write_func, write_ob, from_page, to_page, page_step);
     Py_END_ALLOW_THREADS
+    Py_DECREF(write_ob);
     RETURN_NULL_IF_ERROR(status);
     Py_RETURN_NONE;
 }
 
 static PyObject* Book_write_to_png(Book_Object* self, PyObject* args)
 {
-    const char* filename;
+    PyObject* file_ob;
     ImageFormat_Object* format_ob = NULL;
-    if(!PyArg_ParseTuple(args, "s|O!", &filename, &ImageFormat_Type, &format_ob)) {
+    if(!PyArg_ParseTuple(args, "O&|O!", PyUnicode_FSConverter, &file_ob, &ImageFormat_Type, &format_ob)) {
+        return NULL;
+    }
+
+    plutobook_image_format_t format = PLUTOBOOK_IMAGE_FORMAT_ARGB32;
+    if(format_ob) {
+        format = format_ob->value;
+    }
+
+    const char* filename = PyBytes_AS_STRING(file_ob);
+    plutobook_status_t status;
+    Py_BEGIN_ALLOW_THREADS
+    status = plutobook_write_to_png(self->book, filename, format);
+    Py_END_ALLOW_THREADS
+    Py_DECREF(file_ob);
+    RETURN_NULL_IF_ERROR(status);
+    Py_RETURN_NONE;
+}
+
+static PyObject* Book_write_to_png_stream(Book_Object* self, PyObject* args)
+{
+    PyObject* write_ob;
+    ImageFormat_Object* format_ob = NULL;
+    if(!PyArg_ParseTuple(args, "O&|O!", stream_write_conv, &write_ob, &ImageFormat_Type, &format_ob)) {
         return NULL;
     }
 
@@ -606,8 +1160,9 @@ static PyObject* Book_write_to_png(Book_Object* self, PyObject* args)
 
     plutobook_status_t status;
     Py_BEGIN_ALLOW_THREADS
-    status = plutobook_write_to_png(self->book, filename, format);
+    status = plutobook_write_to_png_stream(self->book, stream_write_func, write_ob, format);
     Py_END_ALLOW_THREADS
+    Py_DECREF(write_ob);
     RETURN_NULL_IF_ERROR(status);
     Py_RETURN_NONE;
 }
@@ -630,7 +1185,9 @@ static PyMethodDef Book_methods[] = {
     {"load_xml", (PyCFunction)Book_load_xml, METH_VARARGS | METH_KEYWORDS},
     {"load_html", (PyCFunction)Book_load_html, METH_VARARGS | METH_KEYWORDS},
     {"write_to_pdf", (PyCFunction)Book_write_to_pdf, METH_VARARGS | METH_KEYWORDS},
+    {"write_to_pdf_stream", (PyCFunction)Book_write_to_pdf_stream, METH_VARARGS | METH_KEYWORDS},
     {"write_to_png", (PyCFunction)Book_write_to_png, METH_VARARGS},
+    {"write_to_png_stream", (PyCFunction)Book_write_to_png_stream, METH_VARARGS},
     {NULL}
 };
 
@@ -647,7 +1204,7 @@ static PyTypeObject Book_Type = {
 static PyObject* Book_Create(plutobook_t* book)
 {
     if(book == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "out of memory");
+        PyErr_SetString(MemoryError_Object, "out of memory");
         return NULL;
     }
 
@@ -679,7 +1236,7 @@ static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* 
     Py_END_ALLOW_THREADS
     PyBuffer_Release(&content);
     if(resource == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "out of memory");
+        PyErr_SetString(MemoryError_Object, "out of memory");
         return NULL;
     }
 
@@ -744,7 +1301,9 @@ static PyObject* ResourceData_Create(plutobook_resource_data_t* resource)
     return (PyObject*)resource_ob;
 }
 
-static PyObject* ResourceFetcher_load_url(ResourceData_Object* self, PyObject* args)
+typedef PyObject ResourceFetcher_Object;
+
+static PyObject* ResourceFetcher_load_url(ResourceFetcher_Object* self, PyObject* args)
 {
     const char* url;
     if(!PyArg_ParseTuple(args, "s", &url)) {
@@ -756,7 +1315,7 @@ static PyObject* ResourceFetcher_load_url(ResourceData_Object* self, PyObject* a
     resource = plutobook_default_resource_fetcher_load_url(url);
     Py_END_ALLOW_THREADS
     if(resource == NULL) {
-        PyErr_SetString(PyExc_ValueError, "unable to load url");
+        PyErr_SetString(LoadError_Object, "unable to load url");
         return NULL;
     }
 
@@ -771,7 +1330,7 @@ static PyMethodDef ResourceFetcher_methods[] = {
 static PyTypeObject ResourceFetcher_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "plutobook.ResourceFetcher",
-    .tp_basicsize = sizeof(PyObject),
+    .tp_basicsize = sizeof(ResourceFetcher_Object),
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     .tp_methods = ResourceFetcher_methods,
     .tp_new = PyType_GenericNew
@@ -795,7 +1354,7 @@ static void ResourceLoader_dealloc(ResourceLoader_Object* self)
 static PyObject* ResourceLoader_get_default_fetcher(ResourceLoader_Object* self, void* closure)
 {
     if(self->default_fetcher == NULL)
-        self->default_fetcher = PyObject_New(PyObject, &ResourceFetcher_Type);
+        self->default_fetcher = PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type);
     Py_INCREF(self->default_fetcher);
     return self->default_fetcher;
 }
@@ -901,6 +1460,9 @@ PyMODINIT_FUNC PyInit_plutobook(void)
         || PyType_Ready(&PageMargins_Type) < 0
         || PyType_Ready(&MediaType_Type) < 0
         || PyType_Ready(&Book_Type) < 0
+        || PyType_Ready(&Canvas_Type) < 0
+        || PyType_Ready(&ImageCanvas_Type) < 0
+        || PyType_Ready(&PDFCanvas_Type) < 0
         || PyType_Ready(&PDFMetadata_Type) < 0
         || PyType_Ready(&ImageFormat_Type) < 0
         || PyType_Ready(&ResourceData_Type) < 0
@@ -918,6 +1480,9 @@ PyMODINIT_FUNC PyInit_plutobook(void)
     Py_INCREF(&PageMargins_Type);
     Py_INCREF(&MediaType_Type);
     Py_INCREF(&Book_Type);
+    Py_INCREF(&Canvas_Type);
+    Py_INCREF(&ImageCanvas_Type);
+    Py_INCREF(&PDFCanvas_Type);
     Py_INCREF(&PDFMetadata_Type);
     Py_INCREF(&ImageFormat_Type);
     Py_INCREF(&ResourceData_Type);
@@ -928,11 +1493,29 @@ PyMODINIT_FUNC PyInit_plutobook(void)
     PyModule_AddObject(module, "PageMargins", (PyObject*)&PageMargins_Type);
     PyModule_AddObject(module, "MediaType", (PyObject*)&MediaType_Type);
     PyModule_AddObject(module, "Book", (PyObject*)&Book_Type);
+    PyModule_AddObject(module, "Canvas", (PyObject*)&Canvas_Type);
+    PyModule_AddObject(module, "ImageCanvas", (PyObject*)&ImageCanvas_Type);
+    PyModule_AddObject(module, "PDFCanvas", (PyObject*)&PDFCanvas_Type);
     PyModule_AddObject(module, "PDFMetadata", (PyObject*)&PDFMetadata_Type);
     PyModule_AddObject(module, "ImageFormat", (PyObject*)&ImageFormat_Type);
     PyModule_AddObject(module, "ResourceData", (PyObject*)&ResourceData_Type);
     PyModule_AddObject(module, "ResourceFetcher", (PyObject*)&ResourceFetcher_Type);
     PyModule_AddObject(module, "ResourceLoader", (PyObject*)&ResourceLoader_Type);
+
+    MemoryError_Object = PyErr_NewException("plutobook.MemoryError", PyExc_MemoryError, NULL);
+    LoadError_Object = PyErr_NewException("plutobook.LoadError", NULL, NULL);
+    WriteError_Object = PyErr_NewException("plutobook.WriteError", NULL, NULL);
+    CanvasError_Object = PyErr_NewException("plutobook.CanvasError", NULL, NULL);
+
+    Py_INCREF(MemoryError_Object);
+    Py_INCREF(LoadError_Object);
+    Py_INCREF(WriteError_Object);
+    Py_INCREF(CanvasError_Object);
+
+    PyModule_AddObject(module, "MemoryError", MemoryError_Object);
+    PyModule_AddObject(module, "LoadError", LoadError_Object);
+    PyModule_AddObject(module, "WriteError", WriteError_Object);
+    PyModule_AddObject(module, "CanvasError", CanvasError_Object);
 
     PyModule_AddObject(module, "PAGE_SIZE_NONE", PageSize_Create(PLUTOBOOK_PAGE_SIZE_NONE));
     PyModule_AddObject(module, "PAGE_SIZE_LETTER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LETTER));
@@ -978,6 +1561,6 @@ PyMODINIT_FUNC PyInit_plutobook(void)
     PyModule_AddObject(module, "UNITS_PX", PyFloat_FromDouble(PLUTOBOOK_UNITS_PX));
 
     PyModule_AddObject(module, "resource_loader", ResourceLoader_Create());
-    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.12"));
+    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.1"));
     return module;
 }
