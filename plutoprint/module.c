@@ -1386,12 +1386,12 @@ plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
 
 static int ResourceLoader_set_custom_fetcher(ResourceLoader_Object* self, PyObject* value, void* closure)
 {
-    if(value && !Py_IsNone(value) && !PyObject_TypeCheck(value, &ResourceFetcher_Type)) {
+    if(value && value != Py_None && !PyObject_TypeCheck(value, &ResourceFetcher_Type)) {
         PyErr_SetString(PyExc_TypeError, "value must be None or an instance of plutoprint.ResourceFetcher");
         return -1;
     }
 
-    if(value == NULL || Py_IsNone(value)) {
+    if(value == NULL || value == Py_None) {
         plutobook_set_custom_resource_fetcher(NULL, NULL);
     } else {
         plutobook_set_custom_resource_fetcher(resource_load_func, value);
