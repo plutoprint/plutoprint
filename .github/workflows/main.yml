@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: sdist
+          name: cibw-sdist
           path: ./dist/*.tar.gz
 
   build_wheels:
@@ -66,8 +66,7 @@ jobs:
             --prefer-static \
             -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -lstdc++' \
             -Dcpp_args='-DCURL_STATICLIB -DCAIRO_WIN32_STATIC_BUILD'
-          meson compile -v -C build
-          meson install -C build
+          meson install --strip -C build
 
       - name: Copy pkgconf
         run: |
@@ -83,14 +82,17 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.18.1
         env:
-          CIBW_BUILD: 'cp310-win_amd64 cp311-win_amd64 cp312-win_amd64'
-          CIBW_ENVIRONMENT_WINDOWS: PKG_CONFIG='${{ github.workspace }}/plutobook-win-x64/bin/pkgconf.exe' PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win-x64/lib/pkgconfig'
+          CIBW_BUILD: cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64
           CIBW_BEFORE_BUILD_WINDOWS: pip install delvewheel
-          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
+          CIBW_ENVIRONMENT_WINDOWS:
+            PKG_CONFIG='${{ github.workspace }}/plutobook-win-x64/bin/pkgconf.exe'
+            PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win-x64/lib/pkgconfig'
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS:
+            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
 
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels
+          name: cibw-wheels
           path: ./wheelhouse/*.whl
 
   upload_pypi:
@@ -102,10 +104,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: wheels
+          pattern: cibw-*
+          merge-multiple: true
           path: dist
 
-      - name: Publish to Test PyPI
+      - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/

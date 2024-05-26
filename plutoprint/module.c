@@ -32,7 +32,7 @@ static void PageSize_dealloc(PageSize_Object* self)
 static PyObject* PageSize_repr(PageSize_Object* self)
 {
     char buf[256];
-    PyOS_snprintf(buf, sizeof(buf), "plutobook.PageSize(%g, %g)", self->size.width, self->size.height);
+    PyOS_snprintf(buf, sizeof(buf), "plutoprint.PageSize(%g, %g)", self->size.width, self->size.height);
     return PyUnicode_FromString(buf);
 }
 
@@ -95,7 +95,7 @@ static PyMemberDef PageSize_members[] = {
 
 static PyTypeObject PageSize_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.PageSize",
+    .tp_name = "plutoprint.PageSize",
     .tp_basicsize = sizeof(PageSize_Object),
     .tp_dealloc = (destructor)PageSize_dealloc,
     .tp_repr = (reprfunc)PageSize_repr,
@@ -146,7 +146,7 @@ static void PageMargins_dealloc(PageMargins_Object* self)
 static PyObject* PageMargins_repr(PageMargins_Object* self)
 {
     char buf[256];
-    PyOS_snprintf(buf, sizeof(buf), "plutobook.PageMargins(%g, %g, %g, %g)", self->margins.top, self->margins.right, self->margins.bottom, self->margins.left);
+    PyOS_snprintf(buf, sizeof(buf), "plutoprint.PageMargins(%g, %g, %g, %g)", self->margins.top, self->margins.right, self->margins.bottom, self->margins.left);
     return PyUnicode_FromString(buf);
 }
 
@@ -187,7 +187,7 @@ static PyMemberDef PageMargins_members[] = {
 
 static PyTypeObject PageMargins_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.PageMargins",
+    .tp_name = "plutoprint.PageMargins",
     .tp_basicsize = sizeof(PageMargins_Object),
     .tp_dealloc = (destructor)PageMargins_dealloc,
     .tp_repr = (reprfunc)PageMargins_repr,
@@ -218,9 +218,9 @@ static PyObject* MediaType_repr(MediaType_Object* self)
 {
     switch(self->value) {
     case PLUTOBOOK_MEDIA_TYPE_PRINT:
-        return PyUnicode_FromString("plutobook.MEDIA_TYPE_PRINT");
+        return PyUnicode_FromString("plutoprint.MEDIA_TYPE_PRINT");
     case PLUTOBOOK_MEDIA_TYPE_SCREEN:
-        return PyUnicode_FromString("plutobook.MEDIA_TYPE_SCREEN");
+        return PyUnicode_FromString("plutoprint.MEDIA_TYPE_SCREEN");
     default:
         Py_UNREACHABLE();
     }
@@ -237,7 +237,7 @@ static PyObject* MediaType_richcompare(MediaType_Object* self, PyObject* other, 
 
 static PyTypeObject MediaType_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.MediaType",
+    .tp_name = "plutoprint.MediaType",
     .tp_basicsize = sizeof(MediaType_Object),
     .tp_dealloc = (destructor)MediaType_dealloc,
     .tp_repr = (reprfunc)MediaType_repr,
@@ -266,19 +266,19 @@ static PyObject* PDFMetadata_repr(PDFMetadata_Object* self)
 {
     switch(self->value) {
     case PLUTOBOOK_PDF_METADATA_TITLE:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_TITLE");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_TITLE");
     case PLUTOBOOK_PDF_METADATA_AUTHOR:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_AUTHOR");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_AUTHOR");
     case PLUTOBOOK_PDF_METADATA_SUBJECT:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_SUBJECT");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_SUBJECT");
     case PLUTOBOOK_PDF_METADATA_KEYWORDS:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_KEYWORDS");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_KEYWORDS");
     case PLUTOBOOK_PDF_METADATA_CREATOR:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_CREATOR");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_CREATOR");
     case PLUTOBOOK_PDF_METADATA_CREATION_DATE:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_CREATION_DATE");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_CREATION_DATE");
     case PLUTOBOOK_PDF_METADATA_MODIFICATION_DATE:
-        return PyUnicode_FromString("plutobook.PDF_METADATA_MODIFICATION_DATE");
+        return PyUnicode_FromString("plutoprint.PDF_METADATA_MODIFICATION_DATE");
     default:
         Py_UNREACHABLE();
     }
@@ -295,7 +295,7 @@ static PyObject* PDFMetadata_richcompare(PDFMetadata_Object* self, PyObject* oth
 
 static PyTypeObject PDFMetadata_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.PDFMetadata",
+    .tp_name = "plutoprint.PDFMetadata",
     .tp_basicsize = sizeof(PDFMetadata_Object),
     .tp_dealloc = (destructor)PDFMetadata_dealloc,
     .tp_repr = (reprfunc)PDFMetadata_repr,
@@ -324,15 +324,15 @@ static PyObject* ImageFormat_repr(ImageFormat_Object* self)
 {
     switch(self->value) {
     case PLUTOBOOK_IMAGE_FORMAT_INVALID:
-        return PyUnicode_FromString("plutobook.IMAGE_FORMAT_INVALID");
+        return PyUnicode_FromString("plutoprint.IMAGE_FORMAT_INVALID");
     case PLUTOBOOK_IMAGE_FORMAT_ARGB32:
-        return PyUnicode_FromString("plutobook.IMAGE_FORMAT_ARGB32");
+        return PyUnicode_FromString("plutoprint.IMAGE_FORMAT_ARGB32");
     case PLUTOBOOK_IMAGE_FORMAT_RGB24:
-        return PyUnicode_FromString("plutobook.IMAGE_FORMAT_RGB24");
+        return PyUnicode_FromString("plutoprint.IMAGE_FORMAT_RGB24");
     case PLUTOBOOK_IMAGE_FORMAT_A8:
-        return PyUnicode_FromString("plutobook.IMAGE_FORMAT_A8");
+        return PyUnicode_FromString("plutoprint.IMAGE_FORMAT_A8");
     case PLUTOBOOK_IMAGE_FORMAT_A1:
-        return PyUnicode_FromString("plutobook.IMAGE_FORMAT_A1");
+        return PyUnicode_FromString("plutoprint.IMAGE_FORMAT_A1");
     default:
         Py_UNREACHABLE();
     }
@@ -349,7 +349,7 @@ static PyObject* ImageFormat_richcompare(ImageFormat_Object* self, PyObject* oth
 
 static PyTypeObject ImageFormat_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.ImageFormat",
+    .tp_name = "plutoprint.ImageFormat",
     .tp_basicsize = sizeof(ImageFormat_Object),
     .tp_dealloc = (destructor)ImageFormat_dealloc,
     .tp_repr = (reprfunc)ImageFormat_repr,
@@ -566,7 +566,7 @@ static PyMethodDef Canvas_methods[] = {
 
 static PyTypeObject Canvas_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.Canvas",
+    .tp_name = "plutoprint.Canvas",
     .tp_basicsize = sizeof(Canvas_Object),
     .tp_dealloc = (destructor)Canvas_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
@@ -749,7 +749,7 @@ static PyMethodDef ImageCanvas_methods[] = {
 
 static PyTypeObject ImageCanvas_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.ImageCanvas",
+    .tp_name = "plutoprint.ImageCanvas",
     .tp_basicsize = sizeof(ImageCanvas_Object),
     .tp_as_buffer = &ImageCanvas_as_buffer,
     .tp_flags = Py_TPFLAGS_DEFAULT,
@@ -837,7 +837,7 @@ static PyMethodDef PDFCanvas_methods[] = {
 
 static PyTypeObject PDFCanvas_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.PDFCanvas",
+    .tp_name = "plutoprint.PDFCanvas",
     .tp_basicsize = sizeof(PDFCanvas_Object),
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_methods = PDFCanvas_methods,
@@ -1193,7 +1193,7 @@ static PyMethodDef Book_methods[] = {
 
 static PyTypeObject Book_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.Book",
+    .tp_name = "plutoprint.Book",
     .tp_basicsize = sizeof(Book_Object),
     .tp_dealloc = (destructor)Book_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT,
@@ -1285,7 +1285,7 @@ static PyMethodDef ResourceData_methods[] = {
 
 static PyTypeObject ResourceData_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.ResourceData",
+    .tp_name = "plutoprint.ResourceData",
     .tp_basicsize = sizeof(ResourceData_Object),
     .tp_dealloc = (destructor)ResourceData_dealloc,
     .tp_as_buffer = &ResourceData_as_buffer,
@@ -1329,7 +1329,7 @@ static PyMethodDef ResourceFetcher_methods[] = {
 
 static PyTypeObject ResourceFetcher_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.ResourceFetcher",
+    .tp_name = "plutoprint.ResourceFetcher",
     .tp_basicsize = sizeof(ResourceFetcher_Object),
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     .tp_methods = ResourceFetcher_methods,
@@ -1387,7 +1387,7 @@ plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
 static int ResourceLoader_set_custom_fetcher(ResourceLoader_Object* self, PyObject* value, void* closure)
 {
     if(value && !Py_IsNone(value) && !PyObject_TypeCheck(value, &ResourceFetcher_Type)) {
-        PyErr_SetString(PyExc_TypeError, "value must be None or an instance of plutobook.ResourceFetcher");
+        PyErr_SetString(PyExc_TypeError, "value must be None or an instance of plutoprint.ResourceFetcher");
         return -1;
     }
 
@@ -1411,7 +1411,7 @@ static PyGetSetDef ResourceLoader_getset[] = {
 
 static PyTypeObject ResourceLoader_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutobook.ResourceLoader",
+    .tp_name = "plutoprint.ResourceLoader",
     .tp_basicsize = sizeof(ResourceLoader_Object),
     .tp_dealloc = (destructor)ResourceLoader_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT,
@@ -1444,7 +1444,7 @@ static PyMethodDef module_methods[] = {
 
 static struct PyModuleDef module_definition = {
     PyModuleDef_HEAD_INIT,
-    "plutobook",
+    "plutoprint",
     0,
     0,
     module_methods,
@@ -1454,7 +1454,7 @@ static struct PyModuleDef module_definition = {
     0,
 };
 
-PyMODINIT_FUNC PyInit_plutobook(void)
+PyMODINIT_FUNC PyInit__plutoprint(void)
 {
     if(PyType_Ready(&PageSize_Type) < 0
         || PyType_Ready(&PageMargins_Type) < 0
@@ -1502,10 +1502,10 @@ PyMODINIT_FUNC PyInit_plutobook(void)
     PyModule_AddObject(module, "ResourceFetcher", (PyObject*)&ResourceFetcher_Type);
     PyModule_AddObject(module, "ResourceLoader", (PyObject*)&ResourceLoader_Type);
 
-    MemoryError_Object = PyErr_NewException("plutobook.MemoryError", PyExc_MemoryError, NULL);
-    LoadError_Object = PyErr_NewException("plutobook.LoadError", NULL, NULL);
-    WriteError_Object = PyErr_NewException("plutobook.WriteError", NULL, NULL);
-    CanvasError_Object = PyErr_NewException("plutobook.CanvasError", NULL, NULL);
+    MemoryError_Object = PyErr_NewException("plutoprint.MemoryError", PyExc_MemoryError, NULL);
+    LoadError_Object = PyErr_NewException("plutoprint.LoadError", NULL, NULL);
+    WriteError_Object = PyErr_NewException("plutoprint.WriteError", NULL, NULL);
+    CanvasError_Object = PyErr_NewException("plutoprint.CanvasError", NULL, NULL);
 
     Py_INCREF(MemoryError_Object);
     Py_INCREF(LoadError_Object);
@@ -1560,7 +1560,13 @@ PyMODINIT_FUNC PyInit_plutobook(void)
     PyModule_AddObject(module, "UNITS_MM", PyFloat_FromDouble(PLUTOBOOK_UNITS_MM));
     PyModule_AddObject(module, "UNITS_PX", PyFloat_FromDouble(PLUTOBOOK_UNITS_PX));
 
+    PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION", PLUTOBOOK_VERSION);
+    PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MINOR", PLUTOBOOK_VERSION_MINOR);
+    PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MICRO", PLUTOBOOK_VERSION_MICRO);
+    PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
+    PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
+
     PyModule_AddObject(module, "resource_loader", ResourceLoader_Create());
-    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.1"));
+    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.2"));
     return module;
 }

@@ -1,6 +1,6 @@
 [project]
 name = 'plutoprint'
-version = '0.0.1'
+version = '0.0.2'
 description = 'Paged HTML rendering library'
 readme = 'README.md'
 requires-python = '>=3.8'

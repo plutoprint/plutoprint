@@ -7,10 +7,14 @@ if not get_option('sdist')
     deps += dependency('plutobook', required: true)
 endif
 
-python.install_sources('__init__.py', subdir: 'plutoprint')
+sources = [
+    'plutoprint/__init__.py'
+]
+
+python.install_sources(sources, subdir: 'plutoprint')
 python.extension_module(
-    'plutobook',
-    'plutobook-module.c',
+    '_plutoprint',
+    'plutoprint/module.c',
     dependencies: deps,
     subdir: 'plutoprint',
     install: true
