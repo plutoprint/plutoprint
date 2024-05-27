@@ -1,4 +1,4 @@
-project('plutoprint', 'c', 'cpp', version: '0.0.1', license: 'MIT')
+project('plutoprint', 'c', 'cpp', version: '0.0.3', license: 'MIT')
 
 python = import('python').find_installation(pure: false)
 

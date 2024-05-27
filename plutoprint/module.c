@@ -940,7 +940,6 @@ static PyObject* Book_get_page_size_at(Book_Object* self, PyObject* args)
     Py_BEGIN_ALLOW_THREADS
     page_count = plutobook_get_page_count(self->book);
     Py_END_ALLOW_THREADS
-
     if(page_index >= page_count) {
         PyErr_SetString(PyExc_IndexError, "page index out of range");
         return NULL;
@@ -1081,6 +1080,48 @@ static PyObject* Book_load_html(Book_Object* self, PyObject* args, PyObject* kwd
     Py_RETURN_NONE;
 }
 
+static PyObject* Book_render_page(Book_Object* self, PyObject* args)
+{
+    Canvas_Object* canvas_ob;
+    unsigned int page_index;
+    if(!PyArg_ParseTuple(args, "O!I", &Canvas_Type, &canvas_ob, &page_index)) {
+        return NULL;
+    }
+
+    unsigned int page_count;
+    Py_BEGIN_ALLOW_THREADS
+    page_count = plutobook_get_page_count(self->book);
+    Py_END_ALLOW_THREADS
+    if(page_index >= page_count) {
+        PyErr_SetString(PyExc_IndexError, "page index out of range");
+        return NULL;
+    }
+
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_render_page(self->book, canvas_ob->canvas, page_index);
+    Py_END_ALLOW_THREADS
+    Py_RETURN_NONE;
+}
+
+static PyObject* Book_render_document(Book_Object* self, PyObject* args)
+{
+    Canvas_Object* canvas_ob;
+    float x, y, width, height;
+    if(!PyArg_ParseTuple(args, "O!|(ffff)", &Canvas_Type, &canvas_ob, &x, &y, &width, &height)) {
+        return NULL;
+    }
+
+    Py_BEGIN_ALLOW_THREADS
+    if(PyTuple_Size(args) == 1) {
+        plutobook_render_document(self->book, canvas_ob->canvas);
+    } else {
+        plutobook_render_document_rect(self->book, canvas_ob->canvas, x, y, width, height);
+    }
+
+    Py_END_ALLOW_THREADS
+    Py_RETURN_NONE;
+}
+
 static PyObject* Book_write_to_pdf(Book_Object* self, PyObject* args, PyObject* kwds)
 {
     static char* kwlist[] = { "filename", "from_page", "to_page", "page_step", NULL };
@@ -1184,6 +1225,8 @@ static PyMethodDef Book_methods[] = {
     {"load_image", (PyCFunction)Book_load_image, METH_VARARGS | METH_KEYWORDS},
     {"load_xml", (PyCFunction)Book_load_xml, METH_VARARGS | METH_KEYWORDS},
     {"load_html", (PyCFunction)Book_load_html, METH_VARARGS | METH_KEYWORDS},
+    {"render_page", (PyCFunction)Book_render_page, METH_VARARGS},
+    {"render_document", (PyCFunction)Book_render_document, METH_VARARGS},
     {"write_to_pdf", (PyCFunction)Book_write_to_pdf, METH_VARARGS | METH_KEYWORDS},
     {"write_to_pdf_stream", (PyCFunction)Book_write_to_pdf_stream, METH_VARARGS | METH_KEYWORDS},
     {"write_to_png", (PyCFunction)Book_write_to_png, METH_VARARGS},
@@ -1203,11 +1246,6 @@ static PyTypeObject Book_Type = {
 
 static PyObject* Book_Create(plutobook_t* book)
 {
-    if(book == NULL) {
-        PyErr_SetString(MemoryError_Object, "out of memory");
-        return NULL;
-    }
-
     Book_Object* book_ob = PyObject_New(Book_Object, &Book_Type);
     book_ob->book = book;
     return (PyObject*)book_ob;
@@ -1567,6 +1605,6 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
     PyModule_AddObject(module, "resource_loader", ResourceLoader_Create());
-    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.2"));
+    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.3"));
     return module;
 }
