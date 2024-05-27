@@ -8,7 +8,10 @@ if not get_option('sdist')
 endif
 
 sources = [
-    'plutoprint/__init__.py'
+    'plutoprint/__init__.py',
+    'plutoprint/__init__.pyi',
+    'plutoprint/__main__.py',
+    'plutoprint/py.typed'
 ]
 
 python.install_sources(sources, subdir: 'plutoprint')
