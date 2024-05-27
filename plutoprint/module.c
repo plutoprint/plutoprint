@@ -67,9 +67,9 @@ static PyObject* PageSize_item(PageSize_Object* self, Py_ssize_t index)
 {
     switch(index) {
     case 0:
-        return Py_BuildValue("f", self->size.width);
+        return PyFloat_FromDouble(self->size.width);
     case 1:
-        return Py_BuildValue("f", self->size.height);
+        return PyFloat_FromDouble(self->size.height);
     default:
         PyErr_SetString(PyExc_IndexError, "PageSize index out of range");
         return NULL;
@@ -159,13 +159,13 @@ static PyObject* PageMargins_item(PageMargins_Object* self, Py_ssize_t index)
 {
     switch(index) {
     case 0:
-        return Py_BuildValue("f", self->margins.top);
+        return PyFloat_FromDouble(self->margins.top);
     case 1:
-        return Py_BuildValue("f", self->margins.right);
+        return PyFloat_FromDouble(self->margins.right);
     case 2:
-        return Py_BuildValue("f", self->margins.bottom);
+        return PyFloat_FromDouble(self->margins.bottom);
     case 3:
-        return Py_BuildValue("f", self->margins.left);
+        return PyFloat_FromDouble(self->margins.left);
     default:
         PyErr_SetString(PyExc_IndexError, "PageMargins index out of range");
         return NULL;
@@ -889,12 +889,12 @@ static void Book_dealloc(Book_Object* self)
 
 static PyObject* Book_get_viewport_width(Book_Object* self, PyObject* args)
 {
-    return Py_BuildValue("f", plutobook_get_viewport_width(self->book));
+    return PyFloat_FromDouble(plutobook_get_viewport_width(self->book));
 }
 
 static PyObject* Book_get_viewport_height(Book_Object* self, PyObject* args)
 {
-    return Py_BuildValue("f", plutobook_get_viewport_height(self->book));
+    return PyFloat_FromDouble(plutobook_get_viewport_height(self->book));
 }
 
 static PyObject* Book_get_document_width(Book_Object* self, PyObject* args)
@@ -903,7 +903,7 @@ static PyObject* Book_get_document_width(Book_Object* self, PyObject* args)
     Py_BEGIN_ALLOW_THREADS
     document_width = plutobook_get_document_width(self->book);
     Py_END_ALLOW_THREADS
-    return Py_BuildValue("f", document_width);
+    return PyFloat_FromDouble(document_width);
 }
 
 static PyObject* Book_get_document_height(Book_Object* self, PyObject* args)
@@ -912,7 +912,7 @@ static PyObject* Book_get_document_height(Book_Object* self, PyObject* args)
     Py_BEGIN_ALLOW_THREADS
     document_height = plutobook_get_document_height(self->book);
     Py_END_ALLOW_THREADS
-    return Py_BuildValue("f", document_height);
+    return PyFloat_FromDouble(document_height);
 }
 
 static PyObject* Book_get_page_count(Book_Object* self, PyObject* args)
