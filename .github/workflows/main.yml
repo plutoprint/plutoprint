@@ -52,6 +52,7 @@ jobs:
             mingw-w64-x86_64-python-pip
             mingw-w64-x86_64-gcc
 
+      - run: uname
       - name: Checkout plutobook
         uses: actions/checkout@v4
         with:
