@@ -4,6 +4,20 @@
 
 #include <plutobook.h>
 
+#ifndef PLUTOPRINT_VERSION_MAJOR
+#define PLUTOPRINT_VERSION_MAJOR PLUTOBOOK_VERSION_MAJOR
+#endif
+
+#ifndef PLUTOPRINT_VERSION_MINOR
+#define PLUTOPRINT_VERSION_MINOR PLUTOBOOK_VERSION_MINOR
+#endif
+
+#ifndef PLUTOPRINT_VERSION_MICRO
+#define PLUTOPRINT_VERSION_MICRO PLUTOBOOK_VERSION_MICRO
+#endif
+
+#define PLUTOPRINT_VERSION_STRING PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO)
+
 typedef struct {
     PyObject_HEAD
     plutobook_page_size_t size;
@@ -1604,7 +1618,8 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
+    PyModule_AddObject(module, "version", PyUnicode_FromString(PLUTOPRINT_VERSION_STRING));
+    PyModule_AddObject(module, "version_info", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
     PyModule_AddObject(module, "resource_loader", ResourceLoader_Create());
-    PyModule_AddObject(module, "__version__", PyUnicode_FromString("0.0.3"));
     return module;
 }
