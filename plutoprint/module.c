@@ -403,6 +403,21 @@ static PyObject* CanvasError_Object;
 
 #define RETURN_NULL_IF_CANVAS_ERROR(canvas) RETURN_NULL_IF_ERROR(plutobook_canvas_get_status(canvas))
 
+static PyObject* Canvas__enter__(Canvas_Object* self, PyObject* args)
+{
+    Py_INCREF(self);
+    return (PyObject*)self;
+}
+
+static PyObject* Canvas__exit__(Canvas_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_canvas_finish(self->canvas);
+    Py_END_ALLOW_THREADS
+    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
+    Py_RETURN_NONE;
+}
+
 static PyObject* Canvas_flush(Canvas_Object* self, PyObject* args)
 {
     Py_BEGIN_ALLOW_THREADS
@@ -530,22 +545,9 @@ static PyObject* Canvas_restore_state(Canvas_Object* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
-static PyObject* Canvas__enter__(Canvas_Object* self, PyObject* args)
-{
-    Py_INCREF(self);
-    return (PyObject*)self;
-}
-
-static PyObject* Canvas__exit__(Canvas_Object* self, PyObject* args)
-{
-    Py_BEGIN_ALLOW_THREADS
-    plutobook_canvas_finish(self->canvas);
-    Py_END_ALLOW_THREADS
-    RETURN_NULL_IF_CANVAS_ERROR(self->canvas);
-    Py_RETURN_NONE;
-}
-
 static PyMethodDef Canvas_methods[] = {
+    {"__enter__", (PyCFunction)Canvas__enter__, METH_NOARGS},
+    {"__exit__", (PyCFunction)Canvas__exit__, METH_VARARGS},
     {"flush", (PyCFunction)Canvas_flush, METH_NOARGS},
     {"finish", (PyCFunction)Canvas_finish, METH_NOARGS},
     {"translate", (PyCFunction)Canvas_translate, METH_VARARGS},
@@ -558,8 +560,6 @@ static PyMethodDef Canvas_methods[] = {
     {"clear_surface", (PyCFunction)Canvas_clear_surface, METH_VARARGS},
     {"save_state", (PyCFunction)Canvas_save_state, METH_NOARGS},
     {"restore_state", (PyCFunction)Canvas_restore_state, METH_NOARGS},
-    {"__enter__", (PyCFunction)Canvas__enter__, METH_NOARGS},
-    {"__exit__", (PyCFunction)Canvas__exit__, METH_VARARGS},
     {NULL}
 };
 
@@ -1600,8 +1600,8 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
-    PyModule_AddObject(module, "version_info", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
     PyModule_AddStringConstant(module, "version", PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
+    PyModule_AddObject(module, "version_info", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
     PyModule_AddObject(module, "resource_loader", ResourceLoader_Create());
     return module;
 }
