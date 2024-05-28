@@ -65,7 +65,8 @@ jobs:
             --wrap-mode=nodownload \
             --prefer-static \
             -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -lstdc++' \
-            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DNGHTTP3_STATICLIB'
+            -Dcpp_args='-DNGHTTP3_STATICLIB -DNGTCP2_STATICLIB -DNGHTTP2_STATICLIB'
+            -Dcpp_args='-DCURL_STATICLIB -DCAIRO_WIN32_STATIC_BUILD'
           meson install --strip -C build
 
       - name: Copy pkgconf
