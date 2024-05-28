@@ -377,7 +377,6 @@ static void Canvas_dealloc(Canvas_Object* self)
     PyObject_Del(self);
 }
 
-static PyObject* MemoryError_Object;
 static PyObject* LoadError_Object;
 static PyObject* WriteError_Object;
 static PyObject* CanvasError_Object;
@@ -386,7 +385,7 @@ static PyObject* CanvasError_Object;
     do { \
     switch(status) { \
     case PLUTOBOOK_STATUS_MEMORY_ERROR: \
-        PyErr_SetObject(MemoryError_Object, NULL);\
+        PyErr_SetObject(PyExc_MemoryError, NULL);\
         return NULL; \
     case PLUTOBOOK_STATUS_LOAD_ERROR: \
         PyErr_SetObject(LoadError_Object, NULL);\
@@ -1274,7 +1273,7 @@ static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* 
     Py_END_ALLOW_THREADS
     PyBuffer_Release(&content);
     if(resource == NULL) {
-        PyErr_SetString(MemoryError_Object, "out of memory");
+        PyErr_SetString(PyExc_MemoryError, "out of memory");
         return NULL;
     }
 
@@ -1540,17 +1539,14 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module, "ResourceFetcher", (PyObject*)&ResourceFetcher_Type);
     PyModule_AddObject(module, "ResourceLoader", (PyObject*)&ResourceLoader_Type);
 
-    MemoryError_Object = PyErr_NewException("plutoprint.MemoryError", PyExc_MemoryError, NULL);
     LoadError_Object = PyErr_NewException("plutoprint.LoadError", NULL, NULL);
     WriteError_Object = PyErr_NewException("plutoprint.WriteError", NULL, NULL);
     CanvasError_Object = PyErr_NewException("plutoprint.CanvasError", NULL, NULL);
 
-    Py_INCREF(MemoryError_Object);
     Py_INCREF(LoadError_Object);
     Py_INCREF(WriteError_Object);
     Py_INCREF(CanvasError_Object);
 
-    PyModule_AddObject(module, "MemoryError", MemoryError_Object);
     PyModule_AddObject(module, "LoadError", LoadError_Object);
     PyModule_AddObject(module, "WriteError", WriteError_Object);
     PyModule_AddObject(module, "CanvasError", CanvasError_Object);
