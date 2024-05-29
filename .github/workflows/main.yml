@@ -41,7 +41,7 @@ jobs:
             mingw-w64-x86_64-freetype
             mingw-w64-x86_64-fontconfig
             mingw-w64-x86_64-cairo
-            mingw-w64-x86_64-curl
+            mingw-w64-x86_64-curl-winssl
             mingw-w64-x86_64-libjpeg-turbo
             mingw-w64-x86_64-libwebp
             mingw-w64-x86_64-meson
