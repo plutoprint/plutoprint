@@ -58,7 +58,6 @@ jobs:
           path: plutobook
       - name: Build plutobook
         run: |
-          cp -v -r lib/* /mingw64/lib/
           cd plutobook
           meson setup build \
             --prefix='${{ github.workspace }}/plutobook-win-x64' \

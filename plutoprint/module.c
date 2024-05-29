@@ -1557,7 +1557,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module, "PAGE_SIZE_LEDGER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LETTER));
 
     PyModule_AddObject(module, "PAGE_SIZE_A3", PageSize_Create(PLUTOBOOK_PAGE_SIZE_A3));
-    PyModule_AddObject(module, "PAGE_SIZE_A4", PageSize_Create(PLUTOBOOK_PAGE_SIZE_A3));
+    PyModule_AddObject(module, "PAGE_SIZE_A4", PageSize_Create(PLUTOBOOK_PAGE_SIZE_A4));
     PyModule_AddObject(module, "PAGE_SIZE_A5", PageSize_Create(PLUTOBOOK_PAGE_SIZE_A5));
     PyModule_AddObject(module, "PAGE_SIZE_B4", PageSize_Create(PLUTOBOOK_PAGE_SIZE_B4));
     PyModule_AddObject(module, "PAGE_SIZE_B5", PageSize_Create(PLUTOBOOK_PAGE_SIZE_B5));
@@ -1566,6 +1566,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module, "PAGE_MARGINS_NORMAL", PageMargins_Create(PLUTOBOOK_PAGE_MARGINS_NORMAL));
     PyModule_AddObject(module, "PAGE_MARGINS_NARROW", PageMargins_Create(PLUTOBOOK_PAGE_MARGINS_NARROW));
     PyModule_AddObject(module, "PAGE_MARGINS_MODERATE", PageMargins_Create(PLUTOBOOK_PAGE_MARGINS_MODERATE));
+    PyModule_AddObject(module, "PAGE_MARGINS_WIDE", PageMargins_Create(PLUTOBOOK_PAGE_MARGINS_WIDE));
 
     PyModule_AddObject(module, "MEDIA_TYPE_PRINT", MediaType_Create(PLUTOBOOK_MEDIA_TYPE_PRINT));
     PyModule_AddObject(module, "MEDIA_TYPE_SCREEN", MediaType_Create(PLUTOBOOK_MEDIA_TYPE_SCREEN));
