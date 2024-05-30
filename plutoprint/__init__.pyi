@@ -361,20 +361,115 @@ class CanvasError(Exception):
     """
 
 class Canvas:
-    def __enter__(self) -> Type[Canvas]: ...
-    def __exit__(self, *exc_info) -> None: ...
-    def flush(self) -> None: ...
-    def finish(self) -> None: ...
-    def translate(self, tx: float, ty: float) -> None: ...
-    def scale(self, sx: float, sy: float) -> None: ...
-    def rotate(self, angle: float) -> None: ...
-    def transform(self, a: float, b: float, c: float, d: float, e: float, f: float) -> None: ...
-    def set_matrix(self, a: float, b: float, c: float, d: float, e: float, f: float) -> None: ...
-    def reset_matrix(self) -> None: ...
-    def clip_rect(self, x: float, y: float, width: float, height: float) -> None: ...
-    def clear_surface(self, red: float, green: float, blue: float, alpha: float = 1.0) -> None: ...
-    def save_state(self) -> None: ...
-    def restore_state(self) -> None: ...
+    """
+    An abstract base class that provides an interface for drawing and transforming graphics on a canvas.
+    """
+
+    def __enter__(self) -> Type[Canvas]:
+        """
+        Enters a runtime context related to this object. Used to support the context management protocol.
+
+        :returns: The canvas instance.
+        """
+
+    def __exit__(self, *exc_info) -> None:
+        """
+        Exits the runtime context related to this object. Used to support the context management protocol.
+
+        :param exc_info: Exception information.
+        """
+
+    def flush(self) -> None:
+        """
+        Flushes any pending drawing operations.
+        """
+
+    def finish(self) -> None:
+        """
+        Finishes all drawing operations and cleans up the canvas.
+        """
+
+    def translate(self, tx: float, ty: float) -> None:
+        """
+        Moves the canvas and its origin to a different point.
+
+        :param tx: The translation offset in the x-direction.
+        :param ty: The translation offset in the y-direction.
+        """
+
+    def scale(self, sx: float, sy: float) -> None:
+        """
+        Scales the canvas units by the specified factors.
+
+        :param sx: The scaling factor in the x-direction.
+        :param sy: The scaling factor in the y-direction.
+        """
+
+    def rotate(self, angle: float) -> None:
+        """
+        Rotates the canvas around the current origin.
+
+        :param angle: The rotation angle in radians.
+        """
+
+    def transform(self, a: float, b: float, c: float, d: float, e: float, f: float) -> None:
+        """
+        Multiplies the current transformation matrix with the specified matrix.
+
+        :param a: The element at position (1, 1) of the transformation matrix.
+        :param b: The element at position (1, 2) of the transformation matrix.
+        :param c: The element at position (2, 1) of the transformation matrix.
+        :param d: The element at position (2, 2) of the transformation matrix.
+        :param e: The element at position (3, 1) of the transformation matrix.
+        :param f: The element at position (3, 2) of the transformation matrix.
+        """
+
+    def set_matrix(self, a: float, b: float, c: float, d: float, e: float, f: float) -> None:
+        """
+        Resets the transformation matrix to the specified matrix.
+
+        :param a: The element at position (1, 1) of the transformation matrix.
+        :param b: The element at position (1, 2) of the transformation matrix.
+        :param c: The element at position (2, 1) of the transformation matrix.
+        :param d: The element at position (2, 2) of the transformation matrix.
+        :param e: The element at position (3, 1) of the transformation matrix.
+        :param f: The element at position (3, 2) of the transformation matrix.
+        """
+
+    def reset_matrix(self) -> None:
+        """
+        Resets the current transformation to the identity matrix.
+        """
+
+    def clip_rect(self, x: float, y: float, width: float, height: float) -> None:
+        """
+        Intersects the current clip with the specified rectangle.
+
+        :param x: The x-coordinate of the top-left corner of the rectangle.
+        :param y: The y-coordinate of the top-left corner of the rectangle.
+        :param width: The width of the rectangle.
+        :param height: The height of the rectangle.
+        """
+
+    def clear_surface(self, red: float, green: float, blue: float, alpha: float = 1.0) -> None:
+        """
+        Clears the canvas surface with the specified color.
+
+        :param red: The red component of the color.
+        :param green: The green component of the color.
+        :param blue: The blue component of the color.
+        :param alpha: The alpha component of the color.
+        """
+
+    def save_state(self) -> None:
+        """
+        Saves the current state of the canvas.
+        """
+
+    def restore_state(self) -> None:
+        """
+        Restores the most recently saved state of the canvas.
+        """
 
 class ImageCanvas(Canvas):
     def __init__(self, width: int, height: int, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None: ...
@@ -431,6 +526,7 @@ class ResourceData:
     def get_text_encoding(self) -> str: ...
 
 class ResourceFetcher:
+    def __init__(self) -> None: ...
     def load_url(self, url: str) -> ResourceData: ...
 
 class ResourceLoader:
