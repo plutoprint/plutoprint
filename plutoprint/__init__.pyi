@@ -362,7 +362,7 @@ class CanvasError(Exception):
 
 class Canvas:
     """
-    An abstract base class that provides an interface for drawing and transforming graphics on a canvas.
+    An abstract base class that provides an interface for drawing graphics on a canvas.
     """
 
     def __enter__(self) -> Type[Canvas]:
@@ -472,24 +472,130 @@ class Canvas:
         """
 
 class ImageCanvas(Canvas):
-    def __init__(self, width: int, height: int, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None: ...
+    """
+    The `ImageCanvas` class provides an interface for rendering to memory buffers.
+    """
+
+    def __init__(self, width: int, height: int, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None:
+        """
+        Initializes a new `ImageCanvas` with the specified width, height, and format.
+
+        :param width: The width of the canvas in pixels.
+        :param height: The height of the canvas in pixels.
+        :param format: The pixel format of the canvas.
+        """
+
     @classmethod
-    def create_for_data(cls, data: memoryview, width: int, height: int, stride: int, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> ImageCanvas: ...
-    def get_data(self) -> memoryview: ...
-    def get_width(self) -> int: ...
-    def get_height(self) -> int: ...
-    def get_stride(self) -> int: ...
-    def get_format(self) -> ImageFormat: ...
-    def write_to_png(self, path: Union[str, bytes, os.PathLike]) -> None: ...
-    def write_to_png_stream(self, stream: BinaryIO) -> None: ...
+    def create_for_data(cls, data: memoryview, width: int, height: int, stride: int, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> ImageCanvas:
+        """
+        Creates a new `ImageCanvas` for the given writable data buffer.
+
+        :param data: A writable memoryview representing the image data buffer.
+        :param width: The width of the canvas in pixels.
+        :param height: The height of the canvas in pixels.
+        :param stride: The stride (number of bytes per row) of the image data.
+        :param format: The pixel format of the canvas.
+        :returns: A new instance of `ImageCanvas`.
+        """
+
+    def get_data(self) -> memoryview:
+        """
+        Returns a writable memoryview of the image data buffer.
+
+        :returns: A writable memoryview of the image data.
+        """
+
+    def get_width(self) -> int:
+        """
+        Returns the width of the canvas.
+
+        :returns: The width of the canvas in pixels.
+        """
+
+    def get_height(self) -> int:
+        """
+        Returns the height of the canvas.
+
+        :returns: The height of the canvas in pixels.
+        """
+
+    def get_stride(self) -> int:
+        """
+        Returns the stride (number of bytes per row) of the image data.
+
+        :returns: The stride of the image data.
+        """
+
+    def get_format(self) -> ImageFormat:
+        """
+        Returns the pixel format of the canvas.
+
+        :returns: The pixel format of the canvas.
+        """
+
+    def write_to_png(self, path: Union[str, bytes, os.PathLike]) -> None:
+        """
+        Writes the image data to a file at the specified path as PNG.
+
+        :param path: The file path where the PNG should be written.
+        """
+
+    def write_to_png_stream(self, stream: BinaryIO) -> None:
+        """
+        Writes the image data to a writable binary stream as PNG.
+
+        :param stream: A writable binary stream where the PNG data should be written.
+        """
 
 class PDFCanvas(Canvas):
-    def __init__(self, path: Union[str, bytes, os.PathLike], size: PageSize) -> None: ...
+    """
+    The `PDFCanvas` class provides an interface for rendering to Adobe PDF files.
+    """
+
+    def __init__(self, path: Union[str, bytes, os.PathLike], size: PageSize) -> None:
+        """
+        Initializes a new `PDFCanvas` with the specified file path and page size.
+
+        :param path: The file path where the PDF document will be written.
+        :param size: The size of the PDF page.
+        """
+
     @classmethod
     def create_for_stream(cls, stream: BinaryIO, size: PageSize) -> PDFCanvas: ...
-    def set_metadata(self, metadata: PDFMetadata, value: str) -> None: ...
-    def set_size(self, size: PageSize) -> None: ...
-    def show_page(self) -> None: ...
+        """
+        Creates a new `PDFCanvas` for the given writable binary stream and page size.
+
+        :param stream: A writable binary stream where the PDF document will be written.
+        :param size: The size of the PDF page.
+        :returns: A new instance of `PDFCanvas`.
+        """
+
+    def set_metadata(self, metadata: PDFMetadata, value: str) -> None:
+        """
+        Sets the metadata of the PDF document.
+
+        The :attr:`PDF_METADATA_CREATION_DATE` and :attr:`PDF_METADATA_MODIFICATION_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss.
+        An optional timezone of the form "[+/-]hh:mm" or "Z" for UTC time can be appended. All other metadata values can be any string.
+
+        :param metadata: The type of metadata to set.
+        :param value: The value of the metadata.
+        """
+
+    def set_size(self, size: PageSize) -> None:
+        """
+        Sets the size of the PDF page.
+
+        This function should only be called before any drawing operations have been performed on the current page.
+        The simplest way to do this is to call this function immediately after creating the canvas or immediately
+        after completing a immediately after completing a page with :meth:`show_page`.
+
+        :param size: The size of the PDF page.
+        """
+
+    def show_page(self) -> None:
+        """
+        Emits the current page and starts a new page.
+        """
 
 MIN_PAGE_COUNT: int = ...
 MAX_PAGE_COUNT: int = ...
