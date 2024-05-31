@@ -71,6 +71,7 @@ class PageSize:
     """
     The `PageSize` class represents the dimensions of a page in points (1 / 72 inch).
     """
+
     def __init__(self, width: float = 0.0, height: float = 0.0) -> None:
         """
         Initializes a new instance of the `PageSize` class.
@@ -161,6 +162,7 @@ class PageMargins:
     """
     The `PageMargins` class represents the margins of a page in points (1 / 72 inch)
     """
+
     def __init__(self, top: float = 0.0, right: float = 0.0, bottom: float = 0.0, left: float = 0.0) -> None:
         """
         Initializes a new instance of the `PageMargins` class.
@@ -561,7 +563,7 @@ class PDFCanvas(Canvas):
         """
 
     @classmethod
-    def create_for_stream(cls, stream: BinaryIO, size: PageSize) -> PDFCanvas: ...
+    def create_for_stream(cls, stream: BinaryIO, size: PageSize) -> PDFCanvas:
         """
         Creates a new `PDFCanvas` for the given writable binary stream and page size.
 
@@ -598,45 +600,278 @@ class PDFCanvas(Canvas):
         """
 
 MIN_PAGE_COUNT: int = ...
+"""
+This constant defines an index that is guaranteed to be less than the valid page count. 
+"""
+
 MAX_PAGE_COUNT: int = ...
+"""
+This constant defines an index that is guaranteed to be greater than the valid page count.
+"""
 
 class Book:
-    def __init__(self, size: PageSize = PAGE_SIZE_A4, margins: PageMargins = PAGE_MARGINS_NORMAL, media: MediaType = MEDIA_TYPE_PRINT) -> None: ...
-    def get_viewport_width(self) -> float: ...
-    def get_viewport_height(self) -> float: ...
-    def get_document_width(self) -> float: ...
-    def get_document_height(self) -> float: ...
-    def get_page_count(self) -> int: ...
-    def get_page_size(self) -> PageSize: ...
-    def get_page_size_at(self, page_index: int) -> PageSize: ...
-    def get_page_margins(self) -> PageMargins: ...
-    def get_media_type(self) -> MediaType: ...
-    def set_metadata(self, metadata: PDFMetadata, value: str) -> None: ...
-    def get_metadata(self, metadata: PDFMetadata) -> str: ...
-    def load_url(self, url: str, user_style: str = ..., user_script: str = ...) -> None: ...
-    def load_data(self, data: Union[str, bytes], mime_type: str = ..., text_encoding: str = ..., user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None: ...
-    def load_image(self, data: Union[str, bytes], mime_type: str = ..., text_encoding: str = ..., user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None: ...
-    def load_xml(self, data: str, user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None: ...
-    def load_html(self, data: str, user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None: ...
-    def render_page(self, canvas: Canvas, page_index: int) -> None: ...
-    def render_document(self, canvas: Canvas, rect: Tuple[float, float, float, float] = ...) -> None: ...
-    def write_to_pdf(self, path: Union[str, bytes, os.PathLike], from_page: int = MIN_PAGE_COUNT, to_page: int = MAX_PAGE_COUNT, page_step: int = 1) -> None: ...
-    def write_to_pdf_stream(self, stream: BinaryIO, from_page: int = MIN_PAGE_COUNT, to_page: int = MAX_PAGE_COUNT, page_step: int = 1) -> None: ...
-    def write_to_png(self, path: Union[str, bytes, os.PathLike], format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None: ...
-    def write_to_png_stream(self, stream: BinaryIO, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None: ...
+    def __init__(self, size: PageSize = PAGE_SIZE_A4, margins: PageMargins = PAGE_MARGINS_NORMAL, media: MediaType = MEDIA_TYPE_PRINT) -> None:
+        """
+        Initializes a new `Book` instance with the specified page size, margins, and media type.
+
+        :param size: The initial page size.
+        :param margins: The initial page margins.
+        :param media: The media type used for media queries.
+        """
+
+    def get_viewport_width(self) -> float:
+        """
+        Returns the width of the viewport.
+
+        :returns: The width of the viewport in pixels.
+        """
+
+    def get_viewport_height(self) -> float:
+        """
+        Returns the height of the viewport.
+
+        :returns: The height of the viewport in pixels.
+        """
+
+    def get_document_width(self) -> float:
+        """
+        Returns the width of the document.
+
+        :returns: The width of the document in pixels.
+        """
+
+    def get_document_height(self) -> float:
+        """
+        Returns the height of the document.
+
+        :returns: The height of the document in pixels.
+        """
+
+    def get_page_count(self) -> int:
+        """
+        Returns the number of pages in the document.
+
+        :returns: The number of pages.
+        """
+
+    def get_page_size(self) -> PageSize:
+        """
+        Returns the initial page size.
+
+        :returns: The initial page size.
+        """
+
+    def get_page_size_at(self, page_index: int) -> PageSize:
+        """
+        Returns the size of the page at the specified index.
+
+        :param page_index: The index of the page.
+        :returns: The size of the specified page.
+        """
+
+    def get_page_margins(self) -> PageMargins:
+        """
+        Returns the initial page margins.
+
+        :returns: The initial page margins.
+        """
+
+    def get_media_type(self) -> MediaType:
+        """
+        Returns the media type.
+
+        :returns: The media type.
+        """
+
+    def set_metadata(self, metadata: PDFMetadata, value: str) -> None:
+        """
+        Sets the metadata of the PDF document.
+
+        The :attr:`PDF_METADATA_CREATION_DATE` and :attr:`PDF_METADATA_MODIFICATION_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss.
+        An optional timezone of the form "[+/-]hh:mm" or "Z" for UTC time can be appended. All other metadata values can be any string.
+
+        :param metadata: The type of metadata to set.
+        :param value: The value of the metadata.
+        """
+
+    def get_metadata(self, metadata: PDFMetadata) -> str:
+        """
+        Gets the value of the specified metadata.
+
+        :param metadata: The type of metadata to get.
+        :returns: The value of the specified metadata.
+        """
+
+    def load_url(self, url: str, user_style: str = ..., user_script: str = ...) -> None:
+        """
+        Loads the document from the specified URL.
+
+        :param url: The URL to load the document from.
+        :param user_style: An optional user-defined style to apply.
+        :param user_script: An optional user-defined script to run after the document has loaded.
+        """
+
+    def load_data(self, data: Union[str, bytes], mime_type: str = ..., text_encoding: str = ..., user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None:
+        """
+        Loads the document from the specified data.
+
+        :param data: The data to load the document from.
+        :param mime_type: The MIME type of the data.
+        :param text_encoding: The text encoding of the data.
+        :param user_style: An optional user-defined style to apply.
+        :param user_script: An optional user-defined script to run after the document has loaded.
+        :param base_url: The base URL for resolving relative URLs.
+        """
+
+    def load_image(self, data: Union[str, bytes], mime_type: str = ..., text_encoding: str = ..., user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None:
+        """
+        Loads the document from the specified image data.
+
+        :param data: The image data to load the document from.
+        :param mime_type: The MIME type of the data.
+        :param text_encoding: The text encoding of the data.
+        :param user_style: An optional user-defined style to apply.
+        :param user_script: An optional user-defined script to run after the document has loaded.
+        :param base_url: The base URL for resolving relative URLs.
+        """
+
+    def load_xml(self, data: str, user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None:
+        """
+        Loads the document from the specified XML data.
+
+        :param data: The XML data to load the document from.
+        :param user_style: An optional user-defined style to apply.
+        :param user_script: An optional user-defined script to run after the document has loaded.
+        :param base_url: The base URL for resolving relative URLs.
+        """
+
+    def load_html(self, data: str, user_style: str = ..., user_script: str = ..., base_url: str = ...) -> None:
+        """
+        Loads the document from the specified HTML data.
+
+        :param data: The HTML data to load the document from.
+        :param user_style: An optional user-defined style to apply.
+        :param user_script: An optional user-defined script to run after the document has loaded.
+        :param base_url: The base URL for resolving relative URLs.
+        """
+
+    def render_page(self, canvas: Canvas, page_index: int) -> None:
+        """
+        Renders the specified page to the given canvas.
+
+        :param canvas: The canvas to render the page on.
+        :param page_index: The index of the page to render.
+        """
+
+    def render_document(self, canvas: Canvas, rect: Tuple[float, float, float, float] = ...) -> None:
+        """
+        Renders the entire document to the given canvas.
+
+        :param canvas: The canvas to render the document on.
+        :param rect: The rectangle specifying the area to render.
+        """
+
+    def write_to_pdf(self, path: Union[str, bytes, os.PathLike], from_page: int = MIN_PAGE_COUNT, to_page: int = MAX_PAGE_COUNT, page_step: int = 1) -> None:
+        """
+        Writes the document to a file at the specified path as PDF.
+
+        :param path: The file path where the PDF document will be written.
+        :param from_page: The starting page index.
+        :param to_page: The ending page index.
+        :param page_step: The step value for iterating through pages.
+        """
+
+    def write_to_pdf_stream(self, stream: BinaryIO, from_page: int = MIN_PAGE_COUNT, to_page: int = MAX_PAGE_COUNT, page_step: int = 1) -> None:
+        """
+        Writes the document to a writable binary stream as PDF.
+
+        :param stream: The writable binary stream where the PDF document will be written.
+        :param from_page: The starting page index.
+        :param to_page: The ending page index.
+        :param page_step: The step value for iterating through pages.
+        """
+
+    def write_to_png(self, path: Union[str, bytes, os.PathLike], format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None:
+        """
+        Writes the document to a file at the specified path as PNG.
+
+        :param path: The file path where the PNG image will be written.
+        :param stream: The writable binary stream where the PNG image will be written.
+        :param format: The pixel format of the image.
+        """
+
+    def write_to_png_stream(self, stream: BinaryIO, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None:
+        """
+        Writes the document to a writable binary stream as PNG.
+
+        :param stream: The writable binary stream where the PNG image will be written.
+        :param format: The pixel format of the image.
+        """
 
 class ResourceData:
-    def __init__(self, content: Union[str, bytes], mime_type: str = ..., text_encoding: str = ...) -> None: ...
-    def get_content(self) -> memoryview: ...
-    def get_mime_type(self) -> str: ...
-    def get_text_encoding(self) -> str: ...
+    """
+    This class represents a piece of fetched data (resource)
+    """
+
+    def __init__(self, content: Union[str, bytes], mime_type: str = ..., text_encoding: str = ...) -> None:
+        """
+        Initializes a new instance of `ResourceData`.
+
+        :param content: The content of the resource.
+        :param mime_type: The MIME type of the resource.
+        :param text_encoding: The text encoding of the resource.
+        """
+
+    def get_content(self) -> memoryview:
+        """
+        Returns the content of the resource.
+
+        :return: The content of the resource.
+        """
+
+    def get_mime_type(self) -> str:
+        """
+        Returns the MIME type of the resource.
+
+        :return: The MIME type of the resource.
+        """
+
+    def get_text_encoding(self) -> str:
+        """
+        Returns the text encoding of the resource.
+
+        :return: The text encoding of the resource.
+        """
 
 class ResourceFetcher:
-    def __init__(self) -> None: ...
-    def load_url(self, url: str) -> ResourceData: ...
+    """
+    Base class for fetching external resources.
+    """
+
+    def load_url(self, url: str) -> ResourceData:
+        """
+        Loads a resource from the specified URL. This method can be overridden in derived classes.
+
+        :param url: The URL of the resource.
+        :return: The fetched resource data.
+        """
 
 class ResourceLoader:
+    """
+    Utility class for loading resources with a specified or default fetcher.
+    """
+
     default_fetcher: ResourceFetcher = ...
+    """
+    The default fetcher used for loading external resources.
+    """
+
     custom_fetcher: Optional[ResourceFetcher] = None
+    """
+    An optional custom fetcher that can be set.
+    """
 
 resource_loader: ResourceLoader = ...
+"""
+Singleton instance of `ResourceLoader`.
+"""
