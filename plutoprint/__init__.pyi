@@ -826,21 +826,21 @@ class ResourceData:
         """
         Returns the content of the resource.
 
-        :return: The content of the resource.
+        :returns: The content of the resource.
         """
 
     def get_mime_type(self) -> str:
         """
         Returns the MIME type of the resource.
 
-        :return: The MIME type of the resource.
+        :returns: The MIME type of the resource.
         """
 
     def get_text_encoding(self) -> str:
         """
         Returns the text encoding of the resource.
 
-        :return: The text encoding of the resource.
+        :returns: The text encoding of the resource.
         """
 
 class ResourceFetcher:
@@ -853,7 +853,7 @@ class ResourceFetcher:
         Loads a resource from the specified URL. This method can be overridden in derived classes.
 
         :param url: The URL of the resource.
-        :return: The fetched resource data.
+        :returns: The fetched resource data.
         """
 
 class ResourceLoader:
