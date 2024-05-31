@@ -3,11 +3,37 @@ name = 'plutoprint'
 description = 'Paged HTML rendering library'
 readme = 'README.md'
 requires-python = '>=3.8'
+keywords = ['html', 'css', 'svg', 'pdf', 'png', 'html2pdf', 'html2png']
 dynamic = ['version']
 license = {file = 'LICENSE'}
 authors = [
     {name = 'Samuel Ugochukwu', email = 'sammycageagle@gmail.com'},
 ]
+
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: Implementation :: PyPy',
+    'Topic :: Multimedia :: Graphics :: Graphics Conversion',
+    'Topic :: Multimedia :: Graphics :: Presentation',
+    'Topic :: Printing',
+    'Topic :: Text Processing :: Markup :: XML',
+    'Topic :: Text Processing :: Markup :: HTML'
+]
+
+[project.urls]
+homepage = 'https://github.com/plutoprint'
+code = 'https://github.com/plutoprint/plutoprint'
+issues = 'https://github.com/plutoprint/plutoprint/issues'
+donation = 'https://www.paypal.com/paypalme/sammycage'
 
 [build-system]
 build-backend = 'mesonpy'
