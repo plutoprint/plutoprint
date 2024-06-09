@@ -1207,6 +1207,14 @@ static PyObject* Book_write_to_png_stream(Book_Object* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
+static PyObject* Book_clear_content(Book_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_clear_content(self->book);
+    Py_END_ALLOW_THREADS
+    Py_RETURN_NONE;
+}
+
 static PyMethodDef Book_methods[] = {
     {"get_viewport_width", (PyCFunction)Book_get_viewport_width, METH_NOARGS},
     {"get_viewport_height", (PyCFunction)Book_get_viewport_height, METH_NOARGS},
@@ -1230,6 +1238,7 @@ static PyMethodDef Book_methods[] = {
     {"write_to_pdf_stream", (PyCFunction)Book_write_to_pdf_stream, METH_VARARGS | METH_KEYWORDS},
     {"write_to_png", (PyCFunction)Book_write_to_png, METH_VARARGS},
     {"write_to_png_stream", (PyCFunction)Book_write_to_png_stream, METH_VARARGS},
+    {"clear_content", (PyCFunction)Book_clear_content, METH_NOARGS},
     {NULL}
 };
 

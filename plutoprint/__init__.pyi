@@ -776,8 +776,8 @@ class Book:
         Writes the document to a file at the specified path as PDF.
 
         :param path: The file path where the PDF document will be written.
-        :param from_page: The starting page index.
-        :param to_page: The ending page index.
+        :param from_page: The starting page number.
+        :param to_page: The ending page number.
         :param page_step: The step value for iterating through pages.
         """
 
@@ -786,8 +786,8 @@ class Book:
         Writes the document to a writable binary stream as PDF.
 
         :param stream: The writable binary stream where the PDF document will be written.
-        :param from_page: The starting page index.
-        :param to_page: The ending page index.
+        :param from_page: The starting page number.
+        :param to_page: The ending page number.
         :param page_step: The step value for iterating through pages.
         """
 
@@ -806,6 +806,11 @@ class Book:
 
         :param stream: The writable binary stream where the PNG image will be written.
         :param format: The pixel format of the image.
+        """
+
+    def clear_content(self) -> None:
+        """
+        Clears the content of the document.
         """
 
 class ResourceData:
