@@ -846,7 +846,148 @@ static PyTypeObject PDFCanvas_Type = {
 
 typedef struct {
     PyObject_HEAD
+    plutobook_resource_data_t* resource;
+} ResourceData_Object;
+
+static PyObject* ResourceData_Create(plutobook_resource_data_t* resource);
+
+static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+{
+    static char* kwlist[] = { "content", "mime_type", "text_encoding", NULL };
+    Py_buffer content;
+    const char* mime_type = "";
+    const char* text_encoding = "";
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s*|ss:ResourceData.__init__", kwlist, &content, &mime_type, &text_encoding)) {
+        return NULL;
+    }
+
+    plutobook_resource_data_t* resource;
+    Py_BEGIN_ALLOW_THREADS
+    resource = plutobook_resource_data_create(content.buf, content.len, mime_type, text_encoding);
+    Py_END_ALLOW_THREADS
+    PyBuffer_Release(&content);
+    if(resource == NULL) {
+        PyErr_SetString(PyExc_MemoryError, "out of memory");
+        return NULL;
+    }
+
+    return ResourceData_Create(resource);
+}
+
+static void ResourceData_dealloc(ResourceData_Object* self)
+{
+    plutobook_resource_data_destroy(self->resource);
+    PyObject_Del(self);
+}
+
+static PyObject* ResourceData_get_content(ResourceData_Object* self, PyObject* args)
+{
+    return PyMemoryView_FromObject((PyObject*)self);
+}
+
+static PyObject* ResourceData_get_mime_type(ResourceData_Object* self, PyObject* args)
+{
+    return PyUnicode_FromString(plutobook_resource_data_get_mime_type(self->resource));
+}
+
+static PyObject* ResourceData_get_text_encoding(ResourceData_Object* self, PyObject* args)
+{
+    return PyUnicode_FromString(plutobook_resource_data_get_text_encoding(self->resource));
+}
+
+static int ResourceData_get_buffer(ResourceData_Object* self, Py_buffer* view, int flags)
+{
+    const char* content = plutobook_resource_data_get_content(self->resource);
+    unsigned int content_length = plutobook_resource_data_get_content_length(self->resource);
+    return PyBuffer_FillInfo(view, (PyObject*)self, (void*)content, content_length, 1, flags);
+}
+
+static PyBufferProcs ResourceData_as_buffer = {
+    (getbufferproc)ResourceData_get_buffer,
+    NULL
+};
+
+static PyMethodDef ResourceData_methods[] = {
+    {"get_content", (PyCFunction)ResourceData_get_content, METH_NOARGS},
+    {"get_mime_type", (PyCFunction)ResourceData_get_mime_type, METH_NOARGS},
+    {"get_text_encoding", (PyCFunction)ResourceData_get_text_encoding, METH_NOARGS},
+    {NULL}
+};
+
+static PyTypeObject ResourceData_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "plutoprint.ResourceData",
+    .tp_basicsize = sizeof(ResourceData_Object),
+    .tp_dealloc = (destructor)ResourceData_dealloc,
+    .tp_as_buffer = &ResourceData_as_buffer,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_methods = ResourceData_methods,
+    .tp_new = (newfunc)ResourceData_new
+};
+
+static PyObject* ResourceData_Create(plutobook_resource_data_t* resource)
+{
+    ResourceData_Object* resource_ob = PyObject_New(ResourceData_Object, &ResourceData_Type);
+    resource_ob->resource = resource;
+    return (PyObject*)resource_ob;
+}
+
+typedef PyObject ResourceFetcher_Object;
+
+static PyObject* ResourceFetcher_load_url(ResourceFetcher_Object* self, PyObject* args)
+{
+    const char* url;
+    if(!PyArg_ParseTuple(args, "s", &url)) {
+        return NULL;
+    }
+
+    plutobook_resource_data_t* resource;
+    Py_BEGIN_ALLOW_THREADS
+    resource = plutobook_default_resource_fetcher_load_url(url);
+    Py_END_ALLOW_THREADS
+    if(resource == NULL) {
+        PyErr_SetString(LoadError_Object, "unable to load url");
+        return NULL;
+    }
+
+    return ResourceData_Create(resource);
+}
+
+static PyMethodDef ResourceFetcher_methods[] = {
+    {"load_url", (PyCFunction)ResourceFetcher_load_url, METH_VARARGS},
+    {NULL}
+};
+
+static PyTypeObject ResourceFetcher_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "plutoprint.ResourceFetcher",
+    .tp_basicsize = sizeof(ResourceFetcher_Object),
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_methods = ResourceFetcher_methods,
+    .tp_new = PyType_GenericNew
+};
+
+plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
+{
+    PyGILState_STATE gstate = PyGILState_Ensure();
+    PyObject* result = PyObject_CallMethod((PyObject*)closure, "load_url", "(s)", url);
+    if(result == NULL || !PyObject_TypeCheck(result, &ResourceData_Type)) {
+        PyGILState_Release(gstate);
+        Py_XDECREF(result);
+        return NULL;
+    }
+
+    PyGILState_Release(gstate);
+    ResourceData_Object* resource_ob = (ResourceData_Object*)(result);
+    plutobook_resource_data_t* resource = plutobook_resource_data_reference(resource_ob->resource);
+    Py_DECREF(resource_ob);
+    return resource;
+}
+
+typedef struct {
+    PyObject_HEAD
     plutobook_t* book;
+    PyObject* custom_resource_fetcher;
 } Book_Object;
 
 static PyObject* Book_Create(plutobook_t* book);
@@ -883,6 +1024,7 @@ static PyObject* Book_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 static void Book_dealloc(Book_Object* self)
 {
     plutobook_destroy(self->book);
+    Py_XDECREF(self->custom_resource_fetcher);
     PyObject_Del(self);
 }
 
@@ -1079,6 +1221,14 @@ static PyObject* Book_load_html(Book_Object* self, PyObject* args, PyObject* kwd
     Py_RETURN_NONE;
 }
 
+static PyObject* Book_clear_content(Book_Object* self, PyObject* args)
+{
+    Py_BEGIN_ALLOW_THREADS
+    plutobook_clear_content(self->book);
+    Py_END_ALLOW_THREADS
+    Py_RETURN_NONE;
+}
+
 static PyObject* Book_render_page(Book_Object* self, PyObject* args)
 {
     Canvas_Object* canvas_ob;
@@ -1207,13 +1357,37 @@ static PyObject* Book_write_to_png_stream(Book_Object* self, PyObject* args)
     Py_RETURN_NONE;
 }
 
-static PyObject* Book_clear_content(Book_Object* self, PyObject* args)
+static PyObject* Book_get_custom_resource_fetcher(Book_Object* self, void* closure)
 {
-    Py_BEGIN_ALLOW_THREADS
-    plutobook_clear_content(self->book);
-    Py_END_ALLOW_THREADS
-    Py_RETURN_NONE;
+    if(self->custom_resource_fetcher == NULL)
+        Py_RETURN_NONE;
+    Py_INCREF(self->custom_resource_fetcher);
+    return self->custom_resource_fetcher;
 }
+
+static int Book_set_custom_resource_fetcher(Book_Object* self, PyObject* value, void* closure)
+{
+    if(value && value != Py_None && !PyObject_TypeCheck(value, &ResourceFetcher_Type)) {
+        PyErr_SetString(PyExc_TypeError, "value must be None or an instance of plutoprint.ResourceFetcher");
+        return -1;
+    }
+
+    if(value == NULL || value == Py_None) {
+        plutobook_set_custom_resource_fetcher(self->book, NULL, NULL);
+    } else {
+        plutobook_set_custom_resource_fetcher(self->book, resource_load_func, value);
+    }
+
+    Py_XINCREF(value);
+    Py_XDECREF(self->custom_resource_fetcher);
+    self->custom_resource_fetcher = value;
+    return 0;
+}
+
+static PyGetSetDef Book_getset[] = {
+    {"custom_resource_fetcher", (getter)Book_get_custom_resource_fetcher, (setter)Book_set_custom_resource_fetcher},
+    {NULL}
+};
 
 static PyMethodDef Book_methods[] = {
     {"get_viewport_width", (PyCFunction)Book_get_viewport_width, METH_NOARGS},
@@ -1232,13 +1406,13 @@ static PyMethodDef Book_methods[] = {
     {"load_image", (PyCFunction)Book_load_image, METH_VARARGS | METH_KEYWORDS},
     {"load_xml", (PyCFunction)Book_load_xml, METH_VARARGS | METH_KEYWORDS},
     {"load_html", (PyCFunction)Book_load_html, METH_VARARGS | METH_KEYWORDS},
+    {"clear_content", (PyCFunction)Book_clear_content, METH_NOARGS},
     {"render_page", (PyCFunction)Book_render_page, METH_VARARGS},
     {"render_document", (PyCFunction)Book_render_document, METH_VARARGS},
     {"write_to_pdf", (PyCFunction)Book_write_to_pdf, METH_VARARGS | METH_KEYWORDS},
     {"write_to_pdf_stream", (PyCFunction)Book_write_to_pdf_stream, METH_VARARGS | METH_KEYWORDS},
     {"write_to_png", (PyCFunction)Book_write_to_png, METH_VARARGS},
     {"write_to_png_stream", (PyCFunction)Book_write_to_png_stream, METH_VARARGS},
-    {"clear_content", (PyCFunction)Book_clear_content, METH_NOARGS},
     {NULL}
 };
 
@@ -1249,6 +1423,7 @@ static PyTypeObject Book_Type = {
     .tp_dealloc = (destructor)Book_dealloc,
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_methods = Book_methods,
+    .tp_getset = Book_getset,
     .tp_new = (newfunc)Book_new
 };
 
@@ -1256,220 +1431,8 @@ static PyObject* Book_Create(plutobook_t* book)
 {
     Book_Object* book_ob = PyObject_New(Book_Object, &Book_Type);
     book_ob->book = book;
+    book_ob->custom_resource_fetcher = NULL;
     return (PyObject*)book_ob;
-}
-
-typedef struct {
-    PyObject_HEAD
-    plutobook_resource_data_t* resource;
-} ResourceData_Object;
-
-static PyObject* ResourceData_Create(plutobook_resource_data_t* resource);
-
-static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
-{
-    static char* kwlist[] = { "content", "mime_type", "text_encoding", NULL };
-    Py_buffer content;
-    const char* mime_type = "";
-    const char* text_encoding = "";
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s*|ss:ResourceData.__init__", kwlist, &content, &mime_type, &text_encoding)) {
-        return NULL;
-    }
-
-    plutobook_resource_data_t* resource;
-    Py_BEGIN_ALLOW_THREADS
-    resource = plutobook_resource_data_create(content.buf, content.len, mime_type, text_encoding);
-    Py_END_ALLOW_THREADS
-    PyBuffer_Release(&content);
-    if(resource == NULL) {
-        PyErr_SetString(PyExc_MemoryError, "out of memory");
-        return NULL;
-    }
-
-    return ResourceData_Create(resource);
-}
-
-static void ResourceData_dealloc(ResourceData_Object* self)
-{
-    plutobook_resource_data_destroy(self->resource);
-    PyObject_Del(self);
-}
-
-static PyObject* ResourceData_get_content(ResourceData_Object* self, PyObject* args)
-{
-    return PyMemoryView_FromObject((PyObject*)self);
-}
-
-static PyObject* ResourceData_get_mime_type(ResourceData_Object* self, PyObject* args)
-{
-    return PyUnicode_FromString(plutobook_resource_data_get_mime_type(self->resource));
-}
-
-static PyObject* ResourceData_get_text_encoding(ResourceData_Object* self, PyObject* args)
-{
-    return PyUnicode_FromString(plutobook_resource_data_get_text_encoding(self->resource));
-}
-
-static int ResourceData_get_buffer(ResourceData_Object* self, Py_buffer* view, int flags)
-{
-    const char* content = plutobook_resource_data_get_content(self->resource);
-    unsigned int content_length = plutobook_resource_data_get_content_length(self->resource);
-    return PyBuffer_FillInfo(view, (PyObject*)self, (void*)content, content_length, 1, flags);
-}
-
-static PyBufferProcs ResourceData_as_buffer = {
-    (getbufferproc)ResourceData_get_buffer,
-    NULL
-};
-
-static PyMethodDef ResourceData_methods[] = {
-    {"get_content", (PyCFunction)ResourceData_get_content, METH_NOARGS},
-    {"get_mime_type", (PyCFunction)ResourceData_get_mime_type, METH_NOARGS},
-    {"get_text_encoding", (PyCFunction)ResourceData_get_text_encoding, METH_NOARGS},
-    {NULL}
-};
-
-static PyTypeObject ResourceData_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutoprint.ResourceData",
-    .tp_basicsize = sizeof(ResourceData_Object),
-    .tp_dealloc = (destructor)ResourceData_dealloc,
-    .tp_as_buffer = &ResourceData_as_buffer,
-    .tp_flags = Py_TPFLAGS_DEFAULT,
-    .tp_methods = ResourceData_methods,
-    .tp_new = (newfunc)ResourceData_new
-};
-
-static PyObject* ResourceData_Create(plutobook_resource_data_t* resource)
-{
-    ResourceData_Object* resource_ob = PyObject_New(ResourceData_Object, &ResourceData_Type);
-    resource_ob->resource = resource;
-    return (PyObject*)resource_ob;
-}
-
-typedef PyObject ResourceFetcher_Object;
-
-static PyObject* ResourceFetcher_load_url(ResourceFetcher_Object* self, PyObject* args)
-{
-    const char* url;
-    if(!PyArg_ParseTuple(args, "s", &url)) {
-        return NULL;
-    }
-
-    plutobook_resource_data_t* resource;
-    Py_BEGIN_ALLOW_THREADS
-    resource = plutobook_default_resource_fetcher_load_url(url);
-    Py_END_ALLOW_THREADS
-    if(resource == NULL) {
-        PyErr_SetString(LoadError_Object, "unable to load url");
-        return NULL;
-    }
-
-    return ResourceData_Create(resource);
-}
-
-static PyMethodDef ResourceFetcher_methods[] = {
-    {"load_url", (PyCFunction)ResourceFetcher_load_url, METH_VARARGS},
-    {NULL}
-};
-
-static PyTypeObject ResourceFetcher_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutoprint.ResourceFetcher",
-    .tp_basicsize = sizeof(ResourceFetcher_Object),
-    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-    .tp_methods = ResourceFetcher_methods,
-    .tp_new = PyType_GenericNew
-};
-
-typedef struct {
-    PyObject_HEAD
-    PyObject* default_fetcher;
-    PyObject* custom_fetcher;
-} ResourceLoader_Object;
-
-static PyObject* ResourceLoader_Create(void);
-
-static void ResourceLoader_dealloc(ResourceLoader_Object* self)
-{
-    Py_XDECREF(self->default_fetcher);
-    Py_XDECREF(self->custom_fetcher);
-    PyObject_Del(self);
-}
-
-static PyObject* ResourceLoader_get_default_fetcher(ResourceLoader_Object* self, void* closure)
-{
-    if(self->default_fetcher == NULL)
-        self->default_fetcher = PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type);
-    Py_INCREF(self->default_fetcher);
-    return self->default_fetcher;
-}
-
-static PyObject* ResourceLoader_get_custom_fetcher(ResourceLoader_Object* self, void* closure)
-{
-    if(self->custom_fetcher == NULL)
-        Py_RETURN_NONE;
-    Py_INCREF(self->custom_fetcher);
-    return self->custom_fetcher;
-}
-
-plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
-{
-    PyGILState_STATE gstate = PyGILState_Ensure();
-    PyObject* result = PyObject_CallMethod((PyObject*)closure, "load_url", "(s)", url);
-    if(result == NULL || !PyObject_TypeCheck(result, &ResourceData_Type)) {
-        PyGILState_Release(gstate);
-        Py_XDECREF(result);
-        return NULL;
-    }
-
-    PyGILState_Release(gstate);
-    ResourceData_Object* resource_ob = (ResourceData_Object*)(result);
-    plutobook_resource_data_t* resource = plutobook_resource_data_reference(resource_ob->resource);
-    Py_DECREF(resource_ob);
-    return resource;
-}
-
-static int ResourceLoader_set_custom_fetcher(ResourceLoader_Object* self, PyObject* value, void* closure)
-{
-    if(value && value != Py_None && !PyObject_TypeCheck(value, &ResourceFetcher_Type)) {
-        PyErr_SetString(PyExc_TypeError, "value must be None or an instance of plutoprint.ResourceFetcher");
-        return -1;
-    }
-
-    if(value == NULL || value == Py_None) {
-        plutobook_set_custom_resource_fetcher(NULL, NULL);
-    } else {
-        plutobook_set_custom_resource_fetcher(resource_load_func, value);
-    }
-
-    Py_XINCREF(value);
-    Py_XDECREF(self->custom_fetcher);
-    self->custom_fetcher = value;
-    return 0;
-}
-
-static PyGetSetDef ResourceLoader_getset[] = {
-    {"default_fetcher", (getter)ResourceLoader_get_default_fetcher, (setter)NULL},
-    {"custom_fetcher", (getter)ResourceLoader_get_custom_fetcher, (setter)ResourceLoader_set_custom_fetcher},
-    {NULL}
-};
-
-static PyTypeObject ResourceLoader_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "plutoprint.ResourceLoader",
-    .tp_basicsize = sizeof(ResourceLoader_Object),
-    .tp_dealloc = (destructor)ResourceLoader_dealloc,
-    .tp_flags = Py_TPFLAGS_DEFAULT,
-    .tp_getset = ResourceLoader_getset
-};
-
-static PyObject* ResourceLoader_Create(void)
-{
-    ResourceLoader_Object* loader_ob = PyObject_New(ResourceLoader_Object, &ResourceLoader_Type);
-    loader_ob->custom_fetcher = NULL;
-    loader_ob->default_fetcher = NULL;
-    return (PyObject*)loader_ob;
 }
 
 static PyObject* module_version(PyObject* self, PyObject* args)
@@ -1512,8 +1475,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
         || PyType_Ready(&PDFMetadata_Type) < 0
         || PyType_Ready(&ImageFormat_Type) < 0
         || PyType_Ready(&ResourceData_Type) < 0
-        || PyType_Ready(&ResourceFetcher_Type) < 0
-        || PyType_Ready(&ResourceLoader_Type) < 0) {
+        || PyType_Ready(&ResourceFetcher_Type) < 0) {
         return NULL;
     }
 
@@ -1533,7 +1495,6 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     Py_INCREF(&ImageFormat_Type);
     Py_INCREF(&ResourceData_Type);
     Py_INCREF(&ResourceFetcher_Type);
-    Py_INCREF(&ResourceLoader_Type);
 
     PyModule_AddObject(module, "PageSize", (PyObject*)&PageSize_Type);
     PyModule_AddObject(module, "PageMargins", (PyObject*)&PageMargins_Type);
@@ -1546,7 +1507,6 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module, "ImageFormat", (PyObject*)&ImageFormat_Type);
     PyModule_AddObject(module, "ResourceData", (PyObject*)&ResourceData_Type);
     PyModule_AddObject(module, "ResourceFetcher", (PyObject*)&ResourceFetcher_Type);
-    PyModule_AddObject(module, "ResourceLoader", (PyObject*)&ResourceLoader_Type);
 
     LoadError_Object = PyErr_NewException("plutoprint.LoadError", NULL, NULL);
     WriteError_Object = PyErr_NewException("plutoprint.WriteError", NULL, NULL);
@@ -1612,6 +1572,6 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
 
     PyModule_AddStringConstant(module, "version", PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
     PyModule_AddObject(module, "version_info", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
-    PyModule_AddObject(module, "resource_loader", ResourceLoader_Create());
+    PyModule_AddObject(module, "default_resource_fetcher", PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type));
     return module;
 }

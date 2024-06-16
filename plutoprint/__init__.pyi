@@ -599,6 +599,59 @@ class PDFCanvas(Canvas):
         Emits the current page and starts a new page.
         """
 
+class ResourceData:
+    """
+    This class represents a piece of fetched data (resource)
+    """
+
+    def __init__(self, content: Union[str, bytes], mime_type: str = ..., text_encoding: str = ...) -> None:
+        """
+        Initializes a new instance of `ResourceData`.
+
+        :param content: The content of the resource.
+        :param mime_type: The MIME type of the resource.
+        :param text_encoding: The text encoding of the resource.
+        """
+
+    def get_content(self) -> memoryview:
+        """
+        Returns the content of the resource.
+
+        :returns: The content of the resource.
+        """
+
+    def get_mime_type(self) -> str:
+        """
+        Returns the MIME type of the resource.
+
+        :returns: The MIME type of the resource.
+        """
+
+    def get_text_encoding(self) -> str:
+        """
+        Returns the text encoding of the resource.
+
+        :returns: The text encoding of the resource.
+        """
+
+class ResourceFetcher:
+    """
+    Base class for fetching external resources.
+    """
+
+    def load_url(self, url: str) -> ResourceData:
+        """
+        Loads a resource from the specified URL. This method can be overridden in derived classes.
+
+        :param url: The URL of the resource.
+        :returns: The fetched resource data.
+        """
+
+default_resource_fetcher: ResourceFetcher = ...
+"""
+Singleton instance of `ResourceFetcher`.
+"""
+
 MIN_PAGE_COUNT: int = ...
 """
 This constant defines an index that is guaranteed to be less than the valid page count. 
@@ -755,6 +808,11 @@ class Book:
         :param base_url: The base URL for resolving relative URLs.
         """
 
+    def clear_content(self) -> None:
+        """
+        Clears the content of the document.
+        """
+
     def render_page(self, canvas: Canvas, page_index: int) -> None:
         """
         Renders the specified page to the given canvas.
@@ -808,75 +866,4 @@ class Book:
         :param format: The pixel format of the image.
         """
 
-    def clear_content(self) -> None:
-        """
-        Clears the content of the document.
-        """
-
-class ResourceData:
-    """
-    This class represents a piece of fetched data (resource)
-    """
-
-    def __init__(self, content: Union[str, bytes], mime_type: str = ..., text_encoding: str = ...) -> None:
-        """
-        Initializes a new instance of `ResourceData`.
-
-        :param content: The content of the resource.
-        :param mime_type: The MIME type of the resource.
-        :param text_encoding: The text encoding of the resource.
-        """
-
-    def get_content(self) -> memoryview:
-        """
-        Returns the content of the resource.
-
-        :returns: The content of the resource.
-        """
-
-    def get_mime_type(self) -> str:
-        """
-        Returns the MIME type of the resource.
-
-        :returns: The MIME type of the resource.
-        """
-
-    def get_text_encoding(self) -> str:
-        """
-        Returns the text encoding of the resource.
-
-        :returns: The text encoding of the resource.
-        """
-
-class ResourceFetcher:
-    """
-    Base class for fetching external resources.
-    """
-
-    def load_url(self, url: str) -> ResourceData:
-        """
-        Loads a resource from the specified URL. This method can be overridden in derived classes.
-
-        :param url: The URL of the resource.
-        :returns: The fetched resource data.
-        """
-
-class ResourceLoader:
-    """
-    Utility class for loading resources with a specified or default fetcher.
-    """
-
-    default_fetcher: ResourceFetcher = ...
-    """
-    The default fetcher used for loading external resources.
-    """
-
-    custom_fetcher: Optional[ResourceFetcher] = None
-    """
-    An optional custom fetcher that can be set.
-    """
-
-resource_loader: ResourceLoader = ...
-"""
-Singleton instance of `ResourceLoader`.
-"""
+    custom_resource_fetcher: Optional[ResourceFetcher] = None
