@@ -851,23 +851,34 @@ typedef struct {
 
 static PyObject* ResourceData_Create(plutobook_resource_data_t* resource);
 
+static void resource_destroy_func(void* data)
+{
+    Py_buffer* buffer = (Py_buffer*)data;
+    PyGILState_STATE gstate = PyGILState_Ensure();
+    PyBuffer_Release(buffer);
+    PyMem_Free(buffer);
+    PyGILState_Release(gstate);
+}
+
 static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
 {
     static char* kwlist[] = { "content", "mime_type", "text_encoding", NULL };
-    Py_buffer content;
+    Py_buffer* content = PyMem_Malloc(sizeof(Py_buffer));
     const char* mime_type = "";
     const char* text_encoding = "";
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s*|ss:ResourceData.__init__", kwlist, &content, &mime_type, &text_encoding)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s*|ss:ResourceData.__init__", kwlist, content, &mime_type, &text_encoding)) {
+        PyMem_Free(content);
         return NULL;
     }
 
     plutobook_resource_data_t* resource;
     Py_BEGIN_ALLOW_THREADS
-    resource = plutobook_resource_data_create(content.buf, content.len, mime_type, text_encoding);
+    resource = plutobook_resource_data_create_without_copy(content->buf, content->len, mime_type, text_encoding, resource_destroy_func, content);
     Py_END_ALLOW_THREADS
-    PyBuffer_Release(&content);
     if(resource == NULL) {
         PyErr_SetString(PyExc_MemoryError, "out of memory");
+        PyBuffer_Release(content);
+        PyMem_Free(content);
         return NULL;
     }
 
@@ -967,7 +978,12 @@ static PyTypeObject ResourceFetcher_Type = {
     .tp_new = PyType_GenericNew
 };
 
-plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
+static PyObject* ResourceFetcher_Create(void)
+{
+    return PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type);
+}
+
+static plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
 {
     PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject* result = PyObject_CallMethod((PyObject*)closure, "load_url", "(s)", url);
@@ -1572,6 +1588,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
 
     PyModule_AddStringConstant(module, "version", PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
     PyModule_AddObject(module, "version_info", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
-    PyModule_AddObject(module, "default_resource_fetcher", PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type));
+
+    PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());
     return module;
 }
