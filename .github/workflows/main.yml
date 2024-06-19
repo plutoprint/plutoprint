@@ -44,7 +44,6 @@ jobs:
             mingw-w64-x86_64-curl-winssl
             mingw-w64-x86_64-libjpeg-turbo
             mingw-w64-x86_64-libwebp
-            mingw-w64-x86_64-spdlog
             mingw-w64-x86_64-meson
             mingw-w64-x86_64-ninja
             mingw-w64-x86_64-pkgconf
@@ -66,7 +65,7 @@ jobs:
             --wrap-mode=nodownload \
             --prefer-static \
             -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -lstdc++' \
-            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DSPDLOG_HEADER_ONLY'
+            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB'
           meson install --strip -C build
 
       - name: Copy pkgconf
