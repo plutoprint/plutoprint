@@ -418,24 +418,24 @@ class Canvas:
         """
         Multiplies the current transformation matrix with the specified matrix.
 
-        :param a: The element at position (1, 1) of the transformation matrix.
-        :param b: The element at position (1, 2) of the transformation matrix.
-        :param c: The element at position (2, 1) of the transformation matrix.
-        :param d: The element at position (2, 2) of the transformation matrix.
-        :param e: The element at position (3, 1) of the transformation matrix.
-        :param f: The element at position (3, 2) of the transformation matrix.
+        :param a: The horizontal scaling factor.
+        :param b: The horizontal skewing factor.
+        :param c: The vertical skewing factor.
+        :param d: The vertical scaling factor.
+        :param e: The horizontal translation offset.
+        :param f: The vertical translation offset.
         """
 
     def set_matrix(self, a: float, b: float, c: float, d: float, e: float, f: float) -> None:
         """
         Resets the transformation matrix to the specified matrix.
 
-        :param a: The element at position (1, 1) of the transformation matrix.
-        :param b: The element at position (1, 2) of the transformation matrix.
-        :param c: The element at position (2, 1) of the transformation matrix.
-        :param d: The element at position (2, 2) of the transformation matrix.
-        :param e: The element at position (3, 1) of the transformation matrix.
-        :param f: The element at position (3, 2) of the transformation matrix.
+        :param a: The horizontal scaling factor.
+        :param b: The horizontal skewing factor.
+        :param c: The vertical skewing factor.
+        :param d: The vertical scaling factor.
+        :param e: The horizontal translation offset.
+        :param f: The vertical translation offset.
         """
 
     def reset_matrix(self) -> None:
