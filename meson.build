@@ -10,6 +10,7 @@ add_project_arguments('-DPLUTOPRINT_VERSION_MINOR=@0@'.format(version_minor), la
 add_project_arguments('-DPLUTOPRINT_VERSION_MICRO=@0@'.format(version_micro), language: ['cpp', 'c'])
 
 python = import('python').find_installation(pure: false)
+
 plutoprint_deps = [python.dependency()]
 if not get_option('sdist')
     plutoprint_deps += dependency('plutobook', required: true)
