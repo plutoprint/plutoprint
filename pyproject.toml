@@ -38,3 +38,7 @@ donation = 'https://www.paypal.com/paypalme/sammycage'
 [build-system]
 build-backend = 'mesonpy'
 requires = ['meson-python']
+
+[tool.meson-python.args]
+setup = ['--default-library=static']
+install = ['--skip-subprojects']
