@@ -26,7 +26,7 @@ static PyObject* PageSize_new(PyTypeObject* type, PyObject* args, PyObject* kwds
 
 static void PageSize_dealloc(PageSize_Object* self)
 {
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* PageSize_repr(PageSize_Object* self)
@@ -140,7 +140,7 @@ static PyObject* PageMargins_new(PyTypeObject* type, PyObject* args, PyObject* k
 
 static void PageMargins_dealloc(PageMargins_Object* self)
 {
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* PageMargins_repr(PageMargins_Object* self)
@@ -211,7 +211,7 @@ typedef struct {
 
 static void MediaType_dealloc(MediaType_Object* self)
 {
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* MediaType_repr(MediaType_Object* self)
@@ -259,7 +259,7 @@ typedef struct {
 
 static void PDFMetadata_dealloc(PDFMetadata_Object* self)
 {
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* PDFMetadata_repr(PDFMetadata_Object* self)
@@ -317,7 +317,7 @@ typedef struct {
 
 static void ImageFormat_dealloc(ImageFormat_Object* self)
 {
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* ImageFormat_repr(ImageFormat_Object* self)
@@ -374,7 +374,7 @@ static void Canvas_dealloc(Canvas_Object* self)
 {
     plutobook_canvas_destroy(self->canvas);
     Py_XDECREF(self->data);
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* LoadError_Object;
@@ -888,7 +888,7 @@ static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* 
 static void ResourceData_dealloc(ResourceData_Object* self)
 {
     plutobook_resource_data_destroy(self->resource);
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* ResourceData_get_content(ResourceData_Object* self, PyObject* args)
@@ -1041,7 +1041,7 @@ static void Book_dealloc(Book_Object* self)
 {
     plutobook_destroy(self->book);
     Py_XDECREF(self->custom_resource_fetcher);
-    PyObject_Del(self);
+    Py_TYPE(self)->tp_free(self);
 }
 
 static PyObject* Book_get_viewport_width(Book_Object* self, PyObject* args)
