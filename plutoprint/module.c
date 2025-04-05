@@ -873,7 +873,7 @@ static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* 
 
     plutobook_resource_data_t* resource;
     Py_BEGIN_ALLOW_THREADS
-    resource = plutobook_resource_data_create_without_copy(content->buf, content->len, mime_type, text_encoding, resource_destroy_func, content);
+    resource = plutobook_resource_data_create_with_callback(content->buf, content->len, mime_type, text_encoding, resource_destroy_func, content);
     Py_END_ALLOW_THREADS
     if(resource == NULL) {
         PyErr_SetString(PyExc_MemoryError, "out of memory");
