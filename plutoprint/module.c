@@ -1586,8 +1586,8 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
-    PyModule_AddStringConstant(module, "version", PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
-    PyModule_AddObject(module, "version_info", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
+    PyModule_AddStringConstant(module, "__version__", PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
+    PyModule_AddObject(module, "__version_info__", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
 
     PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());
     return module;

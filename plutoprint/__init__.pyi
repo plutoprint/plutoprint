@@ -2,12 +2,12 @@ from __future__ import annotations
 from typing import Type, Union, Optional, BinaryIO, Tuple
 import os
 
-version: str = ...
+__version__: str = ...
 """
 Represents the version of plutoprint as a string in the format "major.minor.micro".
 """
 
-version_info: Tuple[int, int, int] = ...
+__version_info__: Tuple[int, int, int] = ...
 """
 Represents the version of plutoprint as a tuple of three integers: (major, minor, micro).
 """
