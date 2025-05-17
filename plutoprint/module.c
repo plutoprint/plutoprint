@@ -4,6 +4,19 @@
 
 #include <plutobook.h>
 
+#ifndef PLUTOPRINT_VERSION_MAJOR
+#define PLUTOPRINT_VERSION_MAJOR 0
+#endif
+#ifndef PLUTOPRINT_VERSION_MINOR
+#define PLUTOPRINT_VERSION_MINOR 0
+#endif
+#ifndef PLUTOPRINT_VERSION_MICRO
+#define PLUTOPRINT_VERSION_MICRO 0
+#endif
+
+#define PLUTOPRINT_VERSION PLUTOBOOK_VERSION_ENCODE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO)
+#define PLUTOPRINT_VERSION_STRING PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO)
+
 typedef struct {
     PyObject_HEAD
     plutobook_page_size_t size;
@@ -1451,19 +1464,15 @@ static PyObject* Book_Create(plutobook_t* book)
     return (PyObject*)book_ob;
 }
 
-static PyObject* module_version(PyObject* self, PyObject* args)
+static PyObject* module_build_info(PyObject* self, PyObject* args)
 {
-    return PyLong_FromLong(plutobook_version());
-}
-
-static PyObject* module_version_string(PyObject* self, PyObject* args)
-{
-    return PyUnicode_FromString(plutobook_version_string());
+    char buf[256];
+    PyOS_snprintf(buf, sizeof(buf), "%s\nPlutoPrint version: %s\nPython version: %s\n", plutobook_build_info(), PLUTOPRINT_VERSION_STRING, PY_VERSION);
+    return PyUnicode_FromString(buf);
 }
 
 static PyMethodDef module_methods[] = {
-    {"version", (PyCFunction)module_version, METH_NOARGS},
-    {"version_string", (PyCFunction)module_version_string, METH_NOARGS},
+    {"build_info", (PyCFunction)module_build_info, METH_NOARGS},
     {NULL},
 };
 
@@ -1586,7 +1595,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
-    PyModule_AddStringConstant(module, "__version__", PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
+    PyModule_AddStringConstant(module, "__version__", PLUTOPRINT_VERSION_STRING);
     PyModule_AddObject(module, "__version_info__", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
 
     PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());

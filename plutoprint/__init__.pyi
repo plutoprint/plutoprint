@@ -67,6 +67,11 @@ UNITS_PX: float = ...
 Represents the conversion factor for pixels (72 / 96 pt).
 """
 
+def build_info() -> str:
+    """
+    :returns: Build metadata of the plutoprint library.
+    """
+
 class PageSize:
     """
     The `PageSize` class represents the dimensions of a page in points (1 / 72 inch).
