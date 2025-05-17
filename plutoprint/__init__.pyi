@@ -654,7 +654,7 @@ class ResourceFetcher:
 
 default_resource_fetcher: ResourceFetcher = ...
 """
-Singleton instance of `ResourceFetcher`.
+The default fetcher used to load external resources such as stylesheets, fonts, or images.
 """
 
 MIN_PAGE_COUNT: int = ...
@@ -872,3 +872,6 @@ class Book:
         """
 
     custom_resource_fetcher: Optional[ResourceFetcher] = None
+    """
+    Optional fetcher that overrides the default when loading resources for this document.
+    """
