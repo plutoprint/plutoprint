@@ -31,7 +31,7 @@ METADATA_MAP = {
 }
 
 def length(value):
-    match = re.fullmatch(r'(\d+(?:.\d+)?)(mm|cm|in|pt|px)', value.lower())
+    match = re.fullmatch(r'(\d+(?:.\d+)?)(pt|pc|in|cm|mm|px)', value.lower())
     if not match:
         raise argparse.ArgumentTypeError(f"invalid length value: '{value}'")
     num, unit = match.groups()
@@ -46,7 +46,7 @@ def main():
     parser.add_argument('--size', type=str.lower, choices=PAGE_SIZES, help='Specify the page size (eg. A4).')
     parser.add_argument('--margin', type=length, metavar='MARGIN', help='Specify the page margin (eg. 72pt).')
     parser.add_argument('--media', type=str.lower, choices=['print', 'screen'], help='Specify the media type (eg. print, screen).')
-    parser.add_argument('--orientation', type=str.lower, choices=['portrait', 'landscape'], help='Specify the page size (eg. portrait, landscape).')
+    parser.add_argument('--orientation', type=str.lower, choices=['portrait', 'landscape'], help='Specify the page orientation (eg. portrait, landscape).')
 
     parser.add_argument('--margin-top', type=length, metavar='MARGIN', help='Specify the page margin top (eg. 72pt).')
     parser.add_argument('--margin-right', type=length, metavar='MARGIN', help='Specify the page margin right (eg. 72pt).')
@@ -60,8 +60,8 @@ def main():
     parser.add_argument('--page-end', type=int, default=plutoprint.MAX_PAGE_COUNT, metavar='END', help='Specify the ending page number to include in the output PDF.')
     parser.add_argument('--page-step', type=int, default=1, metavar='STEP', help='Specify the step value when iterating through pages.')
 
-    parser.add_argument('--base-url', default=str(), metavar='URL', help='Specify the base URL of the input document.')
-    parser.add_argument('--user-style', default=str(), metavar='STYLE', help='Specify the user style of the input document.')
+    parser.add_argument('--user-style', default=str(), metavar='STYLE', help='Specify the user-defined CSS style to apply to the input document.')
+    parser.add_argument('--user-script', default=str(), metavar='SCRIPT', help='Specify the user-defined JavaScript to run after the document has fully loaded.')
 
     parser.add_argument('--title', help='Set PDF document title.')
     parser.add_argument('--subject', help='Set PDF document subject.')
@@ -103,7 +103,7 @@ def main():
         media = plutoprint.MEDIA_TYPE_SCREEN
 
     book = plutoprint.Book(size, margins, media)
-    book.load_url(args.input, args.user_style, args.base_url)
+    book.load_url(args.input, args.user_style, args.user_script)
 
     for attr, meta in METADATA_MAP.items():
         value = getattr(args, attr)
