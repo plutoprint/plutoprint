@@ -69,6 +69,8 @@ def main():
     parser.add_argument('--keywords', help='Set PDF document keywords.')
     parser.add_argument('--creator', help='Set PDF document creator.')
 
+    parser.add_argument('--version', action='version', version=f'PlutoPrint v{plutoprint.__version__}')
+
     args = parser.parse_args()
 
     size = plutoprint.PAGE_SIZE_A4;
