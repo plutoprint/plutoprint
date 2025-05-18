@@ -12,6 +12,11 @@ __version_info__: Tuple[int, int, int] = ...
 Represents the version of plutoprint as a tuple of three integers: (major, minor, micro).
 """
 
+__build_info__: str = ...
+"""
+Represents the build metadata of plutoprint as a string.
+"""
+
 PLUTOBOOK_VERSION: int = ...
 """
 Represents the version of the plutobook library encoded as a single integer.
@@ -66,11 +71,6 @@ UNITS_PX: float = ...
 """
 Represents the conversion factor for pixels (72 / 96 pt).
 """
-
-def build_info() -> str:
-    """
-    :returns: Build metadata of the plutoprint library.
-    """
 
 class PageSize:
     """

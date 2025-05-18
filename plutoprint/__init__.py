@@ -1,7 +1,7 @@
 from ._plutoprint import (
     __version__,
     __version_info__,
-    build_info,
+    __build_info__,
 
     PageSize,
     PageMargins,
