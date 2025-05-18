@@ -73,7 +73,7 @@ def main():
 
     args = parser.parse_args()
 
-    size = plutoprint.PAGE_SIZE_A4;
+    size = plutoprint.PAGE_SIZE_A4
     if args.size:
         size = PAGE_SIZES[args.size]
     if args.width:
@@ -90,15 +90,15 @@ def main():
     if args.margin:
         margins = plutoprint.PageMargins(args.margin)
     if args.margin_top:
-        margins = plutoprint.PageMargins(args.margin_top, margins.right, margins.bottom, margins.left);
+        margins = plutoprint.PageMargins(args.margin_top, margins.right, margins.bottom, margins.left)
     if args.margin_right:
-        margins = plutoprint.PageMargins(margins.top, args.margin_right, margins.bottom, margins.left);
+        margins = plutoprint.PageMargins(margins.top, args.margin_right, margins.bottom, margins.left)
     if args.margin_bottom:
-        margins = plutoprint.PageMargins(margins.top, margins.right, args.margin_bottom, margins.left);
+        margins = plutoprint.PageMargins(margins.top, margins.right, args.margin_bottom, margins.left)
     if args.margin_left:
-        margins = plutoprint.PageMargins(margins.top, margins.right, margins.bottom, args.margin_left);
+        margins = plutoprint.PageMargins(margins.top, margins.right, margins.bottom, args.margin_left)
 
-    media = plutoprint.MEDIA_TYPE_PRINT;
+    media = plutoprint.MEDIA_TYPE_PRINT
     if args.media == 'screen':
         media = plutoprint.MEDIA_TYPE_SCREEN
 

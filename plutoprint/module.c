@@ -1584,7 +1584,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
 
     PyModule_AddStringConstant(module, "__version__", PLUTOPRINT_VERSION_STRING);
     PyModule_AddObject(module, "__version_info__", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
-    PyModule_AddObject(module, "__build_info__", PyUnicode_FromFormat("%s\nPlutoPrint version: %s\nPython version: %s\n", plutobook_build_info(), PLUTOPRINT_VERSION_STRING, PY_VERSION));;
+    PyModule_AddObject(module, "__build_info__", PyUnicode_FromFormat("%s\nPlutoPrint version: %s\nPython version: %s\n", plutobook_build_info(), PLUTOPRINT_VERSION_STRING, PY_VERSION));
 
     PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());
     return module;
