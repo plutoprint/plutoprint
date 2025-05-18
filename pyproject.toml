@@ -35,6 +35,9 @@ code = 'https://github.com/plutoprint/plutoprint'
 issues = 'https://github.com/plutoprint/plutoprint/issues'
 donation = 'https://www.paypal.com/paypalme/sammycage'
 
+[project.scripts]
+plutoprint = 'plutoprint.__main__:main'
+
 [build-system]
 build-backend = 'mesonpy'
 requires = ['meson-python']
