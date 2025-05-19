@@ -966,7 +966,7 @@ static PyObject* ResourceFetcher_fetch_url(ResourceFetcher_Object* self, PyObjec
 
     plutobook_resource_data_t* resource;
     Py_BEGIN_ALLOW_THREADS
-    resource = plutobook_default_resource_fetcher_fetch_url(url);
+    resource = plutobook_fetch_url(url);
     Py_END_ALLOW_THREADS
     if(resource == NULL) {
         PyErr_SetString(LoadError_Object, "unable to fetch url");
