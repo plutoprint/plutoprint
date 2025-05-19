@@ -644,9 +644,9 @@ class ResourceFetcher:
     Base class for fetching external resources.
     """
 
-    def load_url(self, url: str) -> ResourceData:
+    def fetch_url(self, url: str) -> ResourceData:
         """
-        Loads a resource from the specified URL. This method can be overridden in derived classes.
+        Fetches a resource from the specified URL. This method can be overridden in derived classes.
 
         :param url: The URL of the resource.
         :returns: The fetched resource data.
@@ -654,7 +654,7 @@ class ResourceFetcher:
 
 default_resource_fetcher: ResourceFetcher = ...
 """
-The default fetcher used to load external resources such as stylesheets, fonts, or images.
+The default fetcher used to fetch external resources such as stylesheets, fonts, or images.
 """
 
 MIN_PAGE_COUNT: int = ...
@@ -873,5 +873,5 @@ class Book:
 
     custom_resource_fetcher: Optional[ResourceFetcher] = None
     """
-    Optional fetcher that overrides the default when loading resources for this document.
+    Optional fetcher that overrides the default when fetching resources for this document.
     """

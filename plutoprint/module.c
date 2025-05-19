@@ -957,7 +957,7 @@ static PyObject* ResourceData_Create(plutobook_resource_data_t* resource)
 
 typedef PyObject ResourceFetcher_Object;
 
-static PyObject* ResourceFetcher_load_url(ResourceFetcher_Object* self, PyObject* args)
+static PyObject* ResourceFetcher_fetch_url(ResourceFetcher_Object* self, PyObject* args)
 {
     const char* url;
     if(!PyArg_ParseTuple(args, "s", &url)) {
@@ -966,10 +966,10 @@ static PyObject* ResourceFetcher_load_url(ResourceFetcher_Object* self, PyObject
 
     plutobook_resource_data_t* resource;
     Py_BEGIN_ALLOW_THREADS
-    resource = plutobook_default_resource_fetcher_load_url(url);
+    resource = plutobook_default_resource_fetcher_fetch_url(url);
     Py_END_ALLOW_THREADS
     if(resource == NULL) {
-        PyErr_SetString(LoadError_Object, "unable to load url");
+        PyErr_SetString(LoadError_Object, "unable to fetch url");
         return NULL;
     }
 
@@ -977,7 +977,7 @@ static PyObject* ResourceFetcher_load_url(ResourceFetcher_Object* self, PyObject
 }
 
 static PyMethodDef ResourceFetcher_methods[] = {
-    {"load_url", (PyCFunction)ResourceFetcher_load_url, METH_VARARGS},
+    {"fetch_url", (PyCFunction)ResourceFetcher_fetch_url, METH_VARARGS},
     {NULL}
 };
 
@@ -995,10 +995,10 @@ static PyObject* ResourceFetcher_Create(void)
     return PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type);
 }
 
-static plutobook_resource_data_t* resource_load_func(void* closure, const char* url)
+static plutobook_resource_data_t* resource_fetch_func(void* closure, const char* url)
 {
     PyGILState_STATE gstate = PyGILState_Ensure();
-    PyObject* result = PyObject_CallMethod((PyObject*)closure, "load_url", "(s)", url);
+    PyObject* result = PyObject_CallMethod((PyObject*)closure, "fetch_url", "(s)", url);
     if(result == NULL || !PyObject_TypeCheck(result, &ResourceData_Type)) {
         PyGILState_Release(gstate);
         Py_XDECREF(result);
@@ -1403,7 +1403,7 @@ static int Book_set_custom_resource_fetcher(Book_Object* self, PyObject* value, 
     if(value == NULL || value == Py_None) {
         plutobook_set_custom_resource_fetcher(self->book, NULL, NULL);
     } else {
-        plutobook_set_custom_resource_fetcher(self->book, resource_load_func, value);
+        plutobook_set_custom_resource_fetcher(self->book, resource_fetch_func, value);
     }
 
     Py_XINCREF(value);
