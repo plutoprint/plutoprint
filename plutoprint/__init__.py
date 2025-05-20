@@ -15,9 +15,7 @@ from ._plutoprint import (
     ResourceData,
     ResourceFetcher,
 
-    LoadError,
-    WriteError,
-    CanvasError,
+    Error,
 
     PAGE_SIZE_NONE,
     PAGE_SIZE_LETTER,

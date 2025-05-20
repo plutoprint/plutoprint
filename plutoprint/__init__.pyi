@@ -352,19 +352,9 @@ On a big-endian machine, the first pixel is in the uppermost bit,
 on a little-endian machine the first pixel is in the least-significant bit.
 """
 
-class LoadError(Exception):
+class Error(Exception):
     """
-    An exception class representing errors that occur during loading operations.
-    """
-
-class WriteError(Exception):
-    """
-    An exception class representing errors that occur during writing operations.
-    """
-
-class CanvasError(Exception):
-    """
-    An exception class representing errors related to canvas operations.
+    An exception class representing errors that occur in the plutoprint library.
     """
 
 class Canvas:
