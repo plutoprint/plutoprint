@@ -1422,14 +1422,14 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     if(PyType_Ready(&PageSize_Type) < 0
         || PyType_Ready(&PageMargins_Type) < 0
         || PyType_Ready(&MediaType_Type) < 0
-        || PyType_Ready(&Book_Type) < 0
+        || PyType_Ready(&PDFMetadata_Type) < 0
+        || PyType_Ready(&ImageFormat_Type) < 0
         || PyType_Ready(&Canvas_Type) < 0
         || PyType_Ready(&ImageCanvas_Type) < 0
         || PyType_Ready(&PDFCanvas_Type) < 0
-        || PyType_Ready(&PDFMetadata_Type) < 0
-        || PyType_Ready(&ImageFormat_Type) < 0
         || PyType_Ready(&ResourceData_Type) < 0
-        || PyType_Ready(&ResourceFetcher_Type) < 0) {
+        || PyType_Ready(&ResourceFetcher_Type) < 0
+        || PyType_Ready(&Book_Type) < 0) {
         return NULL;
     }
 
@@ -1444,6 +1444,9 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module, "__version_info__", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
     PyModule_AddObject(module, "__build_info__", PyUnicode_FromFormat("%s\nPlutoPrint version: %s\nPython version: %s\n", plutobook_build_info(), PLUTOPRINT_VERSION_STRING, PY_VERSION));
 
+    Py_INCREF(Error_Object);
+    PyModule_AddObject(module, "Error", Error_Object);
+
     Py_INCREF(&PageSize_Type);
     PyModule_AddObject(module, "PageSize", (PyObject*)&PageSize_Type);
 
@@ -1453,8 +1456,11 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     Py_INCREF(&MediaType_Type);
     PyModule_AddObject(module, "MediaType", (PyObject*)&MediaType_Type);
 
-    Py_INCREF(&Book_Type);
-    PyModule_AddObject(module, "Book", (PyObject*)&Book_Type);
+    Py_INCREF(&PDFMetadata_Type);
+    PyModule_AddObject(module, "PDFMetadata", (PyObject*)&PDFMetadata_Type);
+
+    Py_INCREF(&ImageFormat_Type);
+    PyModule_AddObject(module, "ImageFormat", (PyObject*)&ImageFormat_Type);
 
     Py_INCREF(&Canvas_Type);
     PyModule_AddObject(module, "Canvas", (PyObject*)&Canvas_Type);
@@ -1465,20 +1471,16 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     Py_INCREF(&PDFCanvas_Type);
     PyModule_AddObject(module, "PDFCanvas", (PyObject*)&PDFCanvas_Type);
 
-    Py_INCREF(&PDFMetadata_Type);
-    PyModule_AddObject(module, "PDFMetadata", (PyObject*)&PDFMetadata_Type);
-
-    Py_INCREF(&ImageFormat_Type);
-    PyModule_AddObject(module, "ImageFormat", (PyObject*)&ImageFormat_Type);
-
     Py_INCREF(&ResourceData_Type);
     PyModule_AddObject(module, "ResourceData", (PyObject*)&ResourceData_Type);
 
     Py_INCREF(&ResourceFetcher_Type);
     PyModule_AddObject(module, "ResourceFetcher", (PyObject*)&ResourceFetcher_Type);
 
-    Py_INCREF(Error_Object);
-    PyModule_AddObject(module, "Error", Error_Object);
+    Py_INCREF(&Book_Type);
+    PyModule_AddObject(module, "Book", (PyObject*)&Book_Type);
+
+    PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());
 
     PyModule_AddObject(module, "PAGE_SIZE_NONE", PageSize_Create(PLUTOBOOK_PAGE_SIZE_NONE));
     PyModule_AddObject(module, "PAGE_SIZE_LETTER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LETTER));
@@ -1530,6 +1532,5 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
-    PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());
     return module;
 }

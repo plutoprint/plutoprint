@@ -3,19 +3,21 @@ from ._plutoprint import (
     __version_info__,
     __build_info__,
 
+    Error,
+
     PageSize,
     PageMargins,
     MediaType,
-    Book,
+    PDFMetadata,
+    ImageFormat,
     Canvas,
     ImageCanvas,
     PDFCanvas,
-    PDFMetadata,
-    ImageFormat,
     ResourceData,
     ResourceFetcher,
+    Book,
 
-    Error,
+    default_resource_fetcher,
 
     PAGE_SIZE_NONE,
     PAGE_SIZE_LETTER,
@@ -64,7 +66,5 @@ from ._plutoprint import (
     PLUTOBOOK_VERSION_MAJOR,
     PLUTOBOOK_VERSION_MINOR,
     PLUTOBOOK_VERSION_MICRO,
-    PLUTOBOOK_VERSION_STRING,
-
-    default_resource_fetcher
+    PLUTOBOOK_VERSION_STRING
 )
