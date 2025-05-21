@@ -105,8 +105,8 @@ def main():
     book = plutoprint.Book(size, margins, media)
     book.load_url(args.input, args.user_style, args.user_script)
 
-    for attr, meta in METADATA_MAP.items():
-        value = getattr(args, attr)
+    for name, meta in METADATA_MAP.items():
+        value = getattr(args, name)
         if value:
             book.set_metadata(meta, value)
 
