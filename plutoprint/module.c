@@ -16,6 +16,9 @@
 
 #define PLUTOPRINT_VERSION_STRING PLUTOBOOK_VERSION_STRINGIZE(PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO)
 
+#define Object_New(obj, type) ((obj*)(type)->tp_alloc(type, 0))
+#define Object_Del(obj) (Py_TYPE(obj)->tp_free(obj))
+
 typedef struct {
     PyObject_HEAD
     plutobook_page_size_t size;
@@ -38,7 +41,7 @@ static PyObject* PageSize_new(PyTypeObject* type, PyObject* args, PyObject* kwds
 
 static void PageSize_dealloc(PageSize_Object* self)
 {
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* PageSize_repr(PageSize_Object* self)
@@ -120,7 +123,7 @@ static PyTypeObject PageSize_Type = {
 
 static PyObject* PageSize_Create(plutobook_page_size_t size)
 {
-    PageSize_Object* size_ob = PyObject_New(PageSize_Object, &PageSize_Type);
+    PageSize_Object* size_ob = Object_New(PageSize_Object, &PageSize_Type);
     size_ob->size = size;
     return (PyObject*)size_ob;
 }
@@ -152,7 +155,7 @@ static PyObject* PageMargins_new(PyTypeObject* type, PyObject* args, PyObject* k
 
 static void PageMargins_dealloc(PageMargins_Object* self)
 {
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* PageMargins_repr(PageMargins_Object* self)
@@ -211,7 +214,7 @@ static PyTypeObject PageMargins_Type = {
 
 static PyObject* PageMargins_Create(plutobook_page_margins_t margins)
 {
-    PageMargins_Object* margins_ob = PyObject_New(PageMargins_Object, &PageMargins_Type);
+    PageMargins_Object* margins_ob = Object_New(PageMargins_Object, &PageMargins_Type);
     margins_ob->margins = margins;
     return (PyObject*)margins_ob;
 }
@@ -223,7 +226,7 @@ typedef struct {
 
 static void MediaType_dealloc(MediaType_Object* self)
 {
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* MediaType_repr(MediaType_Object* self)
@@ -259,7 +262,7 @@ static PyTypeObject MediaType_Type = {
 
 static PyObject* MediaType_Create(plutobook_media_type_t value)
 {
-    MediaType_Object* media_ob = PyObject_New(MediaType_Object, &MediaType_Type);
+    MediaType_Object* media_ob = Object_New(MediaType_Object, &MediaType_Type);
     media_ob->value = value;
     return (PyObject*)media_ob;
 }
@@ -271,7 +274,7 @@ typedef struct {
 
 static void PDFMetadata_dealloc(PDFMetadata_Object* self)
 {
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* PDFMetadata_repr(PDFMetadata_Object* self)
@@ -317,7 +320,7 @@ static PyTypeObject PDFMetadata_Type = {
 
 static PyObject* PDFMetadata_Create(plutobook_pdf_metadata_t value)
 {
-    PDFMetadata_Object* metadata_ob = PyObject_New(PDFMetadata_Object, &PDFMetadata_Type);
+    PDFMetadata_Object* metadata_ob = Object_New(PDFMetadata_Object, &PDFMetadata_Type);
     metadata_ob->value = value;
     return (PyObject*)metadata_ob;
 }
@@ -329,7 +332,7 @@ typedef struct {
 
 static void ImageFormat_dealloc(ImageFormat_Object* self)
 {
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* ImageFormat_repr(ImageFormat_Object* self)
@@ -371,7 +374,7 @@ static PyTypeObject ImageFormat_Type = {
 
 static PyObject* ImageFormat_Create(plutobook_image_format_t value)
 {
-    ImageFormat_Object* format_ob = PyObject_New(ImageFormat_Object, &ImageFormat_Type);
+    ImageFormat_Object* format_ob = Object_New(ImageFormat_Object, &ImageFormat_Type);
     format_ob->value = value;
     return (PyObject*)format_ob;
 }
@@ -386,7 +389,7 @@ static void Canvas_dealloc(Canvas_Object* self)
 {
     plutobook_canvas_destroy(self->canvas);
     Py_XDECREF(self->data);
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* Canvas__enter__(Canvas_Object* self, PyObject* args)
@@ -578,7 +581,7 @@ static PyObject* ImageCanvas_new(PyTypeObject* type, PyObject* args, PyObject* k
         return NULL;
     }
 
-    ImageCanvas_Object* canvas_ob = PyObject_New(ImageCanvas_Object, type);
+    ImageCanvas_Object* canvas_ob = Object_New(ImageCanvas_Object, type);
     canvas_ob->canvas = canvas;
     canvas_ob->data = NULL;
     return (PyObject*)canvas_ob;
@@ -612,7 +615,7 @@ static PyObject* ImageCanvas_create_for_data(PyTypeObject* type, PyObject* args)
         return NULL;
     }
 
-    ImageCanvas_Object* canvas_ob = PyObject_New(ImageCanvas_Object, type);
+    ImageCanvas_Object* canvas_ob = Object_New(ImageCanvas_Object, type);
     canvas_ob->canvas = canvas;
     canvas_ob->data = data;
     Py_INCREF(canvas_ob->data);
@@ -754,7 +757,7 @@ static PyObject* PDFCanvas_new(PyTypeObject* type, PyObject* args, PyObject* kwd
         return NULL;
     }
 
-    PDFCanvas_Object* canvas_ob = PyObject_New(PDFCanvas_Object, type);
+    PDFCanvas_Object* canvas_ob = Object_New(PDFCanvas_Object, type);
     canvas_ob->canvas = canvas;
     canvas_ob->data = NULL;
     Py_DECREF(file_ob);
@@ -774,7 +777,7 @@ static PyObject* PDFCanvas_create_for_stream(PyTypeObject* type, PyObject* args)
         return NULL;
     }
 
-    PDFCanvas_Object* canvas_ob = PyObject_New(PDFCanvas_Object, type);
+    PDFCanvas_Object* canvas_ob = Object_New(PDFCanvas_Object, type);
     canvas_ob->canvas = canvas;
     canvas_ob->data = write_ob;
     return (PyObject*)canvas_ob;
@@ -869,7 +872,7 @@ static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* 
 static void ResourceData_dealloc(ResourceData_Object* self)
 {
     plutobook_resource_data_destroy(self->resource);
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* ResourceData_get_content(ResourceData_Object* self, PyObject* args)
@@ -919,7 +922,7 @@ static PyTypeObject ResourceData_Type = {
 
 static PyObject* ResourceData_Create(plutobook_resource_data_t* resource)
 {
-    ResourceData_Object* resource_ob = PyObject_New(ResourceData_Object, &ResourceData_Type);
+    ResourceData_Object* resource_ob = Object_New(ResourceData_Object, &ResourceData_Type);
     resource_ob->resource = resource;
     return (PyObject*)resource_ob;
 }
@@ -961,7 +964,7 @@ static PyTypeObject ResourceFetcher_Type = {
 
 static PyObject* ResourceFetcher_Create(void)
 {
-    return PyObject_New(ResourceFetcher_Object, &ResourceFetcher_Type);
+    return Object_New(ResourceFetcher_Object, &ResourceFetcher_Type);
 }
 
 static plutobook_resource_data_t* resource_fetch_func(void* closure, const char* url)
@@ -1022,7 +1025,7 @@ static void Book_dealloc(Book_Object* self)
 {
     plutobook_destroy(self->book);
     Py_XDECREF(self->custom_resource_fetcher);
-    PyObject_Del(self);
+    Object_Del(self);
 }
 
 static PyObject* Book_get_viewport_width(Book_Object* self, PyObject* args)
@@ -1399,7 +1402,7 @@ static PyTypeObject Book_Type = {
 
 static PyObject* Book_Create(plutobook_t* book)
 {
-    Book_Object* book_ob = PyObject_New(Book_Object, &Book_Type);
+    Book_Object* book_ob = Object_New(Book_Object, &Book_Type);
     book_ob->book = book;
     book_ob->custom_resource_fetcher = NULL;
     return (PyObject*)book_ob;
