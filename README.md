@@ -10,7 +10,7 @@ pip install plutoprint
 
 > **Note:** PlutoPrint depends on [PlutoBook](https://github.com/plutoprint/plutobook). For faster builds, it is highly recommended to [install PlutoBook and its dependencies manually](https://github.com/plutoprint/plutobook?tab=readme-ov-file#installation-guide) beforehand. Otherwise, Meson will build them from source during installation, which can significantly increase build time.
 
-For Windows users, **PlutoPrint** provides prebuilt binaries, so no additional setup is required.
+For Windows 64-bit users, **PlutoPrint** provides prebuilt binaries, so no additional setup is required.
 
 ## Quick Usage
 
