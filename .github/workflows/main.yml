@@ -32,6 +32,7 @@ jobs:
 
   build_wheels:
     runs-on: windows-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
     defaults:
       run:
         shell: msys2 {0}
