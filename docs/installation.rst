@@ -1,0 +1,4 @@
+Installation
+============
+
+.. currentmodule:: plutoprint

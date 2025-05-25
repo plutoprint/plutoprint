@@ -9,7 +9,7 @@ Represents the version of plutoprint as a string in the format "major.minor.micr
 
 __version_info__: Tuple[int, int, int] = ...
 """
-Represents the version of plutoprint as a tuple of three integers: (major, minor, micro).
+Represents the version of plutoprint as a tuple of three integers (major, minor, micro).
 """
 
 __build_info__: str = ...

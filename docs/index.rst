@@ -1,15 +1,12 @@
-PlutoPrint
-==========
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Overview
+========
 
 .. currentmodule:: plutoprint
 
-Module Constants
-================
+.. toctree::
+   :maxdepth: 2
+   :titlesonly:
+   :hidden:
 
-.. autodata:: __version__
-
-.. autodata:: __version_info__
+   installation
+   reference
