@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Type, Union, Optional, BinaryIO, Tuple
+from typing import Union, Optional, BinaryIO, Tuple
 import os
 
 __version__: str = ...
@@ -362,7 +362,7 @@ class Canvas:
     An abstract base class that provides an interface for drawing graphics on a canvas.
     """
 
-    def __enter__(self) -> Type[Canvas]:
+    def __enter__(self) -> Canvas:
         """
         Enters a runtime context related to this object. Used to support the context management protocol.
 
@@ -571,7 +571,7 @@ class PDFCanvas(Canvas):
         """
         Sets the metadata of the PDF document.
 
-        The :attr:`PDF_METADATA_CREATION_DATE` and :attr:`PDF_METADATA_MODIFICATION_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss.
+        The :data:`PDF_METADATA_CREATION_DATE` and :data:`PDF_METADATA_MODIFICATION_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss.
         An optional timezone of the form "[+/-]hh:mm" or "Z" for UTC time can be appended. All other metadata values can be any string.
 
         :param metadata: The type of metadata to set.
@@ -735,7 +735,7 @@ class Book:
         """
         Sets the metadata of the PDF document.
 
-        The :attr:`PDF_METADATA_CREATION_DATE` and :attr:`PDF_METADATA_MODIFICATION_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss.
+        The :data:`PDF_METADATA_CREATION_DATE` and :data:`PDF_METADATA_MODIFICATION_DATE` values must be in ISO-8601 format: YYYY-MM-DDThh:mm:ss.
         An optional timezone of the form "[+/-]hh:mm" or "Z" for UTC time can be appended. All other metadata values can be any string.
 
         :param metadata: The type of metadata to set.

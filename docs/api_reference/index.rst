@@ -8,6 +8,7 @@ API Reference
     :titlesonly:
     :hidden:
 
+    constants
     pagesize
     pagemargins
     mediatype
@@ -20,5 +21,3 @@ API Reference
     resourcedata
     resourcefetcher
     book
-    units
-    constants
