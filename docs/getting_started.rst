@@ -1,0 +1,4 @@
+Getting Started
+===============
+
+.. currentmodule:: plutoprint

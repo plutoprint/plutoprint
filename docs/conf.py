@@ -26,6 +26,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
+autodoc_member_order = "bysource"
+autodoc_preserve_defaults = True
+
 import os
 import sys
 
@@ -40,6 +43,10 @@ sys.modules["plutoprint"] = exec_module(os.path.join(BASE_DIR, "..", "plutoprint
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx'
 ]
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None)
+}

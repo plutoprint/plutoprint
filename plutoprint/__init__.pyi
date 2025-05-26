@@ -354,7 +354,7 @@ on a little-endian machine the first pixel is in the least-significant bit.
 
 class Error(Exception):
     """
-    An exception class representing errors that occur in the plutoprint library.
+    This exception is raised whenever a plutoprint operation fails.
     """
 
 class Canvas:

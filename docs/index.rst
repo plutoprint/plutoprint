@@ -4,9 +4,9 @@ Overview
 .. currentmodule:: plutoprint
 
 .. toctree::
-   :maxdepth: 2
-   :titlesonly:
-   :hidden:
+    :maxdepth: 2
+    :titlesonly:
+    :hidden:
 
-   installation
-   reference
+    getting_started
+    api_reference/index
