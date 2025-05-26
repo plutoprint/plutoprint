@@ -550,14 +550,14 @@ static PyTypeObject Canvas_Type = {
 
 static PyObject* Error_Object;
 
-#define TRAP_ERROR(variable, function) \
-    bool variable; \
+#define TRAP_ERROR(error, function) \
+    bool error; \
     Py_BEGIN_ALLOW_THREADS \
-    variable = (function); \
+    error = !(function); \
     Py_END_ALLOW_THREADS \
 
-#define RETURN_NULL_IF_ERROR(variable) \
-    if (!(variable)) { \
+#define RETURN_NULL_IF_ERROR(error) \
+    if (error) { \
         PyErr_SetString(Error_Object, plutobook_get_error_message()); \
         return NULL; \
     } \
@@ -686,9 +686,9 @@ static PyObject* ImageCanvas_write_to_png(ImageCanvas_Object* self, PyObject* ar
     }
 
     const char* filename = PyBytes_AS_STRING(file_ob);
-    TRAP_ERROR(success, plutobook_image_canvas_write_to_png(self->canvas, filename));
+    TRAP_ERROR(error, plutobook_image_canvas_write_to_png(self->canvas, filename));
     Py_DECREF(file_ob);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -699,9 +699,9 @@ static PyObject* ImageCanvas_write_to_png_stream(ImageCanvas_Object* self, PyObj
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_image_canvas_write_to_png_stream(self->canvas, stream_write_func, write_ob));
+    TRAP_ERROR(error, plutobook_image_canvas_write_to_png_stream(self->canvas, stream_write_func, write_ob));
     Py_DECREF(write_ob);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1131,8 +1131,8 @@ static PyObject* Book_load_url(Book_Object* self, PyObject* args, PyObject* kwds
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_load_url(self->book, url, user_style, user_script));
-    RETURN_NULL_IF_ERROR(success);
+    TRAP_ERROR(error, plutobook_load_url(self->book, url, user_style, user_script));
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1149,9 +1149,9 @@ static PyObject* Book_load_data(Book_Object* self, PyObject* args, PyObject* kwd
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_load_data(self->book, data.buf, data.len, mime_type, text_encoding, user_style, user_script, base_url));
+    TRAP_ERROR(error, plutobook_load_data(self->book, data.buf, data.len, mime_type, text_encoding, user_style, user_script, base_url));
     PyBuffer_Release(&data);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1168,9 +1168,9 @@ static PyObject* Book_load_image(Book_Object* self, PyObject* args, PyObject* kw
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_load_image(self->book, data.buf, data.len, mime_type, text_encoding, user_style, user_script, base_url));
+    TRAP_ERROR(error, plutobook_load_image(self->book, data.buf, data.len, mime_type, text_encoding, user_style, user_script, base_url));
     PyBuffer_Release(&data);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1185,8 +1185,8 @@ static PyObject* Book_load_xml(Book_Object* self, PyObject* args, PyObject* kwds
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_load_xml(self->book, data, -1, user_style, user_script, base_url));
-    RETURN_NULL_IF_ERROR(success);
+    TRAP_ERROR(error, plutobook_load_xml(self->book, data, -1, user_style, user_script, base_url));
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1201,8 +1201,8 @@ static PyObject* Book_load_html(Book_Object* self, PyObject* args, PyObject* kwd
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_load_html(self->book, data, -1, user_style, user_script, base_url));
-    RETURN_NULL_IF_ERROR(success);
+    TRAP_ERROR(error, plutobook_load_html(self->book, data, -1, user_style, user_script, base_url));
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1268,9 +1268,9 @@ static PyObject* Book_write_to_pdf(Book_Object* self, PyObject* args, PyObject* 
     }
 
     const char* filename = PyBytes_AS_STRING(file_ob);
-    TRAP_ERROR(success, plutobook_write_to_pdf_range(self->book, filename, from_page, to_page, page_step));
+    TRAP_ERROR(error, plutobook_write_to_pdf_range(self->book, filename, from_page, to_page, page_step));
     Py_DECREF(file_ob);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1285,9 +1285,9 @@ static PyObject* Book_write_to_pdf_stream(Book_Object* self, PyObject* args, PyO
         return NULL;
     }
 
-    TRAP_ERROR(success, plutobook_write_to_pdf_stream_range(self->book, stream_write_func, write_ob, from_page, to_page, page_step));
+    TRAP_ERROR(error, plutobook_write_to_pdf_stream_range(self->book, stream_write_func, write_ob, from_page, to_page, page_step));
     Py_DECREF(write_ob);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1305,9 +1305,9 @@ static PyObject* Book_write_to_png(Book_Object* self, PyObject* args)
     }
 
     const char* filename = PyBytes_AS_STRING(file_ob);
-    TRAP_ERROR(success, plutobook_write_to_png(self->book, filename, format));
+    TRAP_ERROR(error, plutobook_write_to_png(self->book, filename, format));
     Py_DECREF(file_ob);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
@@ -1324,9 +1324,9 @@ static PyObject* Book_write_to_png_stream(Book_Object* self, PyObject* args)
         format = format_ob->value;
     }
 
-    TRAP_ERROR(success, plutobook_write_to_png_stream(self->book, stream_write_func, write_ob, format));
+    TRAP_ERROR(error, plutobook_write_to_png_stream(self->book, stream_write_func, write_ob, format));
     Py_DECREF(write_ob);
-    RETURN_NULL_IF_ERROR(success);
+    RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
