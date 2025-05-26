@@ -96,6 +96,25 @@ static PySequenceMethods PageSize_as_sequence = {
     .sq_item = (ssizeargfunc)PageSize_item
 };
 
+static PyObject* PageSize_richcompare(PyObject* a, PyObject* b, int op)
+{
+    if(Py_TYPE(a) != Py_TYPE(b))
+        Py_RETURN_NOTIMPLEMENTED;
+    if(op != Py_EQ && op != Py_NE) {
+        Py_RETURN_NOTIMPLEMENTED;
+    }
+
+    plutobook_page_size_t* size_a = &((PageSize_Object*)a)->size;
+    plutobook_page_size_t* size_b = &((PageSize_Object*)b)->size;
+
+    bool equal = size_a->width == size_b->width && size_a->height == size_b->height;
+    if(op == Py_NE)
+        equal = !equal;
+    if(equal)
+        Py_RETURN_TRUE;
+    Py_RETURN_FALSE;
+}
+
 static PyMethodDef PageSize_methods[] = {
     {"landscape", (PyCFunction)PageSize_landscape, METH_NOARGS},
     {"portrait", (PyCFunction)PageSize_portrait, METH_NOARGS},
@@ -116,6 +135,7 @@ static PyTypeObject PageSize_Type = {
     .tp_repr = (reprfunc)PageSize_repr,
     .tp_as_sequence = &PageSize_as_sequence,
     .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_richcompare = (richcmpfunc)PageSize_richcompare,
     .tp_methods = PageSize_methods,
     .tp_members = PageSize_members,
     .tp_new = (newfunc)PageSize_new
@@ -192,6 +212,26 @@ static PySequenceMethods PageMargins_as_sequence = {
     .sq_item = (ssizeargfunc)PageMargins_item
 };
 
+static PyObject* PageMargins_richcompare(PyObject* a, PyObject* b, int op)
+{
+    if(Py_TYPE(a) != Py_TYPE(b))
+        Py_RETURN_NOTIMPLEMENTED;
+    if(op != Py_EQ && op != Py_NE) {
+        Py_RETURN_NOTIMPLEMENTED;
+    }
+
+    plutobook_page_margins_t* margins_a = &((PageMargins_Object*)a)->margins;
+    plutobook_page_margins_t* margins_b = &((PageMargins_Object*)b)->margins;
+
+    bool equal = margins_a->top == margins_b->top && margins_a->right == margins_b->right
+        && margins_a->bottom == margins_b->bottom && margins_a->left == margins_b->left;
+    if(op == Py_NE)
+        equal = !equal;
+    if(equal)
+        Py_RETURN_TRUE;
+    Py_RETURN_FALSE;
+}
+
 static PyMemberDef PageMargins_members[] = {
     {"top", T_FLOAT, offsetof(PageMargins_Object, margins.top), READONLY, NULL},
     {"right", T_FLOAT, offsetof(PageMargins_Object, margins.right), READONLY, NULL},
@@ -208,6 +248,7 @@ static PyTypeObject PageMargins_Type = {
     .tp_repr = (reprfunc)PageMargins_repr,
     .tp_as_sequence = &PageMargins_as_sequence,
     .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_richcompare = (richcmpfunc)PageMargins_richcompare,
     .tp_members = PageMargins_members,
     .tp_new = (newfunc)PageMargins_new
 };
