@@ -8,3 +8,5 @@ Canvas
 
     .. automethod:: __enter__
     .. automethod:: __exit__
+
+.. autoclass:: AnyCanvas

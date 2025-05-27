@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Union, Optional, BinaryIO, Tuple
+from typing import Any, Union, Optional, BinaryIO, Tuple, TypeVar
 import os
 
 __version__: str = ...
@@ -357,19 +357,24 @@ class Error(Exception):
     This exception is raised whenever a plutoprint operation fails.
     """
 
+AnyCanvas = TypeVar('AnyCanvas', bound='Canvas')
+"""
+A type variable that represents any subclass of :class:`Canvas`.
+"""
+
 class Canvas:
     """
     An abstract base class that provides an interface for drawing graphics on a canvas.
     """
 
-    def __enter__(self) -> Canvas:
+    def __enter__(self: AnyCanvas) -> AnyCanvas:
         """
         Enters a runtime context related to this object. Used to support the context management protocol.
 
         :returns: The canvas instance.
         """
 
-    def __exit__(self, *exc_info) -> None:
+    def __exit__(self, *exc_info: Any) -> None:
         """
         Exits the runtime context related to this object. Used to support the context management protocol.
 
