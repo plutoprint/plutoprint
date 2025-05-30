@@ -74,11 +74,11 @@ def main():
     args = parser.parse_args()
 
     size = plutoprint.PAGE_SIZE_A4
-    if args.size:
+    if args.size is not None:
         size = PAGE_SIZES[args.size]
-    if args.width:
+    if args.width is not None:
         size = plutoprint.PageSize(args.width, size.height)
-    if args.height:
+    if args.height is not None:
         size = plutoprint.PageSize(size.width, args.height)
 
     if args.orientation == 'portrait':
@@ -87,15 +87,15 @@ def main():
         size = size.landscape()
 
     margins = plutoprint.PAGE_MARGINS_NORMAL
-    if args.margin:
+    if args.margin is not None:
         margins = plutoprint.PageMargins(args.margin)
-    if args.margin_top:
+    if args.margin_top is not None:
         margins = plutoprint.PageMargins(args.margin_top, margins.right, margins.bottom, margins.left)
-    if args.margin_right:
+    if args.margin_right is not None:
         margins = plutoprint.PageMargins(margins.top, args.margin_right, margins.bottom, margins.left)
-    if args.margin_bottom:
+    if args.margin_bottom is not None:
         margins = plutoprint.PageMargins(margins.top, margins.right, args.margin_bottom, margins.left)
-    if args.margin_left:
+    if args.margin_left is not None:
         margins = plutoprint.PageMargins(margins.top, margins.right, margins.bottom, args.margin_left)
 
     media = plutoprint.MEDIA_TYPE_PRINT
