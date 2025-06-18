@@ -72,6 +72,7 @@ jobs:
             --buildtype=release \
             --wrap-mode=nodownload \
             --prefer-static \
+            -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -static-libwinpthread' \
             -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DU_STATIC_IMPLEMENTATION'
           meson install --strip -C build
 
@@ -80,9 +81,6 @@ jobs:
           sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
           cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
           cp -v /mingw64/bin/libpkgconf-*.dll plutobook-win-x64/bin
-          cp -v /mingw64/bin/libgcc_s_*.dll plutobook-win-x64/bin
-          cp -v /mingw64/bin/libstdc++-*.dll plutobook-win-x64/bin
-          cp -v /mingw64/bin/libwinpthread-*.dll plutobook-win-x64/bin
 
       - name: Upload plutobook
         uses: actions/upload-artifact@v4
