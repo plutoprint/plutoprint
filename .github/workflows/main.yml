@@ -72,7 +72,7 @@ jobs:
             --buildtype=release \
             --wrap-mode=nodownload \
             --prefer-static \
-            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB'
+            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DU_STATIC_IMPLEMENTATION'
           meson install --strip -C build
 
       - name: Copy pkgconf
