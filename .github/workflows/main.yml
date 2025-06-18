@@ -1,4 +1,4 @@
-name: Build PlutoPrint Module
+name: Build and Upload to PyPI
 
 on:
   workflow_dispatch:
@@ -32,7 +32,6 @@ jobs:
 
   build_wheels:
     runs-on: windows-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
     defaults:
       run:
         shell: msys2 {0}
@@ -83,7 +82,8 @@ jobs:
           cp -v /mingw64/bin/libpkgconf-5.dll plutobook-win-x64/bin
           cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload plutobook
+        uses: actions/upload-artifact@v4
         with:
           name: plutobook-win-x64
           path: plutobook-win-x64/
@@ -98,12 +98,15 @@ jobs:
             PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win-x64/lib/pkgconfig'
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS:
             delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
+          CIBW_TEST_COMMAND:
+            python -c 'import plutoprint; print(plutoprint.__build_info__)'
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels
+          name: wheels-win_amd64
           path: ./wheelhouse/*.whl
-
+          
   upload_pypi:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
@@ -113,9 +116,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: cibw-*
-          merge-multiple: true
           path: dist
-
+          pattern: wheels-*
+          merge-multiple: true
+          
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
