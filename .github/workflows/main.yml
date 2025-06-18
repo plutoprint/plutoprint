@@ -32,6 +32,7 @@ jobs:
 
   build_wheels:
     runs-on: windows-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
     defaults:
       run:
         shell: msys2 {0}
@@ -76,7 +77,7 @@ jobs:
             -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DU_STATIC_IMPLEMENTATION'
           meson install --strip -C build
 
-      - name: Copy dependencies
+      - name: Copy build dependencies
         run: |
           sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
           cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
