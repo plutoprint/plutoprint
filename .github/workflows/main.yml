@@ -98,8 +98,8 @@ jobs:
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS:
             delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
           CIBW_TEST_COMMAND:
-            python -c 'import plutoprint; print(plutoprint.__build_info__)'
-
+            python -c "import plutoprint; print(plutoprint.__build_info__)"
+            
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
