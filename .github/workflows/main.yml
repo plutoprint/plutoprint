@@ -70,10 +70,7 @@ jobs:
           meson setup build \
             --prefix='${{ github.workspace }}/plutobook-win-x64' \
             --buildtype=release \
-            --wrap-mode=nodownload \
-            --prefer-static \
-            -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -lstdc++' \
-            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB'
+            --wrap-mode=nodownload
           meson install --strip -C build
 
       - name: Copy pkgconf
