@@ -70,13 +70,15 @@ jobs:
           meson setup build \
             --prefix='${{ github.workspace }}/plutobook-win-x64' \
             --buildtype=release \
-            --wrap-mode=nodownload
+            --wrap-mode=nodownload \
+            --prefer-static \
+            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB'
           meson install --strip -C build
 
       - name: Copy pkgconf
         run: |
           sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
-          cp -v /mingw64/bin/libpkgconf-6.dll plutobook-win-x64/bin
+          cp -v /mingw64/bin/libpkgconf*.dll plutobook-win-x64/bin
           cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
 
       - name: Upload plutobook
