@@ -76,7 +76,7 @@ jobs:
       - name: Copy pkgconf
         run: |
           sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
-          cp -v /mingw64/bin/libpkgconf-5.dll plutobook-win-x64/bin
+          cp -v /mingw64/bin/libpkgconf-6.dll plutobook-win-x64/bin
           cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
 
       - name: Upload plutobook
