@@ -34,7 +34,6 @@ Links & Resources
 - Samples: https://github.com/plutoprint/plutoprint-samples
 - Code: https://github.com/plutoprint/plutoprint
 - Issues: https://github.com/plutoprint/plutoprint/issues
-- Releases: https://github.com/plutoprint/plutoprint/releases
 - Donation: https://github.com/sponsors/plutoprint
 
 License
