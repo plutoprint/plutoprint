@@ -1,7 +1,7 @@
 [project]
 name = 'plutoprint'
 description = 'Paged HTML rendering library'
-readme = 'README.md'
+readme = 'README.rst'
 requires-python = '>=3.8'
 keywords = ['html', 'css', 'svg', 'pdf', 'png', 'html2pdf', 'html2png']
 dynamic = ['version']
@@ -30,10 +30,11 @@ classifiers = [
 ]
 
 [project.urls]
-homepage = 'https://github.com/plutoprint'
-code = 'https://github.com/plutoprint/plutoprint'
-issues = 'https://github.com/plutoprint/plutoprint/issues'
-donation = 'https://www.paypal.com/paypalme/sammycage'
+Homepage = 'https://github.com/plutoprint'
+Documentation = 'https://plutoprint.readthedocs.io'
+Code = 'https://github.com/plutoprint/plutoprint'
+Issues = 'https://github.com/plutoprint/plutoprint/issues'
+Donation = 'https://github.com/sponsors/plutoprint'
 
 [project.scripts]
 plutoprint = 'plutoprint.__main__:main'
