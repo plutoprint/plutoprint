@@ -41,7 +41,7 @@ License
 
 PlutoPrint is licensed under the `MIT License <https://github.com/plutoprint/plutoprint/blob/main/LICENSE>`_, allowing for both personal and commercial use.
 
-.. |build| image:: https://github.com/plutoprint/plutoprint/actions/workflows/main.yml/badge.svg
+.. |build| image:: https://img.shields.io/github/actions/workflow/status/plutoprint/plutoprint/main.yml
    :target: https://github.com/plutoprint/plutoprint/actions
 .. |pypi| image:: https://img.shields.io/pypi/v/plutoprint.svg
    :target: https://pypi.org/project/plutoprint
