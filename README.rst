@@ -1,4 +1,4 @@
-|build| |pypi| |pyver| |license| |downloads| |docs|
+|build| |docs| |license| |downloads| |pypi| |pyver|
 
 PlutoPrint
 ==========
@@ -43,9 +43,11 @@ PlutoPrint is licensed under the `MIT License <https://github.com/plutoprint/plu
 
 .. |build| image:: https://img.shields.io/github/actions/workflow/status/plutoprint/plutoprint/main.yml
    :target: https://github.com/plutoprint/plutoprint/actions
-.. |pypi| image:: https://img.shields.io/pypi/v/plutoprint.svg
+.. |docs| image:: https://img.shields.io/readthedocs/plutoprint
+   :target: https://plutoprint.readthedocs.io
+.. |license| image:: https://img.shields.io/pypi/l/plutoprint
+   :target: https://github.com/plutoprint/plutoprint/blob/main/LICENSE
+.. |downloads| image:: https://img.shields.io/pypi/dm/plutoprint
+.. |pypi| image:: https://img.shields.io/pypi/v/plutoprint
    :target: https://pypi.org/project/plutoprint
 .. |pyver| image:: https://img.shields.io/pypi/pyversions/plutoprint
-.. |license| image:: https://img.shields.io/pypi/l/plutoprint
-.. |downloads| image:: https://img.shields.io/pypi/dm/plutoprint
-.. |docs| image:: https://img.shields.io/readthedocs/plutoprint
