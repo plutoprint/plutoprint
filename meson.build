@@ -31,3 +31,7 @@ python.extension_module(
     subdir: 'plutoprint',
     install: true
 )
+
+if get_option('tests')
+    subdir('tests')
+endif

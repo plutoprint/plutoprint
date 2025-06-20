@@ -39,6 +39,9 @@ Donation = 'https://github.com/sponsors/plutoprint'
 [project.scripts]
 plutoprint = 'plutoprint.__main__:main'
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov"]
+
 [build-system]
 build-backend = 'mesonpy'
 requires = ['meson-python']
