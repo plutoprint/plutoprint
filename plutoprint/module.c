@@ -1529,7 +1529,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module, "PAGE_SIZE_NONE", PageSize_Create(PLUTOBOOK_PAGE_SIZE_NONE));
     PyModule_AddObject(module, "PAGE_SIZE_LETTER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LETTER));
     PyModule_AddObject(module, "PAGE_SIZE_LEGAL", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LEGAL));
-    PyModule_AddObject(module, "PAGE_SIZE_LEDGER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LETTER));
+    PyModule_AddObject(module, "PAGE_SIZE_LEDGER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LEDGER));
 
     PyModule_AddObject(module, "PAGE_SIZE_A3", PageSize_Create(PLUTOBOOK_PAGE_SIZE_A3));
     PyModule_AddObject(module, "PAGE_SIZE_A4", PageSize_Create(PLUTOBOOK_PAGE_SIZE_A4));
