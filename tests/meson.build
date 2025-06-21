@@ -1,4 +1,5 @@
 test_sources = [
+    'test_book.py',
     'test_canvas.py',
     'test_enums.py',
     'test_pagemargins.py',
