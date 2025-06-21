@@ -21,13 +21,13 @@ def test_pdfmetadata():
     with pytest.raises(TypeError):
         plutoprint.PDFMetadata(object())
 
-    assert isinstance(plutoprint.PDF_METADATA_TITLE,              plutoprint.PDFMetadata)
-    assert isinstance(plutoprint.PDF_METADATA_AUTHOR,             plutoprint.PDFMetadata)
-    assert isinstance(plutoprint.PDF_METADATA_SUBJECT,            plutoprint.PDFMetadata)
-    assert isinstance(plutoprint.PDF_METADATA_KEYWORDS,           plutoprint.PDFMetadata)
-    assert isinstance(plutoprint.PDF_METADATA_CREATOR,            plutoprint.PDFMetadata)
-    assert isinstance(plutoprint.PDF_METADATA_CREATION_DATE,      plutoprint.PDFMetadata)
-    assert isinstance(plutoprint.PDF_METADATA_MODIFICATION_DATE,  plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_TITLE,             plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_AUTHOR,            plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_SUBJECT,           plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_KEYWORDS,          plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_CREATOR,           plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_CREATION_DATE,     plutoprint.PDFMetadata)
+    assert isinstance(plutoprint.PDF_METADATA_MODIFICATION_DATE, plutoprint.PDFMetadata)
 
     assert repr(plutoprint.PDF_METADATA_TITLE)             == "plutoprint.PDF_METADATA_TITLE"
     assert repr(plutoprint.PDF_METADATA_AUTHOR)            == "plutoprint.PDF_METADATA_AUTHOR"

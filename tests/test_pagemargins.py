@@ -12,11 +12,11 @@ def test_pagemargins_new():
         plutoprint.PageMargins(1, 2, 3, 4, 5)
 
 def test_pagemargins_repr():
-    assert repr(plutoprint.PageMargins())               == "plutoprint.PageMargins(0, 0, 0, 0)"
-    assert repr(plutoprint.PageMargins(1))              == "plutoprint.PageMargins(1, 1, 1, 1)"
-    assert repr(plutoprint.PageMargins(1, 2))           == "plutoprint.PageMargins(1, 2, 1, 2)"
-    assert repr(plutoprint.PageMargins(1, 2, 3))        == "plutoprint.PageMargins(1, 2, 3, 2)"
-    assert repr(plutoprint.PageMargins(1, 2, 3, 4))     == "plutoprint.PageMargins(1, 2, 3, 4)"
+    assert repr(plutoprint.PageMargins())           == "plutoprint.PageMargins(0, 0, 0, 0)"
+    assert repr(plutoprint.PageMargins(1))          == "plutoprint.PageMargins(1, 1, 1, 1)"
+    assert repr(plutoprint.PageMargins(1, 2))       == "plutoprint.PageMargins(1, 2, 1, 2)"
+    assert repr(plutoprint.PageMargins(1, 2, 3))    == "plutoprint.PageMargins(1, 2, 3, 2)"
+    assert repr(plutoprint.PageMargins(1, 2, 3, 4)) == "plutoprint.PageMargins(1, 2, 3, 4)"
 
 def test_pagemargins_sequence():
     margins = plutoprint.PageMargins(1, 2, 3, 4)
