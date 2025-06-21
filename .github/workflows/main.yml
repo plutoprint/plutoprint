@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cibw-sdist
+          name: sdist
           path: ./dist/*.tar.gz
 
   build_wheels:
@@ -90,7 +90,7 @@ jobs:
           path: plutobook-win-x64/
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.18.1
+        uses: pypa/cibuildwheel@v3.0.0
         env:
           CIBW_BUILD: cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64
           CIBW_BEFORE_BUILD_WINDOWS: pip install delvewheel
@@ -118,8 +118,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: dist
-          pattern: wheels-*
+          pattern: |
+            sdist
+            wheels-*
           merge-multiple: true
-          
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
