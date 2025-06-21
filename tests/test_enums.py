@@ -6,7 +6,7 @@ def test_mediatype():
         plutoprint.MediaType()
 
     with pytest.raises(TypeError):
-        plutoprint.MediaType(0)
+        plutoprint.MediaType(object())
 
     assert isinstance(plutoprint.MEDIA_TYPE_PRINT,  plutoprint.MediaType)
     assert isinstance(plutoprint.MEDIA_TYPE_SCREEN, plutoprint.MediaType)
@@ -19,7 +19,7 @@ def test_pdfmetadata():
         plutoprint.PDFMetadata()
 
     with pytest.raises(TypeError):
-        plutoprint.PDFMetadata(0)
+        plutoprint.PDFMetadata(object())
 
     assert isinstance(plutoprint.PDF_METADATA_TITLE,              plutoprint.PDFMetadata)
     assert isinstance(plutoprint.PDF_METADATA_AUTHOR,             plutoprint.PDFMetadata)
@@ -42,7 +42,7 @@ def test_imageformat():
         plutoprint.ImageFormat()
 
     with pytest.raises(TypeError):
-        plutoprint.ImageFormat(0)
+        plutoprint.ImageFormat(object())
 
     assert isinstance(plutoprint.IMAGE_FORMAT_INVALID, plutoprint.ImageFormat)
     assert isinstance(plutoprint.IMAGE_FORMAT_ARGB32,  plutoprint.ImageFormat)

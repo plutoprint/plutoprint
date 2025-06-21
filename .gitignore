@@ -1,5 +1,6 @@
 /build
 /subprojects/*/
-/plutoprint/__pycache__
 /docs/_build
+/pytest_cache
+__pycache__
 *.user
