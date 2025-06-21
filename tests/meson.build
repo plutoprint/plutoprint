@@ -1,7 +1,10 @@
 test_sources = [
+    'test_canvas.py',
     'test_enums.py',
     'test_pagemargins.py',
     'test_pagesize.py',
+    'test_resourcedata.py',
+    'test_resourcefetcher.py',
     'test_units.py',
 ]
 
