@@ -97,7 +97,7 @@ def test_imagecanvas_get_data(imagecanvas):
     for i in range(len(data)):
         data[i] = 0xFF
 
-    assert bytes(data) == b'\xff\xff\xff\xff\xff\xff\xff\xff'
+    assert imagecanvas.get_data() == b'\xff\xff\xff\xff\xff\xff\xff\xff'
 
 def test_imagecanvas_get_width(imagecanvas):
     assert isinstance(imagecanvas.get_width(), int)
