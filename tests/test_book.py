@@ -1,4 +1,5 @@
 import plutoprint
+import base64
 import pytest
 
 def test_book_new():
@@ -108,6 +109,48 @@ def test_book_metadata_from_html(book):
     TITLE = "Alice’s Adventures in Wonderland"
     book.load_html(f"<title>{TITLE}</title>")
     assert book.get_metadata(plutoprint.PDF_METADATA_TITLE) == TITLE
+
+def test_book_load_url(book, tmp_path):
+    path = tmp_path / "hello.html"
+    with pytest.raises(plutoprint.Error):
+        book.load_url(path.as_posix())
+
+    path.write_text(HTML_CONTENT)
+    book.load_url(path.as_posix())
+    book.load_url(path.as_uri())
+
+def test_book_load_data(book):
+    with pytest.raises(plutoprint.Error):
+        book.load_data(HTML_CONTENT, mime_type="image/webp")
+    book.load_data(HTML_CONTENT, mime_type="text/html")
+
+def test_book_load_image(book):
+    PNG_DATA_BASE64 = (
+        b"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/"
+        b"w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+    )
+
+    with pytest.raises(plutoprint.Error):
+        book.load_image(PNG_DATA_BASE64, mime_type="image/png")
+    book.load_image(base64.b64decode(PNG_DATA_BASE64), mime_type="image/png")
+
+SVG_CONTENT = (
+    "<svg width='10' height='10' xmlns='http://www.w3.org/2000/svg'>"
+    "<circle style='fill:red' cx='5' cy='5' r='5'/>"
+    "</svg>"
+)
+
+MALFORMED_XML_CONTENT = "<svg><circle></svg>"
+
+def test_book_load_xml(book):
+    with pytest.raises(plutoprint.Error):
+        book.load_xml(MALFORMED_XML_CONTENT)
+    book.load_xml(SVG_CONTENT)
+
+def test_book_load_html(book):
+    book.load_html(HTML_CONTENT)
+    book.load_html(SVG_CONTENT)
+    book.load_html(MALFORMED_XML_CONTENT)
 
 def test_book_clear_content(book):
     assert book.get_page_count() == 0
