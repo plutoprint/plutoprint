@@ -184,10 +184,10 @@ def test_book_clear_content(book):
     assert book.get_page_count() == 0
 
     book.load_html(HTML_CONTENT)
-    assert book.get_page_count() != 0;
+    assert book.get_page_count() != 0
 
     book.clear_content()
-    assert book.get_page_count() == 0;
+    assert book.get_page_count() == 0
 
 class CustomResourceFetcher(plutoprint.ResourceFetcher):
     def __init__(self):
