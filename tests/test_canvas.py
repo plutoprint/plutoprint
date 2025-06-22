@@ -121,17 +121,18 @@ def test_imagecanvas_write_to_png_stream(imagecanvas):
     assert png_stream.getvalue().startswith(b'\x89PNG\r\n\x1a\n')
 
 def test_pdfcanvas_new(tmp_path):
-    canvas = plutoprint.PDFCanvas(tmp_path / "hello.pdf", plutoprint.PAGE_SIZE_A4)
-
-    assert isinstance(canvas, plutoprint.PDFCanvas)
-    assert isinstance(canvas, plutoprint.Canvas)
+    pdf_file = tmp_path / "hello.pdf"
+    with plutoprint.PDFCanvas(pdf_file, plutoprint.PAGE_SIZE_A4) as canvas:
+        assert isinstance(canvas, plutoprint.PDFCanvas)
+        assert isinstance(canvas, plutoprint.Canvas)
+    assert pdf_file.read_bytes().startswith(b'%PDF')
 
 def test_pdfcanvas_create_for_stream():
     pdf_stream = io.BytesIO()
-    with pytest.raises(TypeError):
-        plutoprint.PDFCanvas.create_for_stream(pdf_stream)
-
-    assert isinstance(plutoprint.PDFCanvas.create_for_stream(pdf_stream, plutoprint.PAGE_SIZE_A4), plutoprint.PDFCanvas)
+    with plutoprint.PDFCanvas.create_for_stream(pdf_stream, plutoprint.PAGE_SIZE_A4) as canvas:
+        assert isinstance(canvas, plutoprint.PDFCanvas)
+        assert isinstance(canvas, plutoprint.Canvas)
+    assert pdf_stream.getvalue().startswith(b'%PDF')
 
 @pytest.fixture
 def pdfcanvas(tmp_path):
