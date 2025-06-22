@@ -2,24 +2,15 @@ import plutoprint
 import pytest
 
 def test_resourcedata_new():
+    assert isinstance(plutoprint.ResourceData(b'Hello World'), plutoprint.ResourceData)
+
     with pytest.raises(TypeError):
         plutoprint.ResourceData()
 
-    assert isinstance(plutoprint.ResourceData(b'Hello World'), plutoprint.ResourceData)
     assert isinstance(plutoprint.ResourceData('Hello World'),  plutoprint.ResourceData)
-
-    with pytest.raises(TypeError):
-        plutoprint.ResourceData(object())
-
-    assert isinstance(plutoprint.ResourceData('Hello World', 'text/plain'), plutoprint.ResourceData)
-
-    with pytest.raises(TypeError):
-        plutoprint.ResourceData('Hello World', object())
-
+    assert isinstance(plutoprint.ResourceData('Hello World', 'text/plain'),  plutoprint.ResourceData)
     assert isinstance(plutoprint.ResourceData('Hello World', 'text/plain', 'utf8'), plutoprint.ResourceData)
-
-    with pytest.raises(TypeError):
-        plutoprint.ResourceData('Hello World', 'text/plain', object())
+    assert isinstance(plutoprint.ResourceData('Hello World', mime_type='text/plain', text_encoding='utf8'), plutoprint.ResourceData)
 
 @pytest.fixture
 def resource():

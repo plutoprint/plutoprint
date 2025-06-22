@@ -8,6 +8,10 @@ def test_book_new():
     assert isinstance(plutoprint.Book(plutoprint.PAGE_SIZE_A4, plutoprint.PAGE_MARGINS_NORMAL), plutoprint.Book)
     assert isinstance(plutoprint.Book(plutoprint.PAGE_SIZE_A4, plutoprint.PAGE_MARGINS_NORMAL, plutoprint.MEDIA_TYPE_PRINT), plutoprint.Book)
 
+    assert isinstance(plutoprint.Book(size=plutoprint.PAGE_SIZE_A4), plutoprint.Book)
+    assert isinstance(plutoprint.Book(margins=plutoprint.PAGE_MARGINS_NORMAL), plutoprint.Book)
+    assert isinstance(plutoprint.Book(media=plutoprint.MEDIA_TYPE_PRINT), plutoprint.Book)
+
 PAGE_WIDTH  = 10
 PAGE_HEIGHT = 20
 
@@ -29,7 +33,7 @@ def test_book_get_viewport_width(book):
 def test_book_get_viewport_height(book):
     assert PAGE_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM == pytest.approx(book.get_viewport_height() * plutoprint.UNITS_PX)
 
-HTML_CONTENT = "<b> Hello World </b>"
+HTML_CONTENT = "<p>Hello <br> World </p>"
 
 def test_book_get_document_width(book):
     assert book.get_document_width() == 0.0
@@ -63,10 +67,10 @@ def test_book_get_page_size_at(book):
         book.get_page_size_at(1)
 
     book.load_html(HTML_CONTENT, user_style="@page { size: landscape }")
-    assert(book.get_page_size_at(0) == PAGE_SIZE.landscape())
+    assert book.get_page_size_at(0) == PAGE_SIZE.landscape()
 
     book.load_html(HTML_CONTENT, user_style="@page { size: a4 }")
-    assert(book.get_page_size_at(0) == plutoprint.PAGE_SIZE_A4)
+    assert book.get_page_size_at(0) == plutoprint.PAGE_SIZE_A4
 
 def test_book_get_page_margins(book):
     assert book.get_page_margins() == PAGE_MARGINS
@@ -119,20 +123,11 @@ def test_book_load_url(book, tmp_path):
     book.load_url(path.as_posix())
     book.load_url(path.as_uri())
 
-def test_book_load_data(book):
-    with pytest.raises(plutoprint.Error):
-        book.load_data(HTML_CONTENT, mime_type="image/webp")
-    book.load_data(HTML_CONTENT, mime_type="text/html")
-
-def test_book_load_image(book):
-    PNG_DATA_BASE64 = (
-        b"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/"
-        b"w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
-    )
-
-    with pytest.raises(plutoprint.Error):
-        book.load_image(PNG_DATA_BASE64, mime_type="image/png")
-    book.load_image(base64.b64decode(PNG_DATA_BASE64), mime_type="image/png")
+XHTML_CONTENT = (
+    "<html xmlns='http://www.w3.org/1999/xhtml'>"
+    "<body><p>Hello <br/> World </p></body>"
+    "</html>"
+)
 
 SVG_CONTENT = (
     "<svg width='10' height='10' xmlns='http://www.w3.org/2000/svg'>"
@@ -140,17 +135,50 @@ SVG_CONTENT = (
     "</svg>"
 )
 
-MALFORMED_XML_CONTENT = "<svg><circle></svg>"
+PNG_DATA_BASE64 = (
+    b"iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/"
+    b"w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+)
+
+def test_book_load_data(book):
+    book.load_data(SVG_CONTENT, mime_type="image/svg+xml")
+    with pytest.raises(plutoprint.Error):
+        book.load_data(SVG_CONTENT, mime_type="image/webp")
+
+    with pytest.raises(plutoprint.Error):
+        book.load_data(PNG_DATA_BASE64, mime_type="image/png")
+    book.load_data(base64.b64decode(PNG_DATA_BASE64), mime_type="image/png")
+
+    book.load_data(HTML_CONTENT)
+    with pytest.raises(plutoprint.Error):
+        book.load_data(HTML_CONTENT, mime_type="text/xml")
+    book.load_data(XHTML_CONTENT)
+
+def test_book_load_image(book):
+    book.load_image(SVG_CONTENT, mime_type="image/svg+xml")
+    with pytest.raises(plutoprint.Error):
+        book.load_image(SVG_CONTENT)
+
+    with pytest.raises(plutoprint.Error):
+        book.load_image(HTML_CONTENT)
+
+    with pytest.raises(plutoprint.Error):
+        book.load_image(XHTML_CONTENT)
+
+    with pytest.raises(plutoprint.Error):
+        book.load_image(PNG_DATA_BASE64)
+    book.load_image(base64.b64decode(PNG_DATA_BASE64))
 
 def test_book_load_xml(book):
     with pytest.raises(plutoprint.Error):
-        book.load_xml(MALFORMED_XML_CONTENT)
+        book.load_xml(HTML_CONTENT)
+    book.load_xml(XHTML_CONTENT)
     book.load_xml(SVG_CONTENT)
 
 def test_book_load_html(book):
     book.load_html(HTML_CONTENT)
+    book.load_html(XHTML_CONTENT)
     book.load_html(SVG_CONTENT)
-    book.load_html(MALFORMED_XML_CONTENT)
 
 def test_book_clear_content(book):
     assert book.get_page_count() == 0
@@ -160,3 +188,42 @@ def test_book_clear_content(book):
 
     book.clear_content()
     assert book.get_page_count() == 0;
+
+class CustomResourceFetcher(plutoprint.ResourceFetcher):
+    def __init__(self):
+        super().__init__()
+
+    def fetch_url(self, url):
+        if url.startswith("custom:"):
+            return plutoprint.ResourceData(f"<code>{url}</code>", "text/html")
+        if url.startswith("file:"):
+            return None
+        return super().fetch_url(url)
+
+def test_book_custom_resource_fetcher(book, tmp_path):
+    with pytest.raises(TypeError):
+        book.custom_resource_fetcher = object()
+
+    assert book.custom_resource_fetcher is None
+
+    with pytest.raises(plutoprint.Error):
+        book.load_url("custom:hello")
+
+    path = tmp_path / "hello.html"
+    path.write_text(HTML_CONTENT)
+
+    assert book.load_url(path.as_uri()) is None
+
+    book.custom_resource_fetcher = CustomResourceFetcher()
+
+    assert book.load_url("custom:hello") is None
+
+    with pytest.raises(plutoprint.Error):
+        book.load_url(path.as_uri())
+
+    book.custom_resource_fetcher = None
+
+    with pytest.raises(plutoprint.Error):
+        book.load_url("custom:hello")
+
+    assert book.load_url(path.as_uri()) is None

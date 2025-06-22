@@ -4,8 +4,8 @@ import pytest
 def test_resource_fetcher():
     fetcher = plutoprint.ResourceFetcher()
 
-    with pytest.raises(TypeError):
-        fetcher.fetch_url(object())
+    with pytest.raises(plutoprint.Error):
+        fetcher.fetch_url(str())
 
 def test_default_resource_fetcher(tmp_path):
     assert isinstance(plutoprint.default_resource_fetcher, plutoprint.ResourceFetcher)

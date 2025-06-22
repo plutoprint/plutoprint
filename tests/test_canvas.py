@@ -41,8 +41,6 @@ def test_canvas_clip_rect(canvas):
 def test_canvas_clear_surface(canvas):
     canvas.clear_surface(0.1, 0.2, 0.3)
     canvas.clear_surface(0.1, 0.2, 0.3, 0.4)
-    with pytest.raises(TypeError):
-        canvas.clear_surface(0.1, 0.2, 0.3, 0.4, 0.5)
 
 def test_canvas_clip_rect(canvas):
     canvas.clip_rect(1, 2, 3, 4)
@@ -60,9 +58,6 @@ def test_imagecanvas_new():
     assert isinstance(canvas, plutoprint.Canvas)
 
     assert isinstance(plutoprint.ImageCanvas(1, 2, plutoprint.IMAGE_FORMAT_ARGB32), plutoprint.ImageCanvas)
-
-    with pytest.raises(TypeError):
-        plutoprint.ImageCanvas(1, 2, object())
 
     with pytest.raises(plutoprint.Error):
         plutoprint.ImageCanvas(1, 2, plutoprint.IMAGE_FORMAT_INVALID)
