@@ -1,6 +1,7 @@
 import plutoprint
-import base64
 import pytest
+import base64
+import io
 
 def test_book_new():
     assert isinstance(plutoprint.Book(), plutoprint.Book)
@@ -188,6 +189,52 @@ def test_book_clear_content(book):
 
     book.clear_content()
     assert book.get_page_count() == 0
+
+def test_book_render_page(book):
+    canvas = plutoprint.ImageCanvas(1, 1)
+    with pytest.raises(IndexError):
+        book.render_page(canvas, 0)
+
+    assert canvas.get_data() == b'\x00\x00\x00\x00'
+
+    book.load_html(HTML_CONTENT, user_style="@page { background: red }")
+    book.render_page(canvas, 0)
+
+    assert canvas.get_data() == b'\x00\x00\xff\xff'
+
+def test_book_render_document(book):
+    canvas = plutoprint.ImageCanvas(1, 1)
+
+    assert canvas.get_data() == b'\x00\x00\x00\x00'
+
+    book.load_html(HTML_CONTENT, user_style="body { background: yellow }")
+    book.render_document(canvas)
+
+    assert canvas.get_data() == b'\x00\xff\xff\xff'
+
+def test_book_write_to_pdf(book, tmp_path):
+    pdf_file = tmp_path / "hello.pdf"
+    book.load_html(HTML_CONTENT)
+    book.write_to_pdf(pdf_file)
+    assert pdf_file.read_bytes().startswith(b'%PDF')
+
+def test_book_write_to_pdf_stream(book):
+    pdf_stream = io.BytesIO()
+    book.load_html(HTML_CONTENT)
+    book.write_to_pdf_stream(pdf_stream)
+    assert pdf_stream.getvalue().startswith(b'%PDF')
+
+def test_book_write_to_png(book, tmp_path):
+    png_file = tmp_path / "hello.png"
+    book.load_html(HTML_CONTENT)
+    book.write_to_png(png_file)
+    assert png_file.read_bytes().startswith(b'\x89PNG\r\n\x1a\n')
+
+def test_book_write_to_png_stream(book):
+    png_stream = io.BytesIO()
+    book.load_html(HTML_CONTENT)
+    book.write_to_png_stream(png_stream)
+    assert png_stream.getvalue().startswith(b'\x89PNG\r\n\x1a\n')
 
 class CustomResourceFetcher(plutoprint.ResourceFetcher):
     def __init__(self):
