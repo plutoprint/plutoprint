@@ -8,7 +8,7 @@ def test_canvas_new():
 
 def test_canvas_context_manager():
     with plutoprint.ImageCanvas(1, 1) as canvas:
-        pass
+        assert isinstance(canvas, plutoprint.Canvas)
 
 @pytest.fixture
 def canvas():
