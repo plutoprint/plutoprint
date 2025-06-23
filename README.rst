@@ -19,13 +19,39 @@ For Windows 64-bit users, PlutoPrint provides prebuilt binaries, so no additiona
 Quick Usage
 -----------
 
+Generate a PDF from the command line with the installed ``plutoprint`` script:
+
+.. code-block:: bash
+
+   plutoprint input.html output.pdf --size=A4
+
+**Generate PDF with Python**
+
 .. code-block:: python
 
    import plutoprint
 
    book = plutoprint.Book(plutoprint.PAGE_SIZE_A4)
-   book.load_html("<b> Hello World </b>")
-   book.write_to_pdf("hello.pdf")
+   book.load_url("input.html")
+   book.write_to_pdf("output.pdf")
+
+**Generate PNG with Python**
+
+.. code-block:: python
+
+   import plutoprint
+   import math
+
+   book = plutoprint.Book(media=plutoprint.MEDIA_TYPE_SCREEN)
+   book.load_html("<b>Hello World</b>", user_style="body { text-align: center }")
+
+   width = math.ceil(book.get_document_width())
+   height = math.ceil(book.get_document_height())
+
+   with plutoprint.ImageCanvas(width, height) as canvas:
+      canvas.clear_surface(1, 1, 1)
+      book.render_document(canvas)
+      canvas.write_to_png("hello.png")
 
 Links & Resources
 -----------------
