@@ -34,7 +34,7 @@ def test_book_get_viewport_width(book):
 def test_book_get_viewport_height(book):
     assert PAGE_HEIGHT - MARGIN_TOP - MARGIN_BOTTOM == pytest.approx(book.get_viewport_height() * plutoprint.UNITS_PX)
 
-HTML_CONTENT = "<p>Hello <br> World </p>"
+HTML_CONTENT = "<p>Hello <br> World</p>"
 
 def test_book_get_document_width(book):
     assert book.get_document_width() == 0.0
@@ -126,7 +126,7 @@ def test_book_load_url(book, tmp_path):
 
 XHTML_CONTENT = (
     "<html xmlns='http://www.w3.org/1999/xhtml'>"
-    "<body><p>Hello <br/> World </p></body>"
+    "<body><p>Hello <br/> World</p></body>"
     "</html>"
 )
 
