@@ -1,14 +1,6 @@
 name: Build and Upload to PyPI
 
-on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
-  release:
-    types:
-      - published
+on: [push, pull_request]
 
 jobs:
   build_sdist:
@@ -32,7 +24,7 @@ jobs:
 
   build_wheels:
     runs-on: windows-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     defaults:
       run:
         shell: msys2 {0}
@@ -111,7 +103,7 @@ jobs:
   upload_pypi:
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     permissions:
       id-token: write
     steps:
