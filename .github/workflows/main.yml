@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: sdist
+          name: cibw-sdist
           path: ./dist/*.tar.gz
 
   build_wheels:
@@ -97,7 +97,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-win_amd64
+          name: cibw-wheels
           path: ./wheelhouse/*.whl
 
   upload_pypi:
@@ -110,9 +110,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: dist
-          pattern: |
-            sdist
-            wheels-*
+          pattern: cibw-*
           merge-multiple: true
 
       - name: Publish to PyPI
