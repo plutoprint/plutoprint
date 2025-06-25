@@ -75,8 +75,8 @@ def main():
     parser.add_argument('--keywords', help='Set PDF document keywords.')
     parser.add_argument('--creator', help='Set PDF document creator.')
 
-    parser.add_argument('--version', action='version', version=f'PlutoPrint v{plutoprint.__version__}')
-    parser.add_argument('--info', action=InfoAction, nargs=0, help='show build information and exit')
+    parser.add_argument('--version', action='version', version=f'PlutoPrint v{plutoprint.__version__}', help='Show version information and exit.')
+    parser.add_argument('--info', action=InfoAction, nargs=0, help='Show build information and exit.')
 
     args = parser.parse_args()
 
