@@ -1,5 +1,6 @@
 import plutoprint
 import argparse
+import sys
 import re
 
 PAGE_SIZES = {
@@ -29,6 +30,11 @@ METADATA_MAP = {
     'keywords': plutoprint.PDF_METADATA_KEYWORDS,
     'creator': plutoprint.PDF_METADATA_CREATOR,
 }
+
+class InfoAction(argparse.Action):
+    def __call__(self, *args, **kwargs):
+        print(plutoprint.__build_info__, end='')
+        sys.exit()
 
 def length(value):
     match = re.fullmatch(r'(\d+(?:.\d+)?)(pt|pc|in|cm|mm|px)', value.lower())
@@ -70,6 +76,7 @@ def main():
     parser.add_argument('--creator', help='Set PDF document creator.')
 
     parser.add_argument('--version', action='version', version=f'PlutoPrint v{plutoprint.__version__}')
+    parser.add_argument('--info', action=InfoAction, nargs=0, help='show build information and exit')
 
     args = parser.parse_args()
 
