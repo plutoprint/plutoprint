@@ -5,8 +5,6 @@ API Reference
 
 .. toctree::
     :maxdepth: 2
-    :titlesonly:
-    :hidden:
 
     constants
     pagesize
