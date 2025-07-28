@@ -4,7 +4,7 @@ API Reference
 .. currentmodule:: plutoprint
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     constants
     pagesize
