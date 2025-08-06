@@ -53,8 +53,101 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
       book.render_document(canvas)
       canvas.write_to_png("hello.png")
 
+Samples
+=======
+
+Invoices
+--------
+
+.. raw:: html
+
+    <div align="center">
+      <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/invoices.png" alt="Invoices">
+    </div>
+
+**Invoice 1**
+
+.. code-block:: bash
+
+   plutoprint invoice-1.html invoice-1.pdf --margin=0.5in
+
+.. raw:: html
+
+    <div align="center">
+      <img width="800" src="https://github.com/sammycage/plutoprint-samples/blob/main/images/invoice-1.png" alt="Invoice 1">
+    </div>
+
+**Invoice 2**
+
+.. code-block:: bash
+
+   plutoprint invoice-2.html invoice-2.pdf --margin=0.5in
+
+.. raw:: html
+
+    <div align="center">
+      <img width="800" src="https://github.com/sammycage/plutoprint-samples/blob/main/images/invoice-2.png" alt="Invoice 2">
+    </div>
+
+**Invoice 3**
+
+.. code-block:: bash
+
+   plutoprint invoice-3.html invoice-3.pdf --margin=0.5in
+
+.. raw:: html
+
+    <div align="center">
+      <img width="800" src="https://github.com/sammycage/plutoprint-samples/blob/main/images/invoice-3.png" alt="Invoice 3">
+    </div>
+
+Tickets
+-------
+
+.. raw:: html
+
+    <div align="center">
+      <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/tickets.jpg" alt="Tickets">
+    </div>
+
+**Ticket 1**
+
+.. code-block:: bash
+
+   plutoprint ticket-1.html ticket-1.pdf --margin=0.5in
+
+.. raw:: html
+
+    <div align="center">
+      <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/ticket-1.png" alt="Ticket 1">
+    </div>
+
+**Ticket 2**
+
+.. code-block:: bash
+
+   plutoprint ticket-2.html ticket-2.pdf --margin=0.5in
+
+.. raw:: html
+
+    <div align="center">
+      <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/ticket-2.png" alt="Ticket 2">
+    </div>
+
+**Ticket 3**
+
+.. code-block:: bash
+
+   plutoprint ticket-3.html ticket-3.pdf --margin=0.5in
+
+.. raw:: html
+
+    <div align="center">
+      <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/ticket-3.png" alt="Ticket 3">
+    </div>
+
 Links & Resources
------------------
+=================
 
 - Documentation: https://plutoprint.readthedocs.io
 - Samples: https://github.com/plutoprint/plutoprint-samples
@@ -63,7 +156,7 @@ Links & Resources
 - Donation: https://github.com/sponsors/plutoprint
 
 License
--------
+=======
 
 PlutoPrint is licensed under the `MIT License <https://github.com/plutoprint/plutoprint/blob/main/LICENSE>`_, allowing for both personal and commercial use.
 
