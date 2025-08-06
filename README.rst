@@ -61,9 +61,9 @@ Invoices
 
 .. raw:: html
 
-    <div align="center">
+    <p align="center">
       <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/invoices.png" alt="Invoices">
-    </div>
+    </p>
 
 **Invoice 1**
 
@@ -106,9 +106,9 @@ Tickets
 
 .. raw:: html
 
-    <div align="center">
+    <p align="center">
       <img src="https://github.com/sammycage/plutoprint-samples/blob/main/images/tickets.jpg" alt="Tickets">
-    </div>
+    </p>
 
 **Ticket 1**
 
