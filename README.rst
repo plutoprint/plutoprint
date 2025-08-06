@@ -62,7 +62,7 @@ Invoices
 .. raw:: html
 
     <p align="center">
-      <img src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/invoices.png" alt="Invoices">
+      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoices.png" alt="Invoices">
     </p>
 
 **Invoice 1**
@@ -74,7 +74,7 @@ Invoices
 .. raw:: html
 
     <div align="center">
-      <img width="800" src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/invoice-1.png" alt="Invoice 1">
+      <img width="800" src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-1.png" alt="Invoice 1">
     </div>
 
 **Invoice 2**
@@ -86,7 +86,7 @@ Invoices
 .. raw:: html
 
     <div align="center">
-      <img width="800" src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/invoice-2.png" alt="Invoice 2">
+      <img width="800" src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-2.png" alt="Invoice 2">
     </div>
 
 **Invoice 3**
@@ -98,7 +98,7 @@ Invoices
 .. raw:: html
 
     <div align="center">
-      <img width="800" src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/invoice-3.png" alt="Invoice 3">
+      <img width="800" src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-3.png" alt="Invoice 3">
     </div>
 
 Tickets
@@ -107,7 +107,7 @@ Tickets
 .. raw:: html
 
     <p align="center">
-      <img src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/tickets.jpg" alt="Tickets">
+      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/tickets.jpg" alt="Tickets">
     </p>
 
 **Ticket 1**
@@ -119,7 +119,7 @@ Tickets
 .. raw:: html
 
     <div align="center">
-      <img src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/ticket-1.png" alt="Ticket 1">
+      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-1.png" alt="Ticket 1">
     </div>
 
 **Ticket 2**
@@ -131,7 +131,7 @@ Tickets
 .. raw:: html
 
     <div align="center">
-      <img src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/ticket-2.png" alt="Ticket 2">
+      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-2.png" alt="Ticket 2">
     </div>
 
 **Ticket 3**
@@ -143,7 +143,7 @@ Tickets
 .. raw:: html
 
     <div align="center">
-      <img src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/ticket-3.png" alt="Ticket 3">
+      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-3.png" alt="Ticket 3">
     </div>
 
 **Ticket 4**
@@ -155,7 +155,7 @@ Tickets
 .. raw:: html
 
     <div align="center">
-      <img src="https://github.com/plutoprint/plutoprint-samples/blob/main/images/ticket-4.png" alt="Ticket 4">
+      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-4.png" alt="Ticket 4">
     </div>
 
 Links & Resources
