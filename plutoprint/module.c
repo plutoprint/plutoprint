@@ -1451,7 +1451,7 @@ static PyObject* Book_Create(plutobook_t* book)
     return (PyObject*)book_ob;
 }
 
-static struct PyModuleDef module_definition = {
+static struct PyModuleDef plutoprint_module = {
     PyModuleDef_HEAD_INIT,
     "plutoprint",
     0,
@@ -1479,16 +1479,28 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
         return NULL;
     }
 
-    PyObject* module = PyModule_Create(&module_definition);
+    PyObject* module = PyModule_Create(&plutoprint_module);
     if(module == NULL) {
         return NULL;
     }
 
-    Error_Object = PyErr_NewException("plutoprint.Error", NULL, NULL);
-
     PyModule_AddStringConstant(module, "__version__", PLUTOPRINT_VERSION_STRING);
-    PyModule_AddObject(module, "__version_info__", Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO));
-    PyModule_AddObject(module, "__build_info__", PyUnicode_FromFormat("%s\nPlutoPrint version: %s\nPython version: %s\n", plutobook_build_info(), PLUTOPRINT_VERSION_STRING, PY_VERSION));
+    PyModule_AddObject(module,
+        "__version_info__",
+        Py_BuildValue("(iii)", PLUTOPRINT_VERSION_MAJOR, PLUTOPRINT_VERSION_MINOR, PLUTOPRINT_VERSION_MICRO)
+    );
+
+    PyModule_AddObject(module,
+        "__build_info__",
+        PyUnicode_FromFormat(
+            "%s\nPlutoPrint version: %s\nPython version: %s\n",
+            plutobook_build_info(),
+            PLUTOPRINT_VERSION_STRING,
+            PY_VERSION
+        )
+    );
+
+    Error_Object = PyErr_NewException("plutoprint.Error", NULL, NULL);
 
     Py_INCREF(Error_Object);
     PyModule_AddObject(module, "Error", Error_Object);
