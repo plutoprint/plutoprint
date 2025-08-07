@@ -45,22 +45,16 @@ Represents the compile-time PlutoBook version string in the format 'major.minor.
 def plutobook_version() -> int:
     """
     Returns the PlutoBook version encoded as a single integer.
-
-    :returns: The encoded version as an integer.
     """
 
 def plutobook_version_string() -> str:
     """
     Returns the PlutoBook version as a string in the format 'major.minor.micro'.
-
-    :returns: The version string.
     """
 
 def plutobook_build_info() -> str:
     """
     Returns the PlutoBook build information, including build date, platform, and compiler details.
-
-    :returns: The build information string.
     """
 
 UNITS_PT: float = ...
