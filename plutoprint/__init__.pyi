@@ -4,42 +4,42 @@ import os
 
 __version__: str = ...
 """
-Represents the version of plutoprint as a string in the format "major.minor.micro".
+Represents the PlutoPrint version string in the format 'major.minor.micro'.
 """
 
 __version_info__: Tuple[int, int, int] = ...
 """
-Represents the version of plutoprint as a tuple of three integers (major, minor, micro).
+Represents the PlutoPrint version as a tuple of three integers: (major, minor, micro).
 """
 
 __build_info__: str = ...
 """
-Represents the build metadata of plutoprint as a string.
+Represents the PlutoPrint build information, including build date, platform, and compiler details.
 """
 
 PLUTOBOOK_VERSION: int = ...
 """
-Represents the version of the plutobook library encoded as a single integer.
+Represents the compile-time PlutoBook version encoded as a single integer.
 """
 
 PLUTOBOOK_VERSION_MAJOR: int = ...
 """
-Represents the major version number of the plutobook library.
-"""
-
-PLUTOBOOK_VERSION_MICRO: int = ...
-"""
-Represents the micro version number of the plutobook library.
+Represents the compile-time major version number of PlutoBook.
 """
 
 PLUTOBOOK_VERSION_MINOR: int = ...
 """
-Represents the minor version number of the plutobook library.
+Represents the compile-time minor version number of PlutoBook.
+"""
+
+PLUTOBOOK_VERSION_MICRO: int = ...
+"""
+Represents the compile-time micro version number of PlutoBook.
 """
 
 PLUTOBOOK_VERSION_STRING: str = ...
 """
-Represents the version of the plutobook library as a string in the format "major.minor.micro".
+Represents the compile-time PlutoBook version string in the format 'major.minor.micro'.
 """
 
 UNITS_PT: float = ...
@@ -115,7 +115,7 @@ class PageSize:
 
     height: float = ...
     """
-    The width of the page in points (1 / 72 inch).
+    The height of the page in points (1 / 72 inch).
     """
 
 PAGE_SIZE_NONE: PageSize = ...
@@ -150,7 +150,7 @@ Represents the A4 page size (210 x 297 mm).
 
 PAGE_SIZE_A5: PageSize = ...
 """
-Represents the B4 page size (148 x 210 mm).
+Represents the A5 page size (148 x 210 mm).
 """
 
 PAGE_SIZE_B4: PageSize = ...
@@ -165,7 +165,7 @@ Represents the B5 page size (176 x 250 mm).
 
 class PageMargins:
     """
-    The `PageMargins` class represents the margins of a page in points (1 / 72 inch)
+    The `PageMargins` class represents the margins of a page in points (1 / 72 inch).
     """
 
     def __init__(self, top: float = 0.0, right: float = 0.0, bottom: float = 0.0, left: float = 0.0) -> None:
@@ -194,17 +194,17 @@ class PageMargins:
 
     right: float = ...
     """
-    The top margin of the page in points (1 / 72 inch).
+    The right margin of the page in points (1 / 72 inch).
     """
 
     bottom: float = ...
     """
-    The top margin of the page in points (1 / 72 inch).
+    The bottom margin of the page in points (1 / 72 inch).
     """
 
     left: float = ...
     """
-    The top margin of the page in points (1 / 72 inch).
+    The left margin of the page in points (1 / 72 inch).
     """
 
 PAGE_MARGINS_NONE: PageMargins = ...
@@ -354,7 +354,7 @@ on a little-endian machine the first pixel is in the least-significant bit.
 
 class Error(Exception):
     """
-    This exception is raised whenever a plutoprint operation fails.
+    This exception is raised when a PlutoBook operation fails.
     """
 
 AnyCanvas = TypeVar('AnyCanvas', bound='Canvas')
@@ -649,17 +649,17 @@ class ResourceFetcher:
 
 default_resource_fetcher: ResourceFetcher = ...
 """
-The default fetcher used to fetch external resources such as stylesheets, fonts, or images.
+Represents the default fetcher used to fetch external resources such as stylesheets, fonts, and images.
 """
 
 MIN_PAGE_COUNT: int = ...
 """
-This constant defines an index that is guaranteed to be less than the valid page count. 
+Represents a sentinel value less than any valid page count.
 """
 
 MAX_PAGE_COUNT: int = ...
 """
-This constant defines an index that is guaranteed to be greater than the valid page count.
+Represents a sentinel value greater than any valid page count.
 """
 
 class Book:
