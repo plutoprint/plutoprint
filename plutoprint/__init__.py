@@ -3,6 +3,10 @@ from ._plutoprint import (
     __version_info__,
     __build_info__,
 
+    plutobook_version,
+    plutobook_version_string,
+    plutobook_build_info,
+
     Error,
 
     PageSize,

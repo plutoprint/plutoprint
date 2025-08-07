@@ -19,6 +19,12 @@ Constants
 
 .. autodata:: PLUTOBOOK_VERSION_STRING
 
+.. autofunction:: plutobook_version
+
+.. autofunction:: plutobook_version_string
+
+.. autofunction:: plutobook_build_info
+
 .. autodata:: MIN_PAGE_COUNT
 
 .. autodata:: MAX_PAGE_COUNT

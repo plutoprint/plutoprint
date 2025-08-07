@@ -1451,12 +1451,34 @@ static PyObject* Book_Create(plutobook_t* book)
     return (PyObject*)book_ob;
 }
 
+static PyObject* plutoprint_plutobook_version(PyObject* self, PyObject* args)
+{
+    return PyLong_FromLong(plutobook_version());
+}
+
+static PyObject* plutoprint_plutobook_version_string(PyObject* self, PyObject* args)
+{
+    return PyUnicode_FromString(plutobook_version_string());
+}
+
+static PyObject* plutoprint_plutobook_build_info(PyObject* self, PyObject* args)
+{
+    return PyUnicode_FromString(plutobook_build_info());
+}
+
+static PyMethodDef plutoprint_methods[] = {
+    {"plutobook_version", (PyCFunction)plutoprint_plutobook_version, METH_NOARGS},
+    {"plutobook_version_string", (PyCFunction)plutoprint_plutobook_version_string, METH_NOARGS},
+    {"plutobook_build_info", (PyCFunction)plutoprint_plutobook_build_info, METH_NOARGS},
+    {NULL}
+};
+
 static struct PyModuleDef plutoprint_module = {
     PyModuleDef_HEAD_INIT,
     "plutoprint",
     0,
     0,
-    0,
+    plutoprint_methods,
     0,
     0,
     0,
