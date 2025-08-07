@@ -56,6 +56,13 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
 Samples
 =======
 
+Clone the sample repository and run the following commands to generate the PDF outputs:
+
+.. code-block:: bash
+
+   git clone https://github.com/plutoprint/plutoprint-samples.git
+   cd plutoprint-samples
+
 Invoices
 --------
 
