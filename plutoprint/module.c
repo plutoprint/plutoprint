@@ -696,6 +696,7 @@ static plutobook_stream_status_t stream_write_func(void* closure, const char* da
     PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject* result = PyObject_CallFunction((PyObject*)closure, "(y#)", data, length);
     if(result == NULL) {
+        PyErr_Clear();
         PyGILState_Release(gstate);
         return PLUTOBOOK_STREAM_STATUS_SUCCESS;
     }
@@ -1012,12 +1013,18 @@ static PyObject* ResourceFetcher_Create(void)
 
 static plutobook_resource_data_t* resource_fetch_func(void* closure, const char* url)
 {
+    PyObject* obj = (PyObject*)closure;
     PyGILState_STATE gstate = PyGILState_Ensure();
-    PyObject* result = PyObject_CallMethod((PyObject*)closure, "fetch_url", "(s)", url);
-    if(result == NULL || !PyObject_TypeCheck(result, &ResourceData_Type)) {
-        Py_XDECREF(result);
-        PyGILState_Release(gstate);
-        return NULL;
+    PyObject* result = PyObject_CallMethod(obj, "fetch_url", "(s)", url);
+    if(result == NULL) {
+        goto error;
+    }
+
+    if(!PyObject_TypeCheck(result, &ResourceData_Type)) {
+        PyErr_Format(PyExc_TypeError,
+            "%s.fetch_url() must return a plutoprint.ResourceData object, not '%.200s'",
+            Py_TYPE(obj)->tp_name, Py_TYPE(result)->tp_name);
+        goto error;
     }
 
     ResourceData_Object* resource_ob = (ResourceData_Object*)(result);
@@ -1025,6 +1032,16 @@ static plutobook_resource_data_t* resource_fetch_func(void* closure, const char*
     Py_DECREF(resource_ob);
     PyGILState_Release(gstate);
     return resource;
+error:
+    if(PyErr_Occurred()) {
+        plutobook_set_error_message("Failed to fetch URL '%.200s'", url);
+        PyErr_Print();
+        PyErr_Clear();
+    }
+
+    Py_XDECREF(result);
+    PyGILState_Release(gstate);
+    return NULL;
 }
 
 typedef struct {
