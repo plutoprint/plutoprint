@@ -52,12 +52,12 @@ jobs:
             mingw-w64-x86_64-python-pip
             mingw-w64-x86_64-gcc
 
-      - name: Checkout plutobook
+      - name: Checkout PlutoBook
         uses: actions/checkout@v4
         with:
           repository: plutoprint/plutobook
           path: plutobook
-      - name: Build plutobook
+      - name: Build PlutoBook
         run: |
           cd plutobook
           meson setup build \
@@ -67,15 +67,15 @@ jobs:
             --prefer-static \
             -Dcpp_link_args='-static -static-libgcc -static-libstdc++ -lwinpthread' \
             -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DU_STATIC_IMPLEMENTATION'
-          meson install --strip -C build
+          meson install -C build --strip
 
       - name: Copy build dependencies
         run: |
           sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
           cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
-          cp -v /mingw64/bin/libpkgconf-*.dll plutobook-win-x64/bin
+          cp -v /mingw64/bin/libpkgconf*.dll plutobook-win-x64/bin
 
-      - name: Upload plutobook
+      - name: Upload PlutoBook build
         uses: actions/upload-artifact@v4
         with:
           name: plutobook-win-x64
