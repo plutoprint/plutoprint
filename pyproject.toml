@@ -2,7 +2,7 @@
 name = 'plutoprint'
 description = 'Paged HTML rendering library'
 readme = 'README.rst'
-requires-python = '>=3.8'
+requires-python = '>=3.10'
 keywords = ['html', 'css', 'svg', 'pdf', 'png', 'html2pdf', 'html2png']
 dynamic = ['version']
 license = {file = 'LICENSE'}
@@ -15,13 +15,16 @@ classifiers = [
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
     'Operating System :: OS Independent',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
+    'Programming Language :: C',
+    'Programming Language :: Python',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+    'Programming Language :: Python :: 3 :: Only',
     'Programming Language :: Python :: Implementation :: CPython',
-    'Programming Language :: Python :: Implementation :: PyPy',
+    'Typing :: Typed',
     'Topic :: Multimedia :: Graphics :: Graphics Conversion',
     'Topic :: Multimedia :: Graphics :: Presentation',
     'Topic :: Printing',
