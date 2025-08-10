@@ -600,7 +600,7 @@ static PyObject* Error_Object;
     Py_END_ALLOW_THREADS \
 
 #define RETURN_NULL_IF_ERROR(error) \
-    if (error) { \
+    if(error) { \
         PyErr_SetString(Error_Object, plutobook_get_error_message()); \
         return NULL; \
     } \
@@ -696,9 +696,9 @@ static plutobook_stream_status_t stream_write_func(void* closure, const char* da
     PyGILState_STATE gstate = PyGILState_Ensure();
     PyObject* result = PyObject_CallFunction((PyObject*)closure, "(y#)", data, length);
     if(result == NULL) {
-        PyErr_Clear();
+        PyErr_Print();
         PyGILState_Release(gstate);
-        return PLUTOBOOK_STREAM_STATUS_SUCCESS;
+        return PLUTOBOOK_STREAM_STATUS_WRITE_ERROR;
     }
 
     Py_DECREF(result);
@@ -1033,14 +1033,10 @@ static plutobook_resource_data_t* resource_fetch_func(void* closure, const char*
     PyGILState_Release(gstate);
     return resource;
 error:
-    if(PyErr_Occurred()) {
-        plutobook_set_error_message("Failed to fetch URL '%.200s'", url);
-        PyErr_Print();
-        PyErr_Clear();
-    }
-
+    PyErr_Print();
     Py_XDECREF(result);
     PyGILState_Release(gstate);
+    plutobook_set_error_message("Failed to fetch URL '%.200s'", url);
     return NULL;
 }
 
