@@ -22,9 +22,58 @@ jobs:
           name: cibw-sdist
           path: ./dist/*.tar.gz
 
-  build_wheels:
+  build_manylinux_2_28_x86_64_image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -f docker/manylinux_2_28_x86_64.Dockerfile -t ghcr.io/${{ github.repository_owner }}/plutoprint-manylinux_2_28_x86_64:latest .
+          docker push ghcr.io/${{ github.repository_owner }}/plutoprint-manylinux_2_28_x86_64:latest
+
+  build_linux_wheels:
+    needs: [build_manylinux_2_28_x86_64_image]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.0.0
+        env:
+          CIBW_BUILD: |
+            cp38-manylinux_x86_64
+            cp39-manylinux_x86_64
+            cp310-manylinux_x86_64
+            cp311-manylinux_x86_64
+            cp312-manylinux_x86_64
+          CIBW_MANYLINUX_X86_64_IMAGE: >
+            ghcr.io/${{ github.repository_owner }}/plutobook-manylinux_2_28_x86_64:latest
+          CIBW_BEFORE_BUILD_LINUX: >
+            pip install auditwheel
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            auditwheel -v repair -w {dest_dir} {wheel}
+          CIBW_TEST_COMMAND: >
+            python -c "import plutoprint; print(plutoprint.__build_info__)"
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-linux-wheels
+          path: ./wheelhouse/*.whl
+
+  build_windows_wheels:
     runs-on: windows-latest
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     defaults:
       run:
         shell: msys2 {0}
@@ -38,8 +87,8 @@ jobs:
           install: >-
             mingw-w64-x86_64-expat
             mingw-w64-x86_64-icu
-            mingw-w64-x86_64-harfbuzz
             mingw-w64-x86_64-freetype
+            mingw-w64-x86_64-harfbuzz
             mingw-w64-x86_64-fontconfig
             mingw-w64-x86_64-cairo
             mingw-w64-x86_64-curl-winssl
@@ -88,22 +137,22 @@ jobs:
         env:
           CIBW_BUILD: cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64
           CIBW_BEFORE_BUILD_WINDOWS: pip install delvewheel
-          CIBW_ENVIRONMENT_WINDOWS:
+          CIBW_ENVIRONMENT_WINDOWS: |
             PKG_CONFIG='${{ github.workspace }}/plutobook-win-x64/bin/pkgconf.exe'
             PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win-x64/lib/pkgconfig'
-          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS:
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: >
             delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
-          CIBW_TEST_COMMAND:
+          CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels
+          name: cibw-windows-wheels
           path: ./wheelhouse/*.whl
 
   upload_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build_linux_wheels, build_windows_wheels, build_sdist]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     permissions:
