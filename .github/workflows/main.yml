@@ -58,7 +58,7 @@ jobs:
             cp311-manylinux_x86_64
             cp312-manylinux_x86_64
           CIBW_MANYLINUX_X86_64_IMAGE: >
-            ghcr.io/${{ github.repository_owner }}/plutobook-manylinux_2_28_x86_64:latest
+            ghcr.io/${{ github.repository_owner }}/plutoprint-manylinux_2_28_x86_64:latest
           CIBW_BEFORE_BUILD_LINUX: >
             pip install auditwheel
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
