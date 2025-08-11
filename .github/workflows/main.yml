@@ -22,29 +22,7 @@ jobs:
           name: cibw-sdist
           path: ./dist/*.tar.gz
 
-  build_manylinux_2_28_x86_64_image:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and Push Docker image
-        run: |
-          docker build -f docker/manylinux_2_28_x86_64.Dockerfile -t ghcr.io/${{ github.repository_owner }}/plutoprint-manylinux_2_28_x86_64:latest .
-          docker push ghcr.io/${{ github.repository_owner }}/plutoprint-manylinux_2_28_x86_64:latest
-
   build_linux_wheels:
-    needs: [build_manylinux_2_28_x86_64_image]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +35,7 @@ jobs:
             cp312-manylinux_x86_64
             cp313-manylinux_x86_64
             cp314-manylinux_x86_64
-          CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/${{ github.repository_owner }}/plutoprint-manylinux_2_28_x86_64:latest
+          CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/plutoprint/plutobook-manylinux_2_28_x86_64:main
           CIBW_BEFORE_BUILD_LINUX: >
             pip install auditwheel
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
@@ -73,63 +51,14 @@ jobs:
 
   build_windows_wheels:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
-      - name: Setup MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          install: >-
-            mingw-w64-x86_64-expat
-            mingw-w64-x86_64-icu
-            mingw-w64-x86_64-freetype
-            mingw-w64-x86_64-harfbuzz
-            mingw-w64-x86_64-fontconfig
-            mingw-w64-x86_64-cairo
-            mingw-w64-x86_64-curl-winssl
-            mingw-w64-x86_64-libjpeg-turbo
-            mingw-w64-x86_64-libwebp
-            mingw-w64-x86_64-meson
-            mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-pkgconf
-            mingw-w64-x86_64-python
-            mingw-w64-x86_64-python-pip
-            mingw-w64-x86_64-gcc
-
-      - name: Checkout PlutoBook
-        uses: actions/checkout@v4
-        with:
-          repository: plutoprint/plutobook
-          path: plutobook
-      - name: Build PlutoBook
+      - name: Install PlutoBook
         run: |
-          cd plutobook
-          meson setup build \
-            --prefix='${{ github.workspace }}/plutobook-win-x64' \
-            --buildtype=release \
-            --wrap-mode=nodownload \
-            --prefer-static \
-            -Dcpp_args='-DCAIRO_WIN32_STATIC_BUILD -DCURL_STATICLIB -DU_STATIC_IMPLEMENTATION'
-          meson install -C build --strip
-
-      - name: Copy build dependencies
-        run: |
-          sed -i '/^Requires\.private/d' plutobook-win-x64/lib/pkgconfig/plutobook.pc
-          cp -v /mingw64/bin/pkgconf.exe plutobook-win-x64/bin
-          cp -v /mingw64/bin/libpkgconf*.dll plutobook-win-x64/bin
-          cp -v /mingw64/bin/libgcc*.dll plutobook-win-x64/bin
-          cp -v /mingw64/bin/libstdc++*.dll plutobook-win-x64/bin
-          cp -v /mingw64/bin/libwinpthread*.dll plutobook-win-x64/bin
-
-      - name: Upload PlutoBook build
-        uses: actions/upload-artifact@v4
-        with:
-          name: plutobook-win-x64
-          path: plutobook-win-x64/
+          curl -L https://github.com/betasammy/plutoprint/releases/download/v0.0.1/plutobook-win-x64.zip -o plutobook-win-x64.zip
+          7z x plutobook-win-x64.zip -oplutobook
+          sed -i "s|^prefix=.*|prefix=\${{ github.workspace }}/plutobook|" plutobook/lib/pkgconfig/plutobook.pc
+          sed -i '/^Requires\.private/d' plutobook/lib/pkgconfig/plutobook.pc
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.1.3
@@ -137,10 +66,10 @@ jobs:
           CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64
           CIBW_BEFORE_BUILD_WINDOWS: pip install delvewheel
           CIBW_ENVIRONMENT_WINDOWS: |
-            PKG_CONFIG='${{ github.workspace }}/plutobook-win-x64/bin/pkgconf.exe'
-            PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win-x64/lib/pkgconfig'
+            PKG_CONFIG='${{ github.workspace }}/plutobook/bin/pkgconf.exe'
+            PKG_CONFIG_PATH='${{ github.workspace }}/plutobook/lib/pkgconfig'
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: >
-            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win-x64/bin
+            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook/bin
           CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
@@ -151,7 +80,7 @@ jobs:
           path: ./wheelhouse/*.whl
 
   upload_pypi:
-    needs: [build_linux_wheels, build_windows_wheels, build_sdist]
+    needs: [build_sdist, build_linux_wheels, build_windows_wheels]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     permissions:
