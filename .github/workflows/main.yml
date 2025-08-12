@@ -24,6 +24,7 @@ jobs:
 
   build_linux_wheels:
     runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
       - uses: actions/checkout@v4
       - name: Build wheels
@@ -50,6 +51,7 @@ jobs:
           path: ./wheelhouse/*.whl
 
   build_windows_wheels:
+    if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
