@@ -12,3 +12,4 @@ Overview
 
     getting_started
     api_reference/index
+    changelog.rst
