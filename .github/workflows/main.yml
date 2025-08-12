@@ -2,6 +2,8 @@ name: Build and Upload to PyPI
 
 on: [push, pull_request]
 
+env:
+  PLUTOBOOK_VERSION: 0.1.0
 jobs:
   build_sdist:
     runs-on: ubuntu-latest
@@ -36,7 +38,7 @@ jobs:
             cp312-manylinux_x86_64
             cp313-manylinux_x86_64
             cp314-manylinux_x86_64
-          CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/plutoprint/plutobook-manylinux_2_28_x86_64:main
+          CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/plutoprint/plutobook-manylinux_2_28_x86_64:v${{ env.PLUTOBOOK_VERSION }}
           CIBW_BEFORE_BUILD_LINUX: >
             pip install auditwheel
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
@@ -57,10 +59,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install PlutoBook
         run: |
-          curl -L https://github.com/betasammy/plutoprint/releases/download/v0.0.1/plutobook-win-x64.zip -o plutobook-win-x64.zip
-          7z x plutobook-win-x64.zip -oplutobook
-          sed -i "s|^prefix=.*|prefix=\${{ github.workspace }}/plutobook|" plutobook/lib/pkgconfig/plutobook.pc
-          sed -i '/^Requires\.private/d' plutobook/lib/pkgconfig/plutobook.pc
+          curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-win64-${{ env.PLUTOBOOK_VERSION }}.zip -o plutobook-win64.zip
+          7z x plutobook-win64.zip
+          sed -i "s|^prefix=.*|prefix=\${{ github.workspace }}/plutobook-win64|" plutobook-win64/lib/pkgconfig/plutobook.pc
+          sed -i '/^Requires\.private/d' plutobook-win64/lib/pkgconfig/plutobook.pc
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.1.3
@@ -68,10 +70,10 @@ jobs:
           CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64
           CIBW_BEFORE_BUILD_WINDOWS: pip install delvewheel
           CIBW_ENVIRONMENT_WINDOWS: |
-            PKG_CONFIG='${{ github.workspace }}/plutobook/bin/pkgconf.exe'
-            PKG_CONFIG_PATH='${{ github.workspace }}/plutobook/lib/pkgconfig'
+            PKG_CONFIG='${{ github.workspace }}/plutobook-win64/bin/pkgconf.exe'
+            PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win64/lib/pkgconfig'
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: >
-            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook/bin
+            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win64/bin
           CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
