@@ -1,16 +1,22 @@
 Changelog
 =========
 
+.. currentmodule:: plutoprint
+
+.. _v0.2.0:
+
 PlutoPrint 0.2.0 (2025-06-23)
 -----------------------------
 
 - Add Read the Docs support  
 - Refactor error handling for clarity and robustness  
-- Implement `==` and `!=` for `PageMargins` and `PageSize`  
-- Update `Canvas` context methods for `AnyCanvas` type variable  
+- Implement `==` and `!=` for :class:`PageMargins` and :class:`PageSize`  
+- Update :class:`Canvas` context methods for :class:`AnyCanvas` type variable  
 - Use `is not None` for CLI argument presence checks  
-- Fix dimensions in `PAGE_SIZE_LEDGER` constant  
+- Fix dimensions in :class:`PAGE_SIZE_LEDGER` constant  
 - Add comprehensive unit tests  
+
+.. _v0.1.0:
 
 PlutoPrint 0.1.0 (2025-05-24)
 -----------------------------
