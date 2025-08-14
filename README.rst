@@ -5,9 +5,6 @@ PlutoPrint
 
 PlutoPrint is a lightweight and easy-to-use Python library for generating high-quality PDFs and images directly from HTML or XML content. It is based on `PlutoBook’s <https://github.com/plutoprint/plutobook>`_ robust rendering engine and provides a simple API to convert your HTML into crisp PDF documents or vibrant image files. This makes it ideal for reports, invoices, or visual snapshots.
 
-Samples
--------
-
 .. list-table::
    :header-rows: 1
 
@@ -118,6 +115,29 @@ Expected output:
 
 .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/charts.png
    :alt: Charts
+
+Samples
+=======
+
+.. list-table:: Invoices
+
+   * - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-1.png
+          :alt: Invoice 1
+     - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-2.png
+          :alt: Invoice 2
+     - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-3.png
+          :alt: Invoice 3
+
+.. list-table:: Tickets
+
+   * - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-1.png
+          :alt: Ticket 1
+     - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-2.png
+          :alt: Ticket 2
+   * - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-3.png
+          :alt: Ticket 3
+     - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-4.png
+          :alt: Ticket 4
 
 Links & Resources
 =================
