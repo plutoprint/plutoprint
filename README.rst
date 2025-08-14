@@ -5,6 +5,17 @@ PlutoPrint
 
 PlutoPrint is a lightweight and easy-to-use Python library for generating high-quality PDFs and images directly from HTML or XML content. It is based on `PlutoBook’s <https://github.com/plutoprint/plutobook>`_ robust rendering engine and provides a simple API to convert your HTML into crisp PDF documents or vibrant image files. This makes it ideal for reports, invoices, or visual snapshots.
 
+Samples
+-------
+
+.. list-table::
+   :header-rows: 1
+
+   * - Invoices
+     - Tickets
+   * - |invoices|
+     - |tickets|
+
 Installation
 ------------
 
@@ -105,123 +116,8 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
 
 Expected output:
 
-.. raw:: html
-
-    <p align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/charts.png" alt="Charts">
-    </p>
-
-Samples
-=======
-
-Clone the sample repository and run the following commands to generate the PDF outputs:
-
-.. code-block:: bash
-
-   git clone https://github.com/plutoprint/plutoprint-samples.git
-   cd plutoprint-samples
-
-Invoices
---------
-
-.. raw:: html
-
-    <p align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoices.png" alt="Invoices">
-    </p>
-
-**Invoice 1**
-
-.. code-block:: bash
-
-   plutoprint invoice-1.html invoice-1.pdf --margin=0.5in
-
-.. raw:: html
-
-    <div align="center">
-      <img width="800" src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-1.png" alt="Invoice 1">
-    </div>
-
-**Invoice 2**
-
-.. code-block:: bash
-
-   plutoprint invoice-2.html invoice-2.pdf --margin=0.5in
-
-.. raw:: html
-
-    <div align="center">
-      <img width="800" src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-2.png" alt="Invoice 2">
-    </div>
-
-**Invoice 3**
-
-.. code-block:: bash
-
-   plutoprint invoice-3.html invoice-3.pdf --margin=0.5in
-
-.. raw:: html
-
-    <div align="center">
-      <img width="800" src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoice-3.png" alt="Invoice 3">
-    </div>
-
-Tickets
--------
-
-.. raw:: html
-
-    <p align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/tickets.jpg" alt="Tickets">
-    </p>
-
-**Ticket 1**
-
-.. code-block:: bash
-
-   plutoprint ticket-1.html ticket-1.pdf --margin=0mm --width=210mm --height=75mm
-
-.. raw:: html
-
-    <div align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-1.png" alt="Ticket 1">
-    </div>
-
-**Ticket 2**
-
-.. code-block:: bash
-
-   plutoprint ticket-2.html ticket-2.pdf --margin=0mm --width=210mm --height=74mm
-
-.. raw:: html
-
-    <div align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-2.png" alt="Ticket 2">
-    </div>
-
-**Ticket 3**
-
-.. code-block:: bash
-
-   plutoprint ticket-3.html ticket-3.pdf --margin=0mm --width=210mm --height=74mm
-
-.. raw:: html
-
-    <div align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-3.png" alt="Ticket 3">
-    </div>
-
-**Ticket 4**
-
-.. code-block:: bash
-
-   plutoprint ticket-4.html ticket-4.pdf --margin=0mm --width=210mm --height=74mm
-
-.. raw:: html
-
-    <div align="center">
-      <img src="https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/ticket-4.png" alt="Ticket 4">
-    </div>
+.. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/charts.png
+   :alt: Charts
 
 Links & Resources
 =================
@@ -247,3 +143,7 @@ PlutoPrint is licensed under the `MIT License <https://github.com/plutoprint/plu
 .. |pypi| image:: https://img.shields.io/pypi/v/plutoprint
    :target: https://pypi.org/project/plutoprint
 .. |pyver| image:: https://img.shields.io/pypi/pyversions/plutoprint
+.. |invoices| image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/invoices.png
+   :alt: Invoices
+.. |tickets| image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/images/tickets.jpg
+   :alt: Tickets
