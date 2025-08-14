@@ -1,4 +1,4 @@
-name: Build and Upload to PyPI
+name: Build and Publish
 
 on: [push, pull_request]
 
@@ -83,11 +83,12 @@ jobs:
           name: cibw-windows-wheels
           path: ./wheelhouse/*.whl
 
-  upload_pypi:
+  publish:
     needs: [build_sdist, build_linux_wheels, build_windows_wheels]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     permissions:
+      contents: write
       id-token: write
     steps:
       - uses: actions/download-artifact@v4
@@ -98,3 +99,13 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Generate Release Note
+        run: |
+          echo "See changelog: https://plutoprint.readthedocs.io/en/latest/changelog.html#plutoprint-${GITHUB_REF_NAME//./-}" > RELEASENOTE.md
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body_path: RELEASENOTE.md
+          files: dist/*
