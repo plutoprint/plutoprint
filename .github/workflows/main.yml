@@ -102,7 +102,7 @@ jobs:
 
       - name: Generate Release Note
         run: |
-          echo "See changelog: https://plutoprint.readthedocs.io/en/latest/changelog.html#plutoprint-${GITHUB_REF_NAME//./-}" > RELEASENOTE.md
+          echo "See changelog: https://plutoprint.readthedocs.io/en/latest/changelog.html#${GITHUB_REF_NAME//./-}" > RELEASENOTE.md
       - name: Publish to GitHub Release
         uses: softprops/action-gh-release@v2
         with:

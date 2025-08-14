@@ -3,7 +3,7 @@ Changelog
 
 .. currentmodule:: plutoprint
 
-.. _v0.2.0:
+.. _v0-2-0:
 PlutoPrint 0.2.0 (2025-06-23)
 -----------------------------
 
@@ -15,7 +15,7 @@ PlutoPrint 0.2.0 (2025-06-23)
 - Fix dimensions in :data:`PAGE_SIZE_LEDGER` constant  
 - Add comprehensive unit tests  
 
-.. _v0.1.0:
+.. _v0-1-0:
 PlutoPrint 0.1.0 (2025-05-24)
 -----------------------------
 
