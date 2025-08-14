@@ -1,4 +1,4 @@
-project('plutoprint', 'c', 'cpp', version: '0.2.0', license: 'MIT')
+project('plutoprint', 'c', 'cpp', version: '0.3.0', license: 'MIT')
 
 version_info = meson.project_version().split('.')
 version_major = version_info[0].to_int()

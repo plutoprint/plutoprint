@@ -3,6 +3,26 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-3-0:
+
+PlutoPrint 0.3.0 (2025-08-14)
+-----------------------------
+
+- Provide precompiled binaries for:
+
+  - **Linux**: ``cp310-manylinux_x86_64``, ``cp311-manylinux_x86_64``, ``cp312-manylinux_x86_64``, ``cp313-manylinux_x86_64``, ``cp314-manylinux_x86_64``
+  - **Windows**: ``cp310-win_amd64``, ``cp311-win_amd64``, ``cp312-win_amd64``, ``cp313-win_amd64``, ``cp314-win_amd64``
+
+- Update ``requires-python`` to ``>=3.10``
+
+- Add functions for runtime access to version and build metadata from the underlying PlutoBook library:
+
+  - :func:`plutobook_version`
+  - :func:`plutobook_version_string`
+  - :func:`plutobook_build_info`
+
+- Add ``--info`` argument to the ``plutoprint`` CLI
+
 .. _v0-2-0:
 
 PlutoPrint 0.2.0 (2025-06-23)
