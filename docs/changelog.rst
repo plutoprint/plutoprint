@@ -13,7 +13,7 @@ PlutoPrint 0.2.0 (2025-06-23)
 - Implement `==` and `!=` for :class:`PageMargins` and :class:`PageSize`  
 - Update :class:`Canvas` context methods for :class:`AnyCanvas` type variable  
 - Use `is not None` for CLI argument presence checks  
-- Fix dimensions in :class:`PAGE_SIZE_LEDGER` constant  
+- Fix dimensions in :data:`PAGE_SIZE_LEDGER` constant  
 - Add comprehensive unit tests  
 
 .. _v0.1.0:
