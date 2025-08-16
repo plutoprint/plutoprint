@@ -1002,13 +1002,115 @@ static PyTypeObject ResourceFetcher_Type = {
     .tp_name = "plutoprint.ResourceFetcher",
     .tp_basicsize = sizeof(ResourceFetcher_Object),
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-    .tp_methods = ResourceFetcher_methods,
-    .tp_new = PyType_GenericNew
+    .tp_methods = ResourceFetcher_methods
 };
 
-static PyObject* ResourceFetcher_Create(void)
+typedef ResourceFetcher_Object DefaultResourceFetcher_Object;
+
+static PyObject* DefaultResourceFetcher_set_ssl_cainfo(DefaultResourceFetcher_Object* self, PyObject* args)
 {
-    return Object_New(ResourceFetcher_Object, &ResourceFetcher_Type);
+    PyObject* path_ob;
+    if(!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &path_ob)) {
+        return NULL;
+    }
+
+    const char* path = PyBytes_AS_STRING(path_ob);
+    plutobook_set_ssl_cainfo(path);
+    Py_DECREF(path_ob);
+    Py_RETURN_NONE;
+}
+
+static PyObject* DefaultResourceFetcher_set_ssl_capath(DefaultResourceFetcher_Object* self, PyObject* args)
+{
+    PyObject* path_ob;
+    if(!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &path_ob)) {
+        return NULL;
+    }
+
+    const char* path = PyBytes_AS_STRING(path_ob);
+    plutobook_set_ssl_capath(path);
+    Py_DECREF(path_ob);
+    Py_RETURN_NONE;
+}
+
+static PyObject* DefaultResourceFetcher_set_ssl_verify_peer(DefaultResourceFetcher_Object* self, PyObject* args)
+{
+    bool verify;
+    if(!PyArg_ParseTuple(args, "p", &verify)) {
+        return NULL;
+    }
+
+    plutobook_set_ssl_verify_peer(verify);
+    Py_RETURN_NONE;
+}
+
+static PyObject* DefaultResourceFetcher_set_ssl_verify_host(DefaultResourceFetcher_Object* self, PyObject* args)
+{
+    bool verify;
+    if(!PyArg_ParseTuple(args, "p", &verify)) {
+        return NULL;
+    }
+
+    plutobook_set_ssl_verify_host(verify);
+    Py_RETURN_NONE;
+}
+
+static PyObject* DefaultResourceFetcher_set_http_follow_redirects(DefaultResourceFetcher_Object* self, PyObject* args)
+{
+    bool follow;
+    if(!PyArg_ParseTuple(args, "p", &follow)) {
+        return NULL;
+    }
+
+    plutobook_set_http_follow_redirects(follow);
+    Py_RETURN_NONE;
+}
+
+static PyObject* DefaultResourceFetcher_set_http_max_redirects(DefaultResourceFetcher_Object* self, PyObject* args)
+{
+    int amount;
+    if(!PyArg_ParseTuple(args, "i", &amount)) {
+        return NULL;
+    }
+
+    plutobook_set_http_max_redirects(amount);
+    Py_RETURN_NONE;
+}
+
+static PyObject* DefaultResourceFetcher_set_http_timeout(DefaultResourceFetcher_Object* self, PyObject* args)
+{
+    int timeout;
+    if(!PyArg_ParseTuple(args, "i", &timeout)) {
+        return NULL;
+    }
+
+    plutobook_set_http_timeout(timeout);
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef DefaultResourceFetcher_methods[] = {
+    {"set_ssl_cainfo", (PyCFunction)DefaultResourceFetcher_set_ssl_cainfo, METH_VARARGS},
+    {"set_ssl_capath", (PyCFunction)DefaultResourceFetcher_set_ssl_capath, METH_VARARGS},
+    {"set_ssl_verify_peer", (PyCFunction)DefaultResourceFetcher_set_ssl_verify_peer, METH_VARARGS},
+    {"set_ssl_verify_host", (PyCFunction)DefaultResourceFetcher_set_ssl_verify_host, METH_VARARGS},
+    {"set_http_follow_redirects", (PyCFunction)DefaultResourceFetcher_set_http_follow_redirects, METH_VARARGS},
+    {"set_http_max_redirects", (PyCFunction)DefaultResourceFetcher_set_http_max_redirects, METH_VARARGS},
+    {"set_http_timeout", (PyCFunction)DefaultResourceFetcher_set_http_timeout, METH_VARARGS},
+    {NULL}
+};
+
+static PyTypeObject DefaultResourceFetcher_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "plutoprint.DefaultResourceFetcher",
+    .tp_basicsize = sizeof(DefaultResourceFetcher_Object),
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_base = &ResourceFetcher_Type,
+    .tp_methods = DefaultResourceFetcher_methods
+};
+
+static PyObject* DefaultResourceFetcher_Create(void)
+{
+    return Object_New(DefaultResourceFetcher_Object, &DefaultResourceFetcher_Type);
 }
 
 static plutobook_resource_data_t* resource_fetch_func(void* closure, const char* url)
@@ -1510,6 +1612,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
         || PyType_Ready(&PDFCanvas_Type) < 0
         || PyType_Ready(&ResourceData_Type) < 0
         || PyType_Ready(&ResourceFetcher_Type) < 0
+        || PyType_Ready(&DefaultResourceFetcher_Type) < 0
         || PyType_Ready(&Book_Type) < 0) {
         return NULL;
     }
@@ -1570,10 +1673,13 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     Py_INCREF(&ResourceFetcher_Type);
     PyModule_AddObject(module, "ResourceFetcher", (PyObject*)&ResourceFetcher_Type);
 
+    Py_INCREF(&DefaultResourceFetcher_Type);
+    PyModule_AddObject(module, "DefaultResourceFetcher", (PyObject*)&DefaultResourceFetcher_Type);
+
     Py_INCREF(&Book_Type);
     PyModule_AddObject(module, "Book", (PyObject*)&Book_Type);
 
-    PyModule_AddObject(module, "default_resource_fetcher", ResourceFetcher_Create());
+    PyModule_AddObject(module, "default_resource_fetcher", DefaultResourceFetcher_Create());
 
     PyModule_AddObject(module, "PAGE_SIZE_NONE", PageSize_Create(PLUTOBOOK_PAGE_SIZE_NONE));
     PyModule_AddObject(module, "PAGE_SIZE_LETTER", PageSize_Create(PLUTOBOOK_PAGE_SIZE_LETTER));

@@ -662,7 +662,75 @@ class ResourceFetcher:
         :returns: The fetched resource data.
         """
 
-default_resource_fetcher: ResourceFetcher = ...
+class DefaultResourceFetcher(ResourceFetcher):
+    """
+    Default implementation of `ResourceFetcher`.
+    """
+
+    def set_ssl_cainfo(self, path: Union[str, bytes, os.PathLike]) -> None:
+        """
+        Sets the path to a file containing trusted CA certificates.
+
+        If not set, no custom CA file is used.
+
+        :param path: Path to the CA certificate bundle file.
+        """
+
+    def set_ssl_capath(self, path: Union[str, bytes, os.PathLike]) -> None:
+        """
+        Sets the path to a directory containing trusted CA certificates.
+
+        If not set, no custom CA path is used.
+
+        :param path: Path to the directory with CA certificates.
+        """
+
+    def set_ssl_verify_peer(self, verify: bool) -> None:
+        """
+        Enables or disables SSL peer certificate verification.
+
+        If not set, verification is enabled by default.
+
+        :param verify: `True` to verify the peer, `False` to disable verification.
+        """
+
+    def set_ssl_verify_host(self, verify: bool) -> None:
+        """
+        Enables or disables SSL host name verification.
+
+        If not set, verification is enabled by default.
+
+        :param verify: `True` to verify the host, `False` to disable verification.
+        """
+
+    def set_http_follow_redirects(self, follow: bool) -> None:
+        """
+        Enables or disables automatic following of HTTP redirects.
+
+        If not set, following redirects is enabled by default.
+
+        :param follow: `True` to follow redirects, `False` to disable.
+        """
+
+    def set_http_max_redirects(self, amount: int) -> None:
+        """
+        Sets the maximum number of redirects to follow.
+
+        If not set, the default maximum is `30`.
+
+        :param amount: Maximum number of redirects.
+        """
+
+    def set_http_timeout(self, timeout: int) -> None:
+        """
+        Sets the maximum time allowed for an HTTP request.
+
+        If not set, the default timeout is `300` seconds.
+
+        :param timeout: Timeout duration in seconds.
+        """
+
+default_resource_fetcher: DefaultResourceFetcher = ...
 """
 Represents the default fetcher used to fetch external resources such as stylesheets, fonts, and images.
 """

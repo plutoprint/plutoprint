@@ -19,6 +19,7 @@ from ._plutoprint import (
     PDFCanvas,
     ResourceData,
     ResourceFetcher,
+    DefaultResourceFetcher,
     Book,
 
     default_resource_fetcher,
