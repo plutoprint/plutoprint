@@ -1035,7 +1035,7 @@ static PyObject* DefaultResourceFetcher_set_ssl_capath(DefaultResourceFetcher_Ob
 
 static PyObject* DefaultResourceFetcher_set_ssl_verify_peer(DefaultResourceFetcher_Object* self, PyObject* args)
 {
-    bool verify;
+    int verify;
     if(!PyArg_ParseTuple(args, "p", &verify)) {
         return NULL;
     }
@@ -1046,7 +1046,7 @@ static PyObject* DefaultResourceFetcher_set_ssl_verify_peer(DefaultResourceFetch
 
 static PyObject* DefaultResourceFetcher_set_ssl_verify_host(DefaultResourceFetcher_Object* self, PyObject* args)
 {
-    bool verify;
+    int verify;
     if(!PyArg_ParseTuple(args, "p", &verify)) {
         return NULL;
     }
@@ -1057,7 +1057,7 @@ static PyObject* DefaultResourceFetcher_set_ssl_verify_host(DefaultResourceFetch
 
 static PyObject* DefaultResourceFetcher_set_http_follow_redirects(DefaultResourceFetcher_Object* self, PyObject* args)
 {
-    bool follow;
+    int follow;
     if(!PyArg_ParseTuple(args, "p", &follow)) {
         return NULL;
     }
