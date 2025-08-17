@@ -97,9 +97,6 @@ jobs:
           pattern: cibw-*
           merge-multiple: true
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-
       - name: Generate Release Note
         run: |
           echo "See changelog: https://plutoprint.readthedocs.io/en/latest/changelog.html#${GITHUB_REF_NAME//./-}" > RELEASENOTE.md
@@ -109,3 +106,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           body_path: RELEASENOTE.md
           files: dist/*
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
