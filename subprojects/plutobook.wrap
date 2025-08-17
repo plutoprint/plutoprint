@@ -1,6 +1,6 @@
 [wrap-git]
 url = https://github.com/plutoprint/plutobook.git
-revision = v0.1.0
+revision = v0.2.0
 depth = 1
 
 [provide]
