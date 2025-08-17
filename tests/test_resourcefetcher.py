@@ -8,6 +8,9 @@ def test_resource_fetcher():
         fetcher.fetch_url(str())
 
 def test_default_resource_fetcher(tmp_path):
+    with pytest.raises(TypeError):
+        plutoprint.DefaultResourceFetcher()
+
     assert isinstance(plutoprint.default_resource_fetcher, plutoprint.ResourceFetcher)
 
     path = tmp_path / "hello.txt"
