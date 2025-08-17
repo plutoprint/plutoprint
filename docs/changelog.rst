@@ -10,13 +10,13 @@ PlutoPrint 0.4.0 (2025-08-17)
 
 - Add :class:`DefaultResourceFetcher`, a default implementation of :class:`ResourceFetcher` with configuration methods for SSL and HTTP behavior:
 
-  - :meth:`set_ssl_cainfo` - set path to a trusted CA certificate file
-  - :meth:`set_ssl_capath` - set path to a trusted CA certificate directory
-  - :meth:`set_ssl_verify_peer` - enable or disable SSL peer verification
-  - :meth:`set_ssl_verify_host` - enable or disable SSL host name verification
-  - :meth:`set_http_follow_redirects` - enable or disable automatic HTTP redirects
-  - :meth:`set_http_max_redirects` - set maximum number of HTTP redirects
-  - :meth:`set_http_timeout` - set maximum time for an HTTP request
+  - :meth:`DefaultResourceFetcher.set_ssl_cainfo` - set path to a trusted CA certificate file
+  - :meth:`DefaultResourceFetcher.set_ssl_capath` - set path to a trusted CA certificate directory
+  - :meth:`DefaultResourceFetcher.set_ssl_verify_peer` - enable or disable SSL peer verification
+  - :meth:`DefaultResourceFetcher.set_ssl_verify_host` - enable or disable SSL host name verification
+  - :meth:`DefaultResourceFetcher.set_http_follow_redirects` - enable or disable automatic HTTP redirects
+  - :meth:`DefaultResourceFetcher.set_http_max_redirects` - set maximum number of HTTP redirects
+  - :meth:`DefaultResourceFetcher.set_http_timeout` - set maximum time for an HTTP request
 
 - Extend ``plutoprint`` CLI with additional arguments for network configuration:
 
