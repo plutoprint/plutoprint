@@ -1002,6 +1002,7 @@ static PyTypeObject ResourceFetcher_Type = {
     .tp_name = "plutoprint.ResourceFetcher",
     .tp_basicsize = sizeof(ResourceFetcher_Object),
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_new = PyType_GenericNew,
     .tp_methods = ResourceFetcher_methods
 };
 
@@ -1099,13 +1100,20 @@ static PyMethodDef DefaultResourceFetcher_methods[] = {
     {NULL}
 };
 
+static PyObject* DefaultResourceFetcher_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
+{
+    PyErr_Format(PyExc_TypeError, "cannot create '%s' instances", type->tp_name);
+    return NULL;
+}
+
 static PyTypeObject DefaultResourceFetcher_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "plutoprint.DefaultResourceFetcher",
     .tp_basicsize = sizeof(DefaultResourceFetcher_Object),
     .tp_flags = Py_TPFLAGS_DEFAULT,
     .tp_base = &ResourceFetcher_Type,
-    .tp_methods = DefaultResourceFetcher_methods
+    .tp_methods = DefaultResourceFetcher_methods,
+    .tp_new = (newfunc)DefaultResourceFetcher_new
 };
 
 static PyObject* DefaultResourceFetcher_Create(void)
