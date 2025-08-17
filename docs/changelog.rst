@@ -3,6 +3,13 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-4-1:
+
+PlutoPrint 0.4.1 (2025-08-17)
+-----------------------------
+
+- Fix :class:`ResourceFetcher` instantiation error
+
 .. _v0-4-0:
 
 PlutoPrint 0.4.0 (2025-08-17)
