@@ -75,6 +75,13 @@ def main():
     parser.add_argument('--keywords', help='Set PDF document keywords.')
     parser.add_argument('--creator', help='Set PDF document creator.')
 
+    parser.add_argument('--ssl-cainfo', metavar='FILE', type=str, help='Specify an SSL CA certificate file.')
+    parser.add_argument('--ssl-capath', metavar='PATH', type=str, help='Specify an SSL CA certificate directory.')
+    parser.add_argument('--no-ssl', action='store_true', help='Disable SSL verification (not recommended).')
+    parser.add_argument('--no-redirects', action='store_true', help='Disable following HTTP redirects.')
+    parser.add_argument('--max-redirects', metavar='NUM', type=int, help='Specify the maximum number of HTTP redirects to follow.')
+    parser.add_argument('--timeout', metavar='SECONDS', type=int, help='Specify the HTTP timeout in seconds.')
+
     parser.add_argument('--version', action='version', version=f'PlutoPrint v{plutoprint.__version__}', help='Show version information and exit.')
     parser.add_argument('--info', action=InfoAction, nargs=0, help='Show build information and exit.')
 
@@ -108,6 +115,23 @@ def main():
     media = plutoprint.MEDIA_TYPE_PRINT
     if args.media == 'screen':
         media = plutoprint.MEDIA_TYPE_SCREEN
+
+    if args.ssl_cainfo is not None:
+        plutoprint.default_resource_fetcher.set_ssl_cainfo(args.ssl_cainfo)
+    if args.ssl_capath is not None:
+        plutoprint.default_resource_fetcher.set_ssl_capath(args.ssl_capath)
+
+    if args.no_ssl:
+        plutoprint.default_resource_fetcher.set_ssl_verify_peer(False)
+        plutoprint.default_resource_fetcher.set_ssl_verify_host(False)
+
+    if args.no_redirects:
+        plutoprint.default_resource_fetcher.set_http_follow_redirects(False)
+
+    if args.max_redirects is not None:
+        plutoprint.default_resource_fetcher.set_http_max_redirects(args.max_redirects)
+    if args.timeout is not None:
+        plutoprint.default_resource_fetcher.set_http_timeout(args.timeout)
 
     book = plutoprint.Book(size, margins, media)
     book.load_url(args.input, args.user_style, args.user_script)
