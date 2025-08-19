@@ -932,21 +932,22 @@ class Book:
         :param page_step: The step value for iterating through pages.
         """
 
-    def write_to_png(self, path: Union[str, bytes, os.PathLike], format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None:
+    def write_to_png(self, path: Union[str, bytes, os.PathLike], width: int = -1, height: int = -1) -> None:
         """
         Writes the document to a file at the specified path as PNG.
 
         :param path: The file path where the PNG image will be written.
-        :param stream: The writable binary stream where the PNG image will be written.
-        :param format: The pixel format of the image.
+        :param width: The desired width in pixels, or -1 to auto-scale based on the document size.
+        :param height: The desired height in pixels, or -1 to auto-scale based on the document size.
         """
 
-    def write_to_png_stream(self, stream: BinaryIO, format: ImageFormat = IMAGE_FORMAT_ARGB32) -> None:
+    def write_to_png_stream(self, stream: BinaryIO, width: int = -1, height: int = -1) -> None:
         """
         Writes the document to a writable binary stream as PNG.
 
         :param stream: The writable binary stream where the PNG image will be written.
-        :param format: The pixel format of the image.
+        :param width: The desired width in pixels, or -1 to auto-scale based on the document size.
+        :param height: The desired height in pixels, or -1 to auto-scale based on the document size.
         """
 
     custom_resource_fetcher: Optional[ResourceFetcher] = None

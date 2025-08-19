@@ -1457,40 +1457,34 @@ static PyObject* Book_write_to_pdf_stream(Book_Object* self, PyObject* args, PyO
     Py_RETURN_NONE;
 }
 
-static PyObject* Book_write_to_png(Book_Object* self, PyObject* args)
+static PyObject* Book_write_to_png(Book_Object* self, PyObject* args, PyObject* kwds)
 {
+    static char* kwlist[] = { "filename", "width", "height", NULL };
     PyObject* file_ob;
-    ImageFormat_Object* format_ob = NULL;
-    if(!PyArg_ParseTuple(args, "O&|O!", PyUnicode_FSConverter, &file_ob, &ImageFormat_Type, &format_ob)) {
+    int width = -1;
+    int height = -1;
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|ii", kwlist, PyUnicode_FSConverter, &file_ob, &width, &height)) {
         return NULL;
     }
 
-    plutobook_image_format_t format = PLUTOBOOK_IMAGE_FORMAT_ARGB32;
-    if(format_ob) {
-        format = format_ob->value;
-    }
-
     const char* filename = PyBytes_AS_STRING(file_ob);
-    TRAP_ERROR(error, plutobook_write_to_png(self->book, filename, format));
+    TRAP_ERROR(error, plutobook_write_to_png(self->book, filename, width, height));
     Py_DECREF(file_ob);
     RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
 }
 
-static PyObject* Book_write_to_png_stream(Book_Object* self, PyObject* args)
+static PyObject* Book_write_to_png_stream(Book_Object* self, PyObject* args, PyObject* kwds)
 {
+    static char* kwlist[] = { "stream", "width", "height", NULL };
     PyObject* write_ob;
-    ImageFormat_Object* format_ob = NULL;
-    if(!PyArg_ParseTuple(args, "O&|O!", stream_write_conv, &write_ob, &ImageFormat_Type, &format_ob)) {
+    int width = -1;
+    int height = -1;
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|ii", kwlist, stream_write_conv, &write_ob, &width, &height)) {
         return NULL;
     }
 
-    plutobook_image_format_t format = PLUTOBOOK_IMAGE_FORMAT_ARGB32;
-    if(format_ob) {
-        format = format_ob->value;
-    }
-
-    TRAP_ERROR(error, plutobook_write_to_png_stream(self->book, stream_write_func, write_ob, format));
+    TRAP_ERROR(error, plutobook_write_to_png_stream(self->book, stream_write_func, write_ob, width, height));
     Py_DECREF(write_ob);
     RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
@@ -1550,8 +1544,8 @@ static PyMethodDef Book_methods[] = {
     {"render_document", (PyCFunction)Book_render_document, METH_VARARGS},
     {"write_to_pdf", (PyCFunction)Book_write_to_pdf, METH_VARARGS | METH_KEYWORDS},
     {"write_to_pdf_stream", (PyCFunction)Book_write_to_pdf_stream, METH_VARARGS | METH_KEYWORDS},
-    {"write_to_png", (PyCFunction)Book_write_to_png, METH_VARARGS},
-    {"write_to_png_stream", (PyCFunction)Book_write_to_png_stream, METH_VARARGS},
+    {"write_to_png", (PyCFunction)Book_write_to_png, METH_VARARGS | METH_KEYWORDS},
+    {"write_to_png_stream", (PyCFunction)Book_write_to_png_stream, METH_VARARGS | METH_KEYWORDS},
     {NULL}
 };
 
