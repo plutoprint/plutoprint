@@ -3,6 +3,13 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-5-0:
+
+PlutoPrint 0.5.0 (2025-08-19)
+-----------------------------
+
+- Replace the `format` parameter with `width` and `height` parameters in :meth:`Book.write_to_png` and :meth:`Book.write_to_png_stream`
+
 .. _v0-4-1:
 
 PlutoPrint 0.4.1 (2025-08-17)
