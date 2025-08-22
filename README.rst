@@ -41,8 +41,24 @@ Generate PDF with Python
    import plutoprint
 
    book = plutoprint.Book(plutoprint.PAGE_SIZE_A4)
-   book.load_url("input.html")
-   book.write_to_pdf("output.pdf")
+   book.load_url("hello.html")
+
+   # Export the entire document to PDF
+   book.write_to_pdf("hello.pdf")
+
+   # Export pages 2 to 15 (inclusive) in order
+   book.write_to_pdf("hello-range.pdf", 2, 15, 1)
+
+   # Export pages 15 to 2 (inclusive) in reverse order
+   book.write_to_pdf("hello-reverse.pdf", 15, 2, -1)
+
+   # Render pages manually with PDFCanvas (in reverse order)
+   with plutoprint.PDFCanvas("hello-canvas.pdf", book.get_page_size()) as canvas:
+      canvas.scale(plutoprint.UNITS_PX, plutoprint.UNITS_PX)
+      for page_index in range(book.get_page_count() - 1, -1, -1):
+         canvas.set_size(book.get_page_size_at(page_index))
+         book.render_page(canvas, page_index)
+         canvas.show_page()
 
 Generate PNG with Python
 ^^^^^^^^^^^^^^^^^^^^^^^^
