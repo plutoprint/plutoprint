@@ -55,6 +55,9 @@ Generate PNG with Python
    book = plutoprint.Book(media=plutoprint.MEDIA_TYPE_SCREEN)
    book.load_html("<b>Hello World</b>", user_style="body { text-align: center }")
 
+   # Outputs an image at the document’s natural size
+   book.write_to_png("hello.png")
+
    # Outputs a 320px wide image with auto-scaled height
    book.write_to_png("hello-width.png", width=320)
 
