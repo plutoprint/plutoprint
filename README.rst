@@ -33,7 +33,8 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
 
    plutoprint input.html output.pdf --size=A4
 
-**Generate PDF with Python**
+Generate PDF with Python
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -43,7 +44,8 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
    book.load_url("input.html")
    book.write_to_pdf("output.pdf")
 
-**Generate PNG with Python**
+Generate PNG with Python
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -75,7 +77,8 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
       book.render_document(canvas)
       canvas.write_to_png("hello-canvas.png")
 
-**Generate Charts with Matplotlib**
+Generate Charts with Matplotlib
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
