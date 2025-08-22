@@ -53,13 +53,27 @@ Generate a PDF from the command line with the installed ``plutoprint`` script:
    book = plutoprint.Book(media=plutoprint.MEDIA_TYPE_SCREEN)
    book.load_html("<b>Hello World</b>", user_style="body { text-align: center }")
 
+   # Outputs a 320px wide image with auto-scaled height
+   book.write_to_png("hello-width.png", width=320)
+
+   # Outputs a 240px tall image with auto-scaled width
+   book.write_to_png("hello-height.png", height=240)
+
+   # Outputs an 800×200 pixels image (may stretch/squish content)
+   book.write_to_png("hello-fixed.png", 800, 200)
+
+   # Get the natural document size
    width = math.ceil(book.get_document_width())
    height = math.ceil(book.get_document_height())
 
+   # Outputs a high-resolution 5x scaled image
+   book.write_to_png("hello-scaled.png", width * 5, height * 5)
+
+   # Render manually on a canvas with white background
    with plutoprint.ImageCanvas(width, height) as canvas:
       canvas.clear_surface(1, 1, 1)
       book.render_document(canvas)
-      canvas.write_to_png("hello.png")
+      canvas.write_to_png("hello-canvas.png")
 
 **Generate Charts with Matplotlib**
 
