@@ -3,6 +3,16 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-6-0:
+
+PlutoPrint 0.6.0 (2025-08-24)
+-----------------------------
+
+- Bump PlutoBook to v0.4.0
+
+  - Add support for `text-orientation` and `writing-mode`
+  - PNG export outputs a single continuous image (no pagination)
+
 .. _v0-5-0:
 
 PlutoPrint 0.5.0 (2025-08-19)
