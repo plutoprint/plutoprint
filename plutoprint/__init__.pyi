@@ -912,24 +912,24 @@ class Book:
         :param rect: The rectangle specifying the area to render.
         """
 
-    def write_to_pdf(self, path: Union[str, bytes, os.PathLike], from_page: int = MIN_PAGE_COUNT, to_page: int = MAX_PAGE_COUNT, page_step: int = 1) -> None:
+    def write_to_pdf(self, path: Union[str, bytes, os.PathLike], page_start: int = MIN_PAGE_COUNT, page_end: int = MAX_PAGE_COUNT, page_step: int = 1) -> None:
         """
         Writes the document to a file at the specified path as PDF.
 
         :param path: The file path where the PDF document will be written.
-        :param from_page: The starting page number.
-        :param to_page: The ending page number.
-        :param page_step: The step value for iterating through pages.
+        :param page_start: The first page in the range to be written (inclusive).
+        :param page_end: The last page in the range to be written (inclusive).
+        :param page_step: The increment used to advance through pages in the range.
         """
 
-    def write_to_pdf_stream(self, stream: BinaryIO, from_page: int = MIN_PAGE_COUNT, to_page: int = MAX_PAGE_COUNT, page_step: int = 1) -> None:
+    def write_to_pdf_stream(self, stream: BinaryIO, page_start: int = MIN_PAGE_COUNT, page_end: int = MAX_PAGE_COUNT, page_step: int = 1) -> None:
         """
         Writes the document to a writable binary stream as PDF.
 
         :param stream: The writable binary stream where the PDF document will be written.
-        :param from_page: The starting page number.
-        :param to_page: The ending page number.
-        :param page_step: The step value for iterating through pages.
+        :param page_start: The first page in the range to be written (inclusive).
+        :param page_end: The last page in the range to be written (inclusive).
+        :param page_step: The increment used to advance through pages in the range.
         """
 
     def write_to_png(self, path: Union[str, bytes, os.PathLike], width: int = -1, height: int = -1) -> None:

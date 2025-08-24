@@ -1424,17 +1424,17 @@ static PyObject* Book_render_document(Book_Object* self, PyObject* args)
 
 static PyObject* Book_write_to_pdf(Book_Object* self, PyObject* args, PyObject* kwds)
 {
-    static char* kwlist[] = { "filename", "from_page", "to_page", "page_step", NULL };
+    static char* kwlist[] = { "filename", "page_start", "page_end", "page_step", NULL };
     PyObject* file_ob;
-    unsigned int from_page = PLUTOBOOK_MIN_PAGE_COUNT;
-    unsigned int to_page = PLUTOBOOK_MAX_PAGE_COUNT;
+    unsigned int page_start = PLUTOBOOK_MIN_PAGE_COUNT;
+    unsigned int page_end = PLUTOBOOK_MAX_PAGE_COUNT;
     int page_step = 1;
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, PyUnicode_FSConverter, &file_ob, &from_page, &to_page, &page_step)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, PyUnicode_FSConverter, &file_ob, &page_start, &page_end, &page_step)) {
         return NULL;
     }
 
     const char* filename = PyBytes_AS_STRING(file_ob);
-    TRAP_ERROR(error, plutobook_write_to_pdf_range(self->book, filename, from_page, to_page, page_step));
+    TRAP_ERROR(error, plutobook_write_to_pdf_range(self->book, filename, page_start, page_end, page_step));
     Py_DECREF(file_ob);
     RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
@@ -1442,16 +1442,16 @@ static PyObject* Book_write_to_pdf(Book_Object* self, PyObject* args, PyObject* 
 
 static PyObject* Book_write_to_pdf_stream(Book_Object* self, PyObject* args, PyObject* kwds)
 {
-    static char* kwlist[] = { "stream", "from_page", "to_page", "page_step", NULL };
+    static char* kwlist[] = { "stream", "page_start", "page_end", "page_step", NULL };
     PyObject* write_ob;
-    unsigned int from_page = PLUTOBOOK_MIN_PAGE_COUNT;
-    unsigned int to_page = PLUTOBOOK_MAX_PAGE_COUNT;
+    unsigned int page_start = PLUTOBOOK_MIN_PAGE_COUNT;
+    unsigned int page_end = PLUTOBOOK_MAX_PAGE_COUNT;
     int page_step = 1;
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, stream_write_conv, &write_ob, &from_page, &to_page, &page_step)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, stream_write_conv, &write_ob, &page_start, &page_end, &page_step)) {
         return NULL;
     }
 
-    TRAP_ERROR(error, plutobook_write_to_pdf_stream_range(self->book, stream_write_func, write_ob, from_page, to_page, page_step));
+    TRAP_ERROR(error, plutobook_write_to_pdf_stream_range(self->book, stream_write_func, write_ob, page_start, page_end, page_step));
     Py_DECREF(write_ob);
     RETURN_NULL_IF_ERROR(error);
     Py_RETURN_NONE;
