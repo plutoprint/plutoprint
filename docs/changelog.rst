@@ -3,6 +3,26 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-7-0:
+
+PlutoPrint 0.7.0 (2025-08-26)
+-----------------------------
+
+- Bump PlutoBook to v0.5.0
+
+  - Add support for `overflow-wrap` in inline line-breaking algorithm
+  - Fix `text-indent` offset calculation in block-level inline formatting
+  - Fix parser for `text-decoration-line` to return `nullptr` when no values are consumed
+  - Fix luminance mask computation
+
+- Provide precompiled binaries for:
+
+  - `cp310-macosx_14_0_arm64`
+  - `cp311-macosx_14_0_arm64`
+  - `cp312-macosx_14_0_arm64`
+  - `cp313-macosx_14_0_arm64`
+  - `cp314-macosx_14_0_arm64`
+
 .. _v0-6-0:
 
 PlutoPrint 0.6.0 (2025-08-24)
