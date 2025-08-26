@@ -10,18 +10,18 @@ PlutoPrint 0.7.0 (2025-08-26)
 
 - Bump PlutoBook to v0.5.0
 
-  - Add support for `overflow-wrap` in inline line-breaking algorithm
-  - Fix `text-indent` offset calculation in block-level inline formatting
-  - Fix parser for `text-decoration-line` to return `nullptr` when no values are consumed
+  - Add support for ``overflow-wrap`` in inline line-breaking algorithm
+  - Fix ``text-indent`` offset calculation in block-level inline formatting
+  - Fix parser for ``text-decoration-line`` to return ``nullptr`` when no values are consumed
   - Fix luminance mask computation
 
 - Provide precompiled binaries for:
 
-  - `cp310-macosx_14_0_arm64`
-  - `cp311-macosx_14_0_arm64`
-  - `cp312-macosx_14_0_arm64`
-  - `cp313-macosx_14_0_arm64`
-  - `cp314-macosx_14_0_arm64`
+  - ``cp310-macosx_14_0_arm64``
+  - ``cp311-macosx_14_0_arm64``
+  - ``cp312-macosx_14_0_arm64``
+  - ``cp313-macosx_14_0_arm64``
+  - ``cp314-macosx_14_0_arm64``
 
 .. _v0-6-0:
 
@@ -30,7 +30,7 @@ PlutoPrint 0.6.0 (2025-08-24)
 
 - Bump PlutoBook to v0.4.0
 
-  - Add support for `text-orientation` and `writing-mode`
+  - Add support for ``text-orientation`` and ``writing-mode``
   - PNG export outputs a single continuous image (no pagination)
 
 .. _v0-5-0:
@@ -38,7 +38,7 @@ PlutoPrint 0.6.0 (2025-08-24)
 PlutoPrint 0.5.0 (2025-08-19)
 -----------------------------
 
-- Replace the `format` parameter with `width` and `height` parameters in :meth:`Book.write_to_png` and :meth:`Book.write_to_png_stream`
+- Replace the ``format`` parameter with ``width`` and ``height`` parameters in :meth:`Book.write_to_png` and :meth:`Book.write_to_png_stream`
 
 .. _v0-4-1:
 
@@ -78,7 +78,7 @@ PlutoPrint 0.3.0 (2025-08-14)
 
 - Provide precompiled binaries for:
 
-  - **Linux**: ``cp310-manylinux_x86_64``, ``cp311-manylinux_x86_64``, ``cp312-manylinux_x86_64``, ``cp313-manylinux_x86_64``, ``cp314-manylinux_x86_64``
+  - **Linux**: ``cp310-manylinux_2_28_x86_64``, ``cp311-manylinux_2_28_x86_64``, ``cp312-manylinux_2_28_x86_64``, ``cp313-manylinux_2_28_x86_64``, ``cp314-manylinux_2_28_x86_64``
   - **Windows**: ``cp310-win_amd64``, ``cp311-win_amd64``, ``cp312-win_amd64``, ``cp313-win_amd64``, ``cp314-win_amd64``
 
 - Update ``requires-python`` to ``>=3.10``
@@ -98,9 +98,9 @@ PlutoPrint 0.2.0 (2025-06-23)
 
 - Add Read the Docs support  
 - Refactor error handling for clarity and robustness  
-- Implement `==` and `!=` for :class:`PageMargins` and :class:`PageSize`  
+- Implement ``==`` and ``!=`` for :class:`PageMargins` and :class:`PageSize`  
 - Update :class:`Canvas` context methods for :class:`AnyCanvas` type variable  
-- Use `is not None` for CLI argument presence checks  
+- Use ``is not None`` for CLI argument presence checks  
 - Fix dimensions in :data:`PAGE_SIZE_LEDGER` constant  
 - Add comprehensive unit tests  
 
