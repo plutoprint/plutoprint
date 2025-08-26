@@ -53,8 +53,8 @@ jobs:
           path: ./wheelhouse/*.whl
 
   build_windows_wheels:
-    if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     runs-on: windows-latest
+    if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
       - uses: actions/checkout@v4
       - name: Install PlutoBook
