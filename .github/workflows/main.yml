@@ -83,8 +83,42 @@ jobs:
           name: cibw-windows-wheels
           path: ./wheelhouse/*.whl
 
+  build_macos_wheels:
+    if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          brew install cairo expat icu4c freetype fontconfig harfbuzz curl jpeg-turbo webp ninja meson pkg-config
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v3.1.3
+        env:
+          MACOSX_DEPLOYMENT_TARGET: "14.0"
+          CIBW_BUILD: |
+            cp310-macosx_arm64
+            cp311-macosx_arm64
+            cp312-macosx_arm64
+            cp313-macosx_arm64
+            cp314-macosx_arm64
+          CIBW_ENVIRONMENT_MACOS: >
+            PKG_CONFIG_PATH='/opt/homebrew/opt/icu4c/lib/pkgconfig:$PKG_CONFIG_PATH'
+          CIBW_BEFORE_BUILD_MACOS: >
+            pip install delocate
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            delocate-wheel -v -w {dest_dir} {wheel}
+          CIBW_TEST_COMMAND: >
+            python -c "import plutoprint; print(plutoprint.__build_info__)"
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-macos-wheels
+          path: ./wheelhouse/*.whl
+
   publish:
-    needs: [build_sdist, build_linux_wheels, build_windows_wheels]
+    needs: [build_sdist, build_linux_wheels, build_windows_wheels, build_macos_wheels]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     permissions:
