@@ -3,6 +3,16 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-8-0:
+
+PlutoPrint 0.8.0 (2025-08-27)
+-----------------------------
+
+- Bump PlutoBook to v0.6.0
+
+  - Add support for ``-pluto-qrcode()`` in CSS ``content`` property for embedding QR codes
+  - Fix uninitialized table members causing large cell ``padding`` and ``border``
+
 .. _v0-7-0:
 
 PlutoPrint 0.7.0 (2025-08-26)
