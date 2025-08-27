@@ -104,31 +104,59 @@ Quick example of using ``-pluto-qrcode(<string>[, <color>])`` to create QR codes
    import plutoprint
 
    HTML_CONTENT = """
-   <div class="email">Email: contact@example.com</div>
-   <div class="tel">Tel: +1234567890</div>
-   <div class="website">Website: https://example.com</div>
+   <table>
+     <tr>
+       <th class="email">Email</th>
+       <th class="tel">Tel</th>
+     </tr>
+     <tr>
+       <th class="website">Website</th>
+       <th class="github">GitHub</th>
+     </tr>
+   </table>
    """
 
    USER_STYLE = """
-   @page { @top-left-corner { content: -pluto-qrcode("https://github.com/plutoprint"); margin: 16px; } }
-   body { font-family: Arial, sans-serif; background-color: #f7f7f7; padding: 2em; }
-   div { margin-bottom: 2em; padding: 1em; background-color: #fff; border: 2px solid #ccc; border-radius: 8px; font-size: 1.2em; }
-   .email::before, .tel::before, .website::before { display: inline-block; vertical-align: middle; margin-right: 16px; width: 120px; height: 120px; }
-   .email::before { content: -pluto-qrcode("contact@example.com", green); }
-   .tel::before { content: -pluto-qrcode("+1234567890", blue); }
-   .website::before { content: -pluto-qrcode("https://example.com", red); }
+   body {
+     margin: 0;
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background: #f7f7f7;
+     font: 16px Arial;
+   }
+
+   table {
+     border-spacing: 2rem;
+     background: #fff;
+     padding: 2rem;
+     border: 1px solid #ccc;
+     border-radius: 16px;
+   }
+
+   th::before {
+     display: block;
+     width: 130px;
+     height: 130px;
+     margin: 0 auto 0.8rem;
+   }
+
+   .email::before   { content: -pluto-qrcode('mailto:contact@example.com', #16a34a); }
+   .tel::before     { content: -pluto-qrcode('tel:+1234567890', #2563eb); }
+   .website::before { content: -pluto-qrcode('https://example.com', #ef4444); }
+   .github::before  { content: -pluto-qrcode('https://github.com/plutoprint', #f59e0b); }
    """
 
-   book = plutoprint.Book(plutoprint.PAGE_SIZE_LETTER)
-
+   book = plutoprint.Book(plutoprint.PAGE_SIZE_LETTER.landscape())
    book.load_html(HTML_CONTENT, USER_STYLE)
-   book.write_to_png("qrcodes.png")
-   book.write_to_pdf("qrcodes.pdf")
+   book.write_to_png("qrcard.png")
+   book.write_to_pdf("qrcard.pdf")
 
-.. list-table:: Expected output:
+Expected output:
 
-   * - .. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/refs/heads/main/qrcodes-1.png
-          :alt: QrCodes
+.. image:: https://raw.githubusercontent.com/plutoprint/plutoprint-samples/main/qrcard.png
+   :alt: QR card
 
 Generate Charts with Matplotlib
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
