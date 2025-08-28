@@ -191,18 +191,31 @@ Generate Charts with Matplotlib
    book.custom_resource_fetcher = CustomResourceFetcher()
 
    HTML_CONTENT = """
-   <div>
-      <img src='chart:23,45,12,36,28,50'>
-      <img src='chart:5,15,25,35,45'>
-      <img src='chart:50,40,30,20,10'>
-      <img src='chart:10,20,30,40,50,60,70'>
-   </div>
+   <body>
+     <img src='chart:23,45,12,36,28,50'>
+     <img src='chart:5,15,25,35,45'>
+     <img src='chart:50,40,30,20,10'>
+     <img src='chart:10,20,30,40,50,60,70'>
+   </body>
    """
 
    USER_STYLE = """
-   div { display: flex; flex-wrap: wrap; justify-content: center; height: 98vh }
-   img { flex: 0 0 45%; height: 50%; background: #fff; border: 1px solid #ccc; }
-   body { background: #f7f7f7 }
+   body {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     align-items: center;
+     background: #f7f7f7;
+     height: 100vh;
+     margin: 0;
+   }
+
+   img {
+     background: #fff;
+     border: 1px solid #ccc;
+     margin: auto;
+     max-height: 45vh;
+   }
    """
 
    book.load_html(HTML_CONTENT, USER_STYLE)
