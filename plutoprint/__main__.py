@@ -3,6 +3,8 @@ import argparse
 import sys
 import re
 
+from datetime import datetime
+
 PAGE_SIZES = {
     'a3': plutoprint.PAGE_SIZE_A3,
     'a4': plutoprint.PAGE_SIZE_A4,
@@ -136,6 +138,7 @@ def main():
     book = plutoprint.Book(size, margins, media)
     book.load_url(args.input, args.user_style, args.user_script)
 
+    book.set_metadata(plutoprint.PDF_METADATA_CREATION_DATE, datetime.now().astimezone().isoformat(timespec='seconds'))
     for name, meta in METADATA_MAP.items():
         value = getattr(args, name)
         if value:
