@@ -22,7 +22,7 @@ Installation
 
 PlutoPrint requires `PlutoBook <https://github.com/plutoprint/plutobook>`_. On Windows (``win_amd64``), Linux (``manylinux_2_28_x86_64``) and macOS (``macosx_14_0_arm64``), prebuilt binaries are bundled with the package and no further steps are necessary. On other architectures or when building from source, see the `Getting Started guide <https://plutoprint.readthedocs.io/en/latest/getting_started.html>`_ for dependency setup and build instructions.
 
-On macOS, you can also install PlutoPrint using `Homebrew <https://formulae.brew.sh/formula/plutoprint>`_:
+On **macOS**, you can also install PlutoPrint using `Homebrew <https://formulae.brew.sh/formula/plutoprint>`_:
 
 .. code-block:: bash
 
