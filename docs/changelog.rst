@@ -3,6 +3,21 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-10-0:
+
+PlutoPrint 0.10.0 (2025-09-09)
+------------------------------
+
+- Bump PlutoBook to v0.8.0
+
+  - Add support for ``space-evenly`` in flex layout
+  - Add support for presentational attributes on ``<li>`` and ``<ol>``
+  - Fix table height computation for positioned tables
+  - Ensure empty list items with outside markers generate boxes
+
+- Set PDF creation date metadata in CLI to current timestamp
+- PlutoPrint is now available via Homebrew :)
+
 .. _v0-9-0:
 
 PlutoPrint 0.9.0 (2025-08-30)
