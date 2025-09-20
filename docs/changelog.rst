@@ -3,6 +3,24 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-11-0:
+
+PlutoPrint 0.11.0 (2025-09-20)
+------------------------------
+
+- Bump PlutoBook to v0.9.0
+
+  * Add support for CSS Custom Properties
+  * Add support for CSS ``calc()`` function with length values
+  * Add support for extended ``rgb()`` and ``hsl()`` functions with whitespace and alpha slash syntax
+  * Add support for CSS ``hwb()`` color function
+  * Add support for CSS wide keyword ``unset``
+
+Backers and sponsors
+
+- `Woza Labs <https://github.com/wozalabs>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-10-0:
 
 PlutoPrint 0.10.0 (2025-09-09)
