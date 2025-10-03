@@ -3,6 +3,27 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-12-0:
+
+PlutoPrint 0.12.0 (2025-10-03)
+------------------------------
+
+- Bump PlutoBook to v0.10.0
+
+  * Add support for running headers and footers
+  * Add support for CSS ``min()``, ``max()`` and ``clamp()`` functions
+  * Add support for ``unicode-range`` in ``@font-face`` for selective font coverage
+  * Add support for ``type`` and ``fallback`` in ``attr()`` function
+  * Prioritize color emoji fonts during font selection
+  * Use ``serif`` as the last-resort fallback font
+  * Handle UTF-8 BOM
+
+Backers and sponsors:
+
+- `Woza Labs <https://github.com/wozalabs>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+- `Nap2016 <https://github.com/Nap2016>`_
+
 .. _v0-11-0:
 
 PlutoPrint 0.11.0 (2025-09-20)
