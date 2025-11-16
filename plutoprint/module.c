@@ -1752,6 +1752,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
 
     strcat(path, "\\fontconfig");
     _putenv_s("FONTCONFIG_PATH", path);
+    printf("%s\n", path);
 #endif
 
     return module;
