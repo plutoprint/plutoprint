@@ -3,6 +3,11 @@
 #include <structmember.h>
 
 #include <plutobook.h>
+#if defined(_WIN32)
+#include <windows.h>
+#include <stdlib.h>
+#include <string.h>
+#endif
 
 #ifndef PLUTOPRINT_VERSION_MAJOR
 #define PLUTOPRINT_VERSION_MAJOR 0
@@ -1732,6 +1737,22 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MICRO", PLUTOBOOK_VERSION_MICRO);
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
+
+#ifdef _WIN32
+    HMODULE handle = NULL;
+    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&PyInit__plutoprint, &handle);
+
+    char path[MAX_PATH];
+    GetModuleFileNameA(handle, path, MAX_PATH);
+
+    char* slash = strrchr(path, '\\');
+    if(slash) {
+        *slash = '\0';
+    }
+
+    strcat(path, "\\fontconfig");
+    _putenv_s("FONTCONFIG_PATH", path);
+#endif
 
     return module;
 }
