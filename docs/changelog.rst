@@ -3,6 +3,20 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-13-1:
+
+PlutoPrint 0.13.1 (2025-11-23)
+------------------------------
+
+- Bump PlutoBook to v0.11.1
+
+  * Fix URL resolution for Windows absolute paths by mapping them to proper ``file://`` URLs
+  * Add ``cairo-fix-font-options-leaks.patch`` to address memory leaks in Cairo
+
+Backers and sponsors:
+
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-13-0:
 
 PlutoPrint 0.13.0 (2025-11-17)
