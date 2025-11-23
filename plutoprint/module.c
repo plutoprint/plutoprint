@@ -1739,10 +1739,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
 
 #ifdef _WIN32
     HMODULE handle = NULL;
-    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-        GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-        (LPCSTR)&PyInit__plutoprint, &handle
-    );
+    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&PyInit__plutoprint, &handle);
 
     char path[MAX_PATH];
     GetModuleFileNameA(handle, path, MAX_PATH);
