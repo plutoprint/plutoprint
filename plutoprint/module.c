@@ -726,10 +726,28 @@ static int stream_write_conv(PyObject* ob, PyObject** target)
     return 0;
 }
 
+static int filesystem_path_conv(PyObject* ob, PyObject** target)
+{
+#ifdef _WIN32
+    PyObject* unicode;
+    if(!PyUnicode_FSDecoder(ob, &unicode)) {
+        return 0;
+    }
+
+    PyObject* bytes = PyUnicode_AsUTF8String(unicode);
+    Py_DECREF(unicode);
+    if(bytes == NULL)
+        return 0;
+    *target = bytes;
+    return 1;
+#endif
+    return PyUnicode_FSConverter(ob, target);
+}
+
 static PyObject* ImageCanvas_write_to_png(ImageCanvas_Object* self, PyObject* args)
 {
     PyObject* file_ob;
-    if(!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &file_ob)) {
+    if(!PyArg_ParseTuple(args, "O&", filesystem_path_conv, &file_ob)) {
         return NULL;
     }
 
@@ -795,7 +813,7 @@ static PyObject* PDFCanvas_new(PyTypeObject* type, PyObject* args, PyObject* kwd
 {
     PyObject* file_ob;
     PageSize_Object* size_ob;
-    if(!PyArg_ParseTuple(args, "O&O!:PDFCanvas.__init__", PyUnicode_FSConverter, &file_ob, &PageSize_Type, &size_ob))
+    if(!PyArg_ParseTuple(args, "O&O!:PDFCanvas.__init__", filesystem_path_conv, &file_ob, &PageSize_Type, &size_ob))
         return NULL;
     const char* filename = PyBytes_AS_STRING(file_ob);
     plutobook_canvas_t* canvas = plutobook_pdf_canvas_create(filename, size_ob->size);
@@ -1015,7 +1033,7 @@ typedef ResourceFetcher_Object DefaultResourceFetcher_Object;
 static PyObject* DefaultResourceFetcher_set_ssl_cainfo(DefaultResourceFetcher_Object* self, PyObject* args)
 {
     PyObject* path_ob;
-    if(!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &path_ob)) {
+    if(!PyArg_ParseTuple(args, "O&", filesystem_path_conv, &path_ob)) {
         return NULL;
     }
 
@@ -1028,7 +1046,7 @@ static PyObject* DefaultResourceFetcher_set_ssl_cainfo(DefaultResourceFetcher_Ob
 static PyObject* DefaultResourceFetcher_set_ssl_capath(DefaultResourceFetcher_Object* self, PyObject* args)
 {
     PyObject* path_ob;
-    if(!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &path_ob)) {
+    if(!PyArg_ParseTuple(args, "O&", filesystem_path_conv, &path_ob)) {
         return NULL;
     }
 
@@ -1433,7 +1451,7 @@ static PyObject* Book_write_to_pdf(Book_Object* self, PyObject* args, PyObject* 
     unsigned int page_start = PLUTOBOOK_MIN_PAGE_COUNT;
     unsigned int page_end = PLUTOBOOK_MAX_PAGE_COUNT;
     int page_step = 1;
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, PyUnicode_FSConverter, &file_ob, &page_start, &page_end, &page_step)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|IIi", kwlist, filesystem_path_conv, &file_ob, &page_start, &page_end, &page_step)) {
         return NULL;
     }
 
@@ -1467,7 +1485,7 @@ static PyObject* Book_write_to_png(Book_Object* self, PyObject* args, PyObject* 
     PyObject* file_ob;
     int width = -1;
     int height = -1;
-    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|ii", kwlist, PyUnicode_FSConverter, &file_ob, &width, &height)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "O&|ii", kwlist, filesystem_path_conv, &file_ob, &width, &height)) {
         return NULL;
     }
 
