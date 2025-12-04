@@ -57,6 +57,17 @@ def plutobook_build_info() -> str:
     Returns the PlutoBook build information, including build date, platform, and compiler details.
     """
 
+def plutobook_set_fontconfig_path(path: Union[str, bytes, os.PathLike]) -> None:
+    """
+    Set the `FONTCONFIG_PATH` environment variable for PlutoBook.
+
+    This tells Fontconfig which directory to use for its configuration files.
+    It must be called before creating any `Book` instance to ensure the 
+    specified configuration path is used.
+
+    :param path: Directory containing Fontconfig configuration files.
+    """
+
 UNITS_PT: float = ...
 """
 Represents the conversion factor for points (pt).

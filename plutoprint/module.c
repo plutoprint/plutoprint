@@ -1605,10 +1605,24 @@ static PyObject* plutoprint_plutobook_build_info(PyObject* self, PyObject* args)
     return PyUnicode_FromString(plutobook_build_info());
 }
 
+static PyObject* plutoprint_plutobook_set_fontconfig_path(PyObject* self, PyObject* args)
+{
+    PyObject* path_ob;
+    if(!PyArg_ParseTuple(args, "O&", filesystem_path_conv, &path_ob)) {
+        return NULL;
+    }
+
+    const char* path = PyBytes_AS_STRING(path_ob);
+    plutobook_set_fontconfig_path(path);
+    Py_DECREF(path_ob);
+    Py_RETURN_NONE;
+}
+
 static PyMethodDef plutoprint_methods[] = {
     {"plutobook_version", (PyCFunction)plutoprint_plutobook_version, METH_NOARGS},
     {"plutobook_version_string", (PyCFunction)plutoprint_plutobook_version_string, METH_NOARGS},
     {"plutobook_build_info", (PyCFunction)plutoprint_plutobook_build_info, METH_NOARGS},
+    {"plutobook_set_fontconfig_path", (PyCFunction)plutoprint_plutobook_set_fontconfig_path, METH_VARARGS},
     {NULL}
 };
 

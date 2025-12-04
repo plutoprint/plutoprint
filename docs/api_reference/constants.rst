@@ -25,6 +25,8 @@ Constants
 
 .. autofunction:: plutobook_build_info
 
+.. autofunction:: plutobook_set_fontconfig_path
+
 .. autodata:: MIN_PAGE_COUNT
 
 .. autodata:: MAX_PAGE_COUNT

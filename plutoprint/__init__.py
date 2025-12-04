@@ -6,6 +6,7 @@ from ._plutoprint import (
     plutobook_version,
     plutobook_version_string,
     plutobook_build_info,
+    plutobook_set_fontconfig_path,
 
     Error,
 
