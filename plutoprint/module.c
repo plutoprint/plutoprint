@@ -740,8 +740,9 @@ static int filesystem_path_conv(PyObject* ob, PyObject** target)
         return 0;
     *target = bytes;
     return 1;
-#endif
+#else
     return PyUnicode_FSConverter(ob, target);
+#endif
 }
 
 static PyObject* ImageCanvas_write_to_png(ImageCanvas_Object* self, PyObject* args)
