@@ -3,6 +3,24 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-14-0:
+
+PlutoPrint 0.14.0 (2025-12-05)
+------------------------------
+
+- Bump PlutoBook to v0.11.2
+
+  * Fix ``:has()`` matching by preventing premature return so all sub-selectors are evaluated
+  * Handle UTF-8 filenames on Windows when opening output files
+  * Skip zero-width spaces during text rendering to prevent invisible characters in PDF output
+
+- Add :func:`plutobook_set_fontconfig_path` to set ``FONTCONFIG_PATH`` for PlutoBook
+- Fix UTF-8 path handling on Windows
+
+Backers and sponsors:
+
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-13-1:
 
 PlutoPrint 0.13.1 (2025-11-23)
