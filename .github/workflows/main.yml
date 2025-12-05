@@ -19,7 +19,7 @@ jobs:
           python -m pip install -U pip build
           python -m build --sdist -Csetup-args=-Dsdist=true
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: cibw-sdist
           path: ./dist/*.tar.gz
@@ -47,7 +47,7 @@ jobs:
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cibw-linux-wheels
           path: ./wheelhouse/*.whl
@@ -78,7 +78,7 @@ jobs:
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cibw-windows-wheels
           path: ./wheelhouse/*.whl
@@ -112,7 +112,7 @@ jobs:
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cibw-macos-wheels
           path: ./wheelhouse/*.whl
