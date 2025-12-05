@@ -8,7 +8,7 @@ jobs:
   build_sdist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.1.3
         env:
@@ -56,7 +56,7 @@ jobs:
     runs-on: windows-latest
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install PlutoBook
         run: |
           curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-win64-${{ env.PLUTOBOOK_VERSION }}.zip -o plutobook-win64.zip
@@ -87,7 +87,7 @@ jobs:
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install dependencies
         run: |
           brew install cairo expat icu4c freetype fontconfig harfbuzz curl jpeg-turbo webp ninja meson pkg-config
