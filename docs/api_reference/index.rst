@@ -6,7 +6,8 @@ API Reference
 .. toctree::
     :maxdepth: 3
 
-    constants
+    module
+    units
     pagesize
     pagemargins
     mediatype

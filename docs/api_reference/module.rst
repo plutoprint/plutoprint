@@ -1,5 +1,5 @@
-Constants
-=========
+Module Constants
+================
 
 .. currentmodule:: plutoprint
 
@@ -19,6 +19,9 @@ Constants
 
 .. autodata:: PLUTOBOOK_VERSION_STRING
 
+Module Functions
+================
+
 .. autofunction:: plutobook_version
 
 .. autofunction:: plutobook_version_string
@@ -26,19 +29,3 @@ Constants
 .. autofunction:: plutobook_build_info
 
 .. autofunction:: plutobook_set_fontconfig_path
-
-.. autodata:: MIN_PAGE_COUNT
-
-.. autodata:: MAX_PAGE_COUNT
-
-.. autodata:: UNITS_PT
-
-.. autodata:: UNITS_PC
-
-.. autodata:: UNITS_IN
-
-.. autodata:: UNITS_CM
-
-.. autodata:: UNITS_MM
-
-.. autodata:: UNITS_PX
