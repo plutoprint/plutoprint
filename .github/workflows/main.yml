@@ -3,7 +3,7 @@ name: Build and Publish
 on: [push, pull_request]
 
 env:
-  PLUTOBOOK_VERSION: 0.11.2
+  PLUTOBOOK_VERSION: 0.12.0
 jobs:
   build_sdist:
     runs-on: ubuntu-latest
