@@ -3,6 +3,22 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-15-0:
+
+PlutoPrint 0.15.0 (2025-12-23)
+------------------------------
+
+- Bump PlutoBook to v0.12.0
+
+  * Add support for the ``width`` style attribute on ``td``, ``th``, ``col``, and ``colgroup`` elements
+  * Support outline painting for table rows and sections
+  * Fix unnecessary pseudo-element box generation when content is ``none`` or ``normal``
+
+Backers and sponsors:
+
+- `Peter Nguyen <https://github.com/jupetern>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-14-0:
 
 PlutoPrint 0.14.0 (2025-12-05)
