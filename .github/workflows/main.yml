@@ -60,20 +60,18 @@ jobs:
       - name: Install PlutoBook
         run: |
           curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-win64-${{ env.PLUTOBOOK_VERSION }}.zip -o plutobook-win64.zip
-          7z x plutobook-win64.zip
-          sed -i "s|^prefix=.*|prefix=\${{ github.workspace }}/plutobook-win64|" plutobook-win64/lib/pkgconfig/plutobook.pc
-          sed -i '/^Requires\.private/d' plutobook-win64/lib/pkgconfig/plutobook.pc
+          7z x plutobook-win64.zip -o"${{ runner.temp }}\plutobook"
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3.0
         env:
           CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64
           CIBW_BEFORE_BUILD: pip install delvewheel
-          CIBW_ENVIRONMENT: |
-            PKG_CONFIG='${{ github.workspace }}/plutobook-win64/bin/pkgconf.exe'
-            PKG_CONFIG_PATH='${{ github.workspace }}/plutobook-win64/lib/pkgconfig'
+          CIBW_CONFIG_SETTINGS_WINDOWS: |
+            setup-args="-Dplutobook-libdir=${{ runner.temp }}\plutobook\plutobook-win64\lib"
+            setup-args="-Dplutobook-incdir=${{ runner.temp }}\plutobook\plutobook-win64\include\plutobook"
           CIBW_REPAIR_WHEEL_COMMAND: >
-            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ github.workspace }}/plutobook-win64/bin
+            delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ runner.temp }}\plutobook\plutobook-win64\bin
           CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 

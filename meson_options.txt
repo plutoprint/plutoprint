@@ -1,2 +1,5 @@
 option('tests', type : 'boolean', value : true)
 option('sdist', type : 'boolean', value : false)
+
+option('plutobook-libdir', type : 'string')
+option('plutobook-incdir', type : 'string')

@@ -13,7 +13,33 @@ python = import('python').find_installation(pure: false)
 
 plutoprint_deps = [python.dependency()]
 if not get_option('sdist')
-    plutoprint_deps += dependency('plutobook', required: true)
+    cc = meson.get_compiler('c')
+
+    plutobook_libdirs = []
+    if get_option('plutobook-libdir') != ''
+        plutobook_libdirs += get_option('plutobook-libdir')
+    else
+        plutobook_libdirs += ['/opt/homebrew/lib', '/usr/local/lib/x86_64-linux-gnu', '/usr/local/lib', '/usr/lib/x86_64-linux-gnu', '/usr/lib']
+    endif
+
+    plutobook_incdirs = []
+    if get_option('plutobook-incdir') != ''
+        plutobook_incdirs += get_option('plutobook-incdir')
+    else
+        plutobook_incdirs += ['/opt/homebrew/include/plutobook', '/usr/local/include/plutobook', '/usr/include/plutobook']
+    endif
+
+    plutobook_lib = cc.find_library('plutobook', dirs: plutobook_libdirs, required: get_option('plutobook-libdir') != '')
+    if not plutobook_lib.found()
+        plutoprint_deps += dependency('plutobook', required: true)
+    else
+        foreach inc_dir : plutobook_incdirs
+            if cc.has_header(inc_dir / 'plutobook.h', required: get_option('plutobook-incdir') != '')
+                plutoprint_deps += declare_dependency(dependencies: plutobook_lib, include_directories: inc_dir)
+                break
+            endif
+        endforeach
+    endif
 endif
 
 sources = [
