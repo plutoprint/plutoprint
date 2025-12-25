@@ -57,7 +57,7 @@ jobs:
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
       - uses: actions/checkout@v6
-      - name: Install PlutoBook
+      - name: Download and Extract PlutoBook
         run: |
           curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-win64-${{ env.PLUTOBOOK_VERSION }}.zip -o plutobook-win64.zip
           7z x plutobook-win64.zip -o"${{ runner.temp }}\plutobook"
@@ -86,10 +86,24 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v6
-      - name: Install dependencies
-        run: |
-          brew install cairo expat icu4c freetype fontconfig harfbuzz curl jpeg-turbo webp ninja meson pkg-config
+      - name: Checkout PlutoBook
+        uses: actions/checkout@v6
+        with:
+          repository: 'plutoprint/plutobook'
+          ref: 'v${{ env.PLUTOBOOK_VERSION }}'
+          path: 'plutobook'
 
+      - name: Install PlutoBook dependencies
+        run: |
+          brew update
+          brew install cairo expat icu4c freetype fontconfig harfbuzz curl jpeg-turbo webp ninja meson pkg-config
+      - name: Build and Install PlutoBook
+        run: |
+          export PKG_CONFIG_PATH="/opt/homebrew/opt/icu4c/lib/pkgconfig:$PKG_CONFIG_PATH"
+          meson setup plutobook plutobook/build --buildtype=release --wrap-mode=nodownload
+          meson compile -C plutobook/build
+          meson install -C plutobook/build --strip
+          
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3.0
         env:
@@ -100,8 +114,6 @@ jobs:
             cp312-macosx_arm64
             cp313-macosx_arm64
             cp314-macosx_arm64
-          CIBW_ENVIRONMENT_MACOS: >
-            PKG_CONFIG_PATH='/opt/homebrew/opt/icu4c/lib/pkgconfig:$PKG_CONFIG_PATH'
           CIBW_BEFORE_BUILD_MACOS: >
             pip install delocate
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
