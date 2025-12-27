@@ -61,7 +61,7 @@ jobs:
         run: |
           curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-win64-${{ env.PLUTOBOOK_VERSION }}.zip -o plutobook-win64.zip
           7z x plutobook-win64.zip -o"${{ runner.temp }}\plutobook"
-          cp -r "${{ runner.temp }}\plutobook\bin\fonts\*" fontconfig
+          cp -r "${{ runner.temp }}\plutobook\plutobook-win64\bin\fonts\*" fontconfig
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3.0
