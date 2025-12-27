@@ -4,5 +4,7 @@ fontconfig_files = run_command(
 ).stdout().strip()
 
 if fontconfig_files != ''
-    install_data(fontconfig_files.split('\n'), install_dir: python.get_install_dir() / 'plutoprint' / 'fontconfig')
+    add_project_arguments('-DPLUTOPRINT_HAS_FONTCONFIG_FILES', language: ['cpp', 'c'])
+
+    install_data(fontconfig_files.split('\n'), install_dir: python.get_install_dir() / 'plutoprint' / 'fontconfig', preserve_path: true)
 endif

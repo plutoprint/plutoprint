@@ -45,6 +45,8 @@ if not get_option('sdist')
     endif
 endif
 
+subdir('fontconfig')
+
 sources = [
     'plutoprint/__init__.py',
     'plutoprint/__init__.pyi',
@@ -60,8 +62,6 @@ python.extension_module(
     subdir: 'plutoprint',
     install: true
 )
-
-subdir('fontconfig')
 
 if get_option('tests')
     subdir('tests')

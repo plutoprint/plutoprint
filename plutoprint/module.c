@@ -1,11 +1,14 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <structmember.h>
+#include <string.h>
 
 #include <plutobook.h>
 #if defined(_WIN32)
 #include <windows.h>
-#include <string.h>
+#else
+#include <dlfcn.h>
+#include <limits.h>
 #endif
 
 #ifndef PLUTOPRINT_VERSION_MAJOR
@@ -1770,6 +1773,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
+#ifdef PLUTOPRINT_HAS_FONTCONFIG_FILES
 #ifdef _WIN32
     HMODULE handle = NULL;
     GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&PyInit__plutoprint, &handle);
@@ -1783,7 +1787,21 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     }
 
     plutobook_set_fontconfig_path(strcat(path, "\\fontconfig"));
+#else
+    Dl_info info;
+    dladdr((void*)&PyInit__plutoprint, &info);
+
+    char path[PATH_MAX];
+    strncpy(path, info.dli_fname, PATH_MAX);
+
+    char* slash = strrchr(path, '/');
+    if(slash) {
+        *slash = '\0';
+    }
+
+    plutobook_set_fontconfig_path(strcat(path, "/fontconfig"));
 #endif
+#endif // PLUTOPRINT_HAS_FONTCONFIG_FILES
 
     return module;
 }
