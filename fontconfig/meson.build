@@ -1,5 +1,8 @@
-fontconfig_dir = python.get_install_dir() / 'plutoprint' / 'fontconfig'
+fontconfig_files = run_command(
+    python, '-c', 'import glob; print("\\n".join(glob.glob("**/*.conf", recursive=True)))',
+    check: true
+).stdout().strip()
 
-install_data('fonts.conf', install_dir: fontconfig_dir)
-
-subdir('conf.d')
+if fontconfig_files != ''
+    install_data(fontconfig_files.split('\n'), install_dir: python.get_install_dir() / 'plutoprint' / 'fontconfig')
+endif

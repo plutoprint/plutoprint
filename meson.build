@@ -61,9 +61,7 @@ python.extension_module(
     install: true
 )
 
-if host_machine.system() == 'windows'
-    subdir('fontconfig')
-endif
+subdir('fontconfig')
 
 if get_option('tests')
     subdir('tests')
