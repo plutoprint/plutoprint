@@ -29,6 +29,10 @@ jobs:
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
       - uses: actions/checkout@v6
+      - name: Copy fontconfig files
+        run: |
+          cp -rv /etc/fonts/* fontconfig
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3.0
         env:
@@ -104,7 +108,11 @@ jobs:
           meson setup plutobook plutobook/build --buildtype=release --wrap-mode=nodownload
           meson compile -C plutobook/build
           meson install -C plutobook/build --strip
-          
+
+      - name: Copy fontconfig files
+        run: |
+          cp -rv /opt/homebrew/etc/fonts/* fontconfig
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.3.0
         env:
