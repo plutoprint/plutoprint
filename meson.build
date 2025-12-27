@@ -15,6 +15,16 @@ plutoprint_deps = [python.dependency()]
 if not get_option('sdist')
     cc = meson.get_compiler('c')
 
+    if host_machine.system() != 'windows'
+        dl_dep = cc.find_library('dl', required: false)
+        if dl_dep.found() and cc.has_function('dladdr', dependencies: dl_dep)
+            add_project_arguments('-DHAVE_DLADDR', language: ['cpp', 'c'])
+            plutoprint_deps += dl_dep
+        elif cc.has_function('dladdr', prefix: '#include <dlfcn.h>')
+            add_project_arguments('-DHAVE_DLADDR', language: ['cpp', 'c'])
+        endif
+    endif
+
     plutobook_libdir = get_option('plutobook-libdir')
     plutobook_incdir = get_option('plutobook-incdir')
 

@@ -6,7 +6,7 @@
 #include <plutobook.h>
 #if defined(_WIN32)
 #include <windows.h>
-#else
+#elif HAVE_DLADDR
 #include <dlfcn.h>
 #include <limits.h>
 #endif
@@ -1787,7 +1787,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     }
 
     plutobook_set_fontconfig_path(strcat(path, "\\fontconfig"));
-#else
+#elif HAVE_DLADDR
     Dl_info info;
     dladdr((void*)&PyInit__plutoprint, &info);
 
