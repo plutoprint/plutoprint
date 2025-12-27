@@ -1,15 +1,8 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <structmember.h>
-#include <string.h>
 
 #include <plutobook.h>
-#if defined(_WIN32)
-#include <windows.h>
-#elif HAVE_DLADDR
-#include <dlfcn.h>
-#include <limits.h>
-#endif
 
 #ifndef PLUTOPRINT_VERSION_MAJOR
 #define PLUTOPRINT_VERSION_MAJOR 0
@@ -1642,6 +1635,49 @@ static struct PyModuleDef plutoprint_module = {
     0,
 };
 
+#ifdef HAVE_FONTCONFIG_FILES
+
+#include <string.h>
+#ifdef _WIN32
+#include <windows.h>
+#elif HAVE_DLADDR
+#include <dlfcn.h>
+#include <limits.h>
+#endif
+
+static void init_default_fontconfig_path(void)
+{
+#ifdef _WIN32
+    HMODULE handle = NULL;
+    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&plutoprint_module, &handle);
+
+    char path[MAX_PATH];
+    GetModuleFileNameA(handle, path, MAX_PATH);
+
+    char* slash = strrchr(path, '\\');
+    if(slash) {
+        *slash = '\0';
+    }
+
+    plutobook_set_fontconfig_path(strcat(path, "\\fontconfig"));
+#elif HAVE_DLADDR
+    Dl_info info;
+    dladdr((void*)&plutoprint_module, &info);
+
+    char path[PATH_MAX];
+    strncpy(path, info.dli_fname, PATH_MAX);
+
+    char* slash = strrchr(path, '/');
+    if(slash) {
+        *slash = '\0';
+    }
+
+    plutobook_set_fontconfig_path(strcat(path, "/fontconfig"));
+#endif
+}
+
+#endif // HAVE_FONTCONFIG_FILES
+
 PyMODINIT_FUNC PyInit__plutoprint(void)
 {
     if(PyType_Ready(&PageSize_Type) < 0
@@ -1774,34 +1810,8 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
 #ifdef HAVE_FONTCONFIG_FILES
-#ifdef _WIN32
-    HMODULE handle = NULL;
-    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&PyInit__plutoprint, &handle);
-
-    char path[MAX_PATH];
-    GetModuleFileNameA(handle, path, MAX_PATH);
-
-    char* slash = strrchr(path, '\\');
-    if(slash) {
-        *slash = '\0';
-    }
-
-    plutobook_set_fontconfig_path(strcat(path, "\\fontconfig"));
-#elif HAVE_DLADDR
-    Dl_info info;
-    dladdr((void*)&PyInit__plutoprint, &info);
-
-    char path[PATH_MAX];
-    strncpy(path, info.dli_fname, PATH_MAX);
-
-    char* slash = strrchr(path, '/');
-    if(slash) {
-        *slash = '\0';
-    }
-
-    plutobook_set_fontconfig_path(strcat(path, "/fontconfig"));
+    init_default_fontconfig_path();
 #endif
-#endif // HAVE_FONTCONFIG_FILES
 
     return module;
 }
