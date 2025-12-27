@@ -1773,7 +1773,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
 
-#ifdef PLUTOPRINT_HAS_FONTCONFIG_FILES
+#ifdef HAVE_FONTCONFIG_FILES
 #ifdef _WIN32
     HMODULE handle = NULL;
     GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&PyInit__plutoprint, &handle);
@@ -1801,7 +1801,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
 
     plutobook_set_fontconfig_path(strcat(path, "/fontconfig"));
 #endif
-#endif // PLUTOPRINT_HAS_FONTCONFIG_FILES
+#endif // HAVE_FONTCONFIG_FILES
 
     return module;
 }
