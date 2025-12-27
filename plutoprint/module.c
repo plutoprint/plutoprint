@@ -1637,12 +1637,13 @@ static struct PyModuleDef plutoprint_module = {
 
 #ifdef HAVE_FONTCONFIG_FILES
 
-#include <string.h>
 #ifdef _WIN32
 #include <windows.h>
+#include <string.h>
 #elif HAVE_DLADDR
 #include <dlfcn.h>
 #include <limits.h>
+#include <string.h>
 #endif
 
 static void init_default_fontconfig_path(void)
