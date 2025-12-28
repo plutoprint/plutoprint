@@ -77,9 +77,18 @@ from ._plutoprint import (
 
 def _init_default_fontconfig_path():
     import os
-    fontconfig_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontconfig', 'fonts.conf')
-    if os.path.exists(fontconfig_file) and not os.path.exists('/etc/fonts/fonts.conf'):
-        plutobook_set_fontconfig_path(os.path.dirname(fontconfig_file))
+    import sys
+
+    fontconfig_dirs = []
+    if value := os.environ.get('FONTCONFIG_PATH'):
+        fontconfig_dirs.append(value);
+    if sys.platform == 'linux' and os.path.exists(baseconfig_file := '/etc/fonts/fonts.conf'):
+        fontconfig_dirs.append(os.path.dirname(baseconfig_file))
+    if os.path.exists(fontconfig_file := os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontconfig', 'fonts.conf')):
+        fontconfig_dirs.append(os.path.dirname(fontconfig_file))
+    if fontconfig_dirs:
+        fontconfig_sep = ';' if sys.platform == 'win32' else ':'
+        plutobook_set_fontconfig_path(fontconfig_sep.join(fontconfig_dirs))
 
 _init_default_fontconfig_path()
 del _init_default_fontconfig_path
