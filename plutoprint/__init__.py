@@ -81,7 +81,7 @@ def _init_default_fontconfig_path():
 
     fontconfig_dirs = []
     if value := os.environ.get('FONTCONFIG_PATH'):
-        fontconfig_dirs.append(value);
+        fontconfig_dirs.append(value)
     if sys.platform == 'linux' and os.path.exists(baseconfig_file := '/etc/fonts/fonts.conf'):
         fontconfig_dirs.append(os.path.dirname(baseconfig_file))
     if os.path.exists(fontconfig_file := os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontconfig', 'fonts.conf')):
