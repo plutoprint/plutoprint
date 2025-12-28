@@ -1635,50 +1635,6 @@ static struct PyModuleDef plutoprint_module = {
     0,
 };
 
-#ifdef HAVE_FONTCONFIG_FILES
-
-#ifdef _WIN32
-#include <windows.h>
-#include <string.h>
-#elif HAVE_DLADDR
-#include <dlfcn.h>
-#include <limits.h>
-#include <string.h>
-#endif
-
-static void init_default_fontconfig_path(void)
-{
-#ifdef _WIN32
-    HMODULE handle = NULL;
-    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&plutoprint_module, &handle);
-
-    char path[MAX_PATH];
-    GetModuleFileNameA(handle, path, MAX_PATH);
-
-    char* slash = strrchr(path, '\\');
-    if(slash) {
-        *slash = '\0';
-    }
-
-    plutobook_set_fontconfig_path(strcat(path, "\\fontconfig"));
-#elif HAVE_DLADDR
-    Dl_info info;
-    dladdr((void*)&plutoprint_module, &info);
-
-    char path[PATH_MAX];
-    strncpy(path, info.dli_fname, PATH_MAX);
-
-    char* slash = strrchr(path, '/');
-    if(slash) {
-        *slash = '\0';
-    }
-
-    plutobook_set_fontconfig_path(strcat(path, "/fontconfig"));
-#endif
-}
-
-#endif // HAVE_FONTCONFIG_FILES
-
 PyMODINIT_FUNC PyInit__plutoprint(void)
 {
     if(PyType_Ready(&PageSize_Type) < 0
@@ -1809,10 +1765,6 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MICRO", PLUTOBOOK_VERSION_MICRO);
     PyModule_AddIntConstant(module, "PLUTOBOOK_VERSION_MAJOR", PLUTOBOOK_VERSION_MAJOR);
     PyModule_AddStringConstant(module, "PLUTOBOOK_VERSION_STRING", PLUTOBOOK_VERSION_STRING);
-
-#ifdef HAVE_FONTCONFIG_FILES
-    init_default_fontconfig_path();
-#endif
 
     return module;
 }

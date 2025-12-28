@@ -74,3 +74,12 @@ from ._plutoprint import (
     PLUTOBOOK_VERSION_MICRO,
     PLUTOBOOK_VERSION_STRING
 )
+
+def _init_default_fontconfig_path():
+    import os
+    fontconfig_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontconfig', 'fonts.conf')
+    if os.path.exists(fontconfig_file) and not os.path.exists('/etc/fonts/fonts.conf'):
+        plutobook_set_fontconfig_path(os.path.dirname(fontconfig_file))
+
+_init_default_fontconfig_path()
+del _init_default_fontconfig_path
