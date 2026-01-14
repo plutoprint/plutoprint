@@ -3,6 +3,30 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-16-0:
+
+PlutoPrint 0.16.0 (2026-01-14)
+------------------------------
+
+- Bump PlutoBook to v0.13.0
+
+  * Support repeating table headers and footers
+  * Support column group background painting and border resolution
+  * Support absolute and fixed positioning inside page margin boxes
+  * Fix table row and cell height sizing
+  * Fix table column and row span width and padding calculations
+  * Fix collapsed table border resolution order for adjacent columns
+  * Prevent page breaks inside table rows
+  * Remove table padding for collapsed border
+
+- Refactor fontconfig path initialization
+- Add custom Meson search for plutobook library and headers
+
+Backers and sponsors:
+
+- `Peter Nguyen <https://github.com/jupetern>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-15-0:
 
 PlutoPrint 0.15.0 (2025-12-23)
