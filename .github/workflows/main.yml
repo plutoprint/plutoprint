@@ -34,7 +34,7 @@ jobs:
           cp -rv /etc/fonts/* fontconfig
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.3.0
+        uses: pypa/cibuildwheel@v3.3.1
         env:
           CIBW_BUILD: |
             cp310-manylinux_x86_64
@@ -68,7 +68,7 @@ jobs:
           cp -r "${{ runner.temp }}\plutobook\plutobook-win64\bin\fonts\*" fontconfig
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.3.0
+        uses: pypa/cibuildwheel@v3.3.1
         env:
           CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64
           CIBW_BEFORE_BUILD: pip install delvewheel
@@ -114,7 +114,7 @@ jobs:
           cp -rv /opt/homebrew/etc/fonts/* fontconfig
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.3.0
+        uses: pypa/cibuildwheel@v3.3.1
         env:
           MACOSX_DEPLOYMENT_TARGET: "14.0"
           CIBW_BUILD: |
