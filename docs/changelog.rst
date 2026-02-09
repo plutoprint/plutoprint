@@ -3,6 +3,28 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-17-0:
+
+PlutoPrint 0.17.0 (2026-02-09)
+------------------------------
+
+- Bump PlutoBook to v0.14.0
+
+  * Add selector filter for fast CSS selector rejection
+  * Add lazy loading support for CSS ``@font-face`` sources
+  * Add support for padding in page boxes
+  * Fix double slanting of remote CSS ``@font-face`` fonts
+  * Fix fallback handling in SVG paint application
+  * Fix rounding errors in fragment offsets, line, and flex layout
+  * Apply page scale to page margin boxes
+  * Reorder header and footer painting to fix collapsed border rendering
+  * Revert change ensuring empty list items with outside markers generate boxes
+
+Backers and sponsors:
+
+- `Peter Nguyen <https://github.com/jupetern>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-16-0:
 
 PlutoPrint 0.16.0 (2026-01-14)
