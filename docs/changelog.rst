@@ -3,6 +3,24 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-18-0:
+
+PlutoPrint 0.18.0 (2026-02-17)
+------------------------------
+
+- Bump PlutoBook to v0.15.0
+
+  * Add support for emoji variation selectors
+  * Fast skip painting off-screen table content
+  * Fix synthetic oblique slope range check
+  * Fix table cell border attribute mapping
+  * Fix ``empty-cells`` painting in separate border model
+
+Backers and sponsors:
+
+- `Peter Nguyen <https://github.com/jupetern>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-17-0:
 
 PlutoPrint 0.17.0 (2026-02-09)
