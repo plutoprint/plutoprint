@@ -3,6 +3,29 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-19-0:
+
+PlutoPrint 0.19.0 (2026-03-19)
+------------------------------
+
+- Bump PlutoBook to v0.16.0
+
+  * Add full CSS ``:lang()`` locale support
+  * Add language-specific default quotes
+  * Fix ``calc()`` not preserving unitless results
+  * Fix font fallback for grapheme clusters
+  * Fix emoji variation selector detection
+  * Fallback to monochrome when color glyphs are unavailable
+  * Force layout during pagination to fix mismatched layouts
+  * Include query component in base URL resolution
+  * Enforce strict parsing for CSS ``matrix()`` and ``rect()``
+  * Reduce memory usage by avoiding redundant CSS property storage
+
+Backers and sponsors:
+
+- `Sveltware Solutions <https://github.com/sveltware>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-18-0:
 
 PlutoPrint 0.18.0 (2026-02-17)
