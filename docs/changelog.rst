@@ -3,6 +3,28 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-20-0:
+
+PlutoPrint 0.20.0 (2026-04-14)
+------------------------------
+
+- Bump PlutoBook to v0.17.0
+
+  * Add support for ``inset`` shorthand property
+  * Add support for ``lh``, ``rlh``, ``cap``, ``rcap``, ``ic``, ``ric``, ``rex``, and ``rch`` units
+  * Allow flexible emoji selection for primary font
+  * Allow ``none`` in background shorthand parsing
+  * Reject invalid CSS value types
+  * Reject trailing tokens in ``border-radius`` shorthand parsing
+  * Defer font shorthand property emission until full parsing succeeds
+  * Improve media query parsing, error recovery, and feature comparison
+  * Remove unnecessary whitespace from SVG string properties
+
+Backers and sponsors:
+
+- `Sveltware Solutions <https://github.com/sveltware>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-19-0:
 
 PlutoPrint 0.19.0 (2026-03-19)
