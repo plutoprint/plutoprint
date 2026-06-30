@@ -3,6 +3,27 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-21-0:
+
+PlutoPrint 0.21.0 (2026-06-30)
+------------------------------
+
+- Bump PlutoBook to v0.18.0
+
+  * Add support for CSS Logical Properties
+  * Add support for SVG ``textPath``
+  * Add support for SVG ``textLength`` and ``lengthAdjust`` attributes
+  * Add support for SVG text stroke rendering
+  * Fix SVG ``unicode-bidi`` handling
+  * Fix rendering of invisible SVG text fragments
+  * Fix double application of SVG ``baseline-shift`` offset
+
+Backers and sponsors:
+
+- `Sveltware Solutions <https://github.com/sveltware>`_
+- `Dino Maric <https://github.com/dixpac>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-20-0:
 
 PlutoPrint 0.20.0 (2026-04-14)
