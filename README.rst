@@ -275,9 +275,6 @@ This project continues to grow through the encouragement and involvement of its 
 - **Sponsor the project** to help drive new features, improve stability, and ensure the project continues to evolve for everyone who relies on it.
 - **Share your feedback.** If you have suggestions, feature requests, or notice an issue, please open a GitHub issue. Your voice and experience help guide the project’s direction.
 
-.. image:: https://api.star-history.com/svg?repos=plutoprint/plutoprint&type=date&logscale&legend=top-left
-   :alt: Star History Chart
-
 License
 =======
 
