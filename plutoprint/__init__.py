@@ -80,12 +80,12 @@ def _init_default_fontconfig_path():
     import sys
 
     fontconfig_dirs = []
-    if fontconfig_path := os.environ.get('FONTCONFIG_PATH'):
-        fontconfig_dirs.append(fontconfig_path)
-    if sys.platform == 'linux' and os.path.exists(baseconfig_file := '/etc/fonts/fonts.conf'):
-        fontconfig_dirs.append(os.path.dirname(baseconfig_file))
-    if os.path.exists(fontconfig_file := os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontconfig', 'fonts.conf')):
-        fontconfig_dirs.append(os.path.dirname(fontconfig_file))
+    if environ_path := os.environ.get('FONTCONFIG_PATH'):
+        fontconfig_dirs.append(environ_path)
+    if sys.platform == 'linux' and os.path.exists(system_config := '/etc/fonts/fonts.conf'):
+        fontconfig_dirs.append(os.path.dirname(system_config))
+    if os.path.exists(bundled_config := os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontconfig', 'fonts.conf')):
+        fontconfig_dirs.append(os.path.dirname(bundled_config))
     if fontconfig_dirs:
         plutobook_set_fontconfig_path(os.pathsep.join(fontconfig_dirs))
 
