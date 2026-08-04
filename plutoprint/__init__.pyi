@@ -736,7 +736,7 @@ class DefaultResourceFetcher(ResourceFetcher):
         """
         Sets the maximum time allowed for an HTTP request.
 
-        If not set, the default timeout is `300` seconds.
+        If not set, the default timeout is `30` seconds.
 
         :param timeout: Timeout duration in seconds.
         """
