@@ -3,6 +3,28 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-22-0:
+
+PlutoPrint 0.22.0 (2026-08-04)
+------------------------------
+
+- Bump PlutoBook to v0.19.0
+
+  * Fix several security vulnerabilities
+  * Add support for the legacy ``nowrap`` attribute on table cells
+  * Remove ICU i18n dependency
+  * Remove incomplete ``target-counter`` and ``target-counters`` implementation
+  * Reduce default resource request timeout to 30 seconds
+  * Reject invalid ``calc()`` expressions at parse time
+  * Reject trailing garbage in An+B dimension values
+  * Prevent ``rules=rows`` from applying column borders
+
+Backers and sponsors:
+
+- `Sveltware Solutions <https://github.com/sveltware>`_
+- `Dino Maric <https://github.com/dixpac>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-21-0:
 
 PlutoPrint 0.21.0 (2026-06-30)
