@@ -425,13 +425,19 @@ static PyObject* ImageFormat_Create(plutobook_image_format_t value)
 typedef struct {
     PyObject_HEAD
     plutobook_canvas_t* canvas;
-    PyObject* data;
+    Py_buffer* buffer;
+    PyObject* write_ob;
 } Canvas_Object;
 
 static void Canvas_dealloc(Canvas_Object* self)
 {
     plutobook_canvas_destroy(self->canvas);
-    Py_XDECREF(self->data);
+    if(self->buffer) {
+        PyBuffer_Release(self->buffer);
+        PyMem_Free(self->buffer);
+    }
+
+    Py_XDECREF(self->write_ob);
     Object_Del(self);
 }
 
@@ -626,7 +632,8 @@ static PyObject* ImageCanvas_new(PyTypeObject* type, PyObject* args, PyObject* k
 
     ImageCanvas_Object* canvas_ob = Object_New(ImageCanvas_Object, type);
     canvas_ob->canvas = canvas;
-    canvas_ob->data = NULL;
+    canvas_ob->buffer = NULL;
+    canvas_ob->write_ob = NULL;
     return (PyObject*)canvas_ob;
 }
 
@@ -642,27 +649,27 @@ static PyObject* ImageCanvas_create_for_data(PyTypeObject* type, PyObject* args)
         format = format_ob->value;
     }
 
-    Py_buffer buffer;
-    if(PyObject_GetBuffer(data, &buffer, PyBUF_WRITABLE) == -1)
+    Py_buffer* buffer = PyMem_Malloc(sizeof(Py_buffer));
+    if(PyObject_GetBuffer(data, buffer, PyBUF_WRITABLE) == -1)
         return NULL;
-    if(height * stride > buffer.len) {
-        PyBuffer_Release(&buffer);
+    if(height * stride > buffer->len) {
+        PyBuffer_Release(buffer);
         PyErr_SetString(PyExc_ValueError, "buffer is not long enough");
         return NULL;
     }
 
-    plutobook_canvas_t* canvas = plutobook_image_canvas_create_for_data(buffer.buf, width, height, stride, format);
+    plutobook_canvas_t* canvas = plutobook_image_canvas_create_for_data(buffer->buf, width, height, stride, format);
     if(canvas == NULL) {
-        PyBuffer_Release(&buffer);
+        PyBuffer_Release(buffer);
+        PyMem_Free(buffer);
         PyErr_SetString(Error_Object, plutobook_get_error_message());
         return NULL;
     }
 
     ImageCanvas_Object* canvas_ob = Object_New(ImageCanvas_Object, type);
     canvas_ob->canvas = canvas;
-    canvas_ob->data = data;
-    Py_INCREF(canvas_ob->data);
-    PyBuffer_Release(&buffer);
+    canvas_ob->buffer = buffer;
+    canvas_ob->write_ob = NULL;
     return (PyObject*)canvas_ob;
 }
 
@@ -822,7 +829,8 @@ static PyObject* PDFCanvas_new(PyTypeObject* type, PyObject* args, PyObject* kwd
 
     PDFCanvas_Object* canvas_ob = Object_New(PDFCanvas_Object, type);
     canvas_ob->canvas = canvas;
-    canvas_ob->data = NULL;
+    canvas_ob->buffer = NULL;
+    canvas_ob->write_ob = NULL;
     Py_DECREF(file_ob);
     return (PyObject*)canvas_ob;
 }
@@ -842,7 +850,8 @@ static PyObject* PDFCanvas_create_for_stream(PyTypeObject* type, PyObject* args)
 
     PDFCanvas_Object* canvas_ob = Object_New(PDFCanvas_Object, type);
     canvas_ob->canvas = canvas;
-    canvas_ob->data = write_ob;
+    canvas_ob->buffer = NULL;
+    canvas_ob->write_ob = write_ob;
     return (PyObject*)canvas_ob;
 }
 
