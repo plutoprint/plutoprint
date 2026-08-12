@@ -649,6 +649,21 @@ static PyObject* ImageCanvas_create_for_data(PyTypeObject* type, PyObject* args)
         format = format_ob->value;
     }
 
+    if(width < 0) {
+        PyErr_SetString(PyExc_ValueError, "width cannot be negative");
+        return NULL;
+    }
+
+    if(height < 0) {
+        PyErr_SetString(PyExc_ValueError, "height cannot be negative");
+        return NULL;
+    }
+
+    if(stride < 0) {
+        PyErr_SetString(PyExc_ValueError, "stride cannot be negative");
+        return NULL;
+    }
+
     Py_buffer* buffer = PyMem_Malloc(sizeof(Py_buffer));
     if(PyObject_GetBuffer(data, buffer, PyBUF_WRITABLE) == -1)
         return NULL;
