@@ -43,13 +43,8 @@ jobs:
             cp313-manylinux_x86_64
             cp314-manylinux_x86_64
           CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/plutoprint/plutobook-manylinux_2_28_x86_64:v${{ env.PLUTOBOOK_VERSION }}
-          CIBW_BEFORE_BUILD: >
-            pip install auditwheel
-          CIBW_REPAIR_WHEEL_COMMAND: >
-            auditwheel repair -w {dest_dir} {wheel}
           CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)"
-
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
@@ -123,10 +118,6 @@ jobs:
             cp312-macosx_arm64
             cp313-macosx_arm64
             cp314-macosx_arm64
-          CIBW_BEFORE_BUILD_MACOS: >
-            pip install delocate
-          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
-            delocate-wheel -v -w {dest_dir} {wheel}
           CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)"
 
