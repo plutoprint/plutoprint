@@ -547,7 +547,7 @@ static PyObject* Canvas_clear_surface(Canvas_Object* self, PyObject* args)
     }
 
     Py_BEGIN_ALLOW_THREADS
-    plutobook_canvas_clear_surface(self->canvas, red, blue, green, alpha);
+    plutobook_canvas_clear_surface(self->canvas, red, green, blue, alpha);
     Py_END_ALLOW_THREADS
     Py_RETURN_NONE;
 }
