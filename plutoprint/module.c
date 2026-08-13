@@ -429,8 +429,17 @@ typedef struct {
     PyObject* write_ob;
 } Canvas_Object;
 
+static int Canvas_traverse(Canvas_Object* self, visitproc visit, void* arg)
+{
+    if(self->buffer)
+        Py_VISIT(self->buffer->obj);
+    Py_VISIT(self->write_ob);
+    return 0;
+}
+
 static void Canvas_dealloc(Canvas_Object* self)
 {
+    PyObject_GC_UnTrack(self);
     plutobook_canvas_destroy(self->canvas);
     if(self->buffer) {
         PyBuffer_Release(self->buffer);
@@ -593,7 +602,8 @@ static PyTypeObject Canvas_Type = {
     .tp_name = "plutoprint.Canvas",
     .tp_basicsize = sizeof(Canvas_Object),
     .tp_dealloc = (destructor)Canvas_dealloc,
-    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC,
+    .tp_traverse = (traverseproc)Canvas_traverse,
     .tp_methods = Canvas_methods
 };
 
@@ -665,10 +675,16 @@ static PyObject* ImageCanvas_create_for_data(PyTypeObject* type, PyObject* args)
     }
 
     Py_buffer* buffer = PyMem_Malloc(sizeof(Py_buffer));
-    if(PyObject_GetBuffer(data, buffer, PyBUF_WRITABLE) == -1)
+    if(buffer == NULL)
+        return PyErr_NoMemory();
+    if(PyObject_GetBuffer(data, buffer, PyBUF_WRITABLE) == -1) {
+        PyMem_Free(buffer);
         return NULL;
+    }
+
     if(height * stride > buffer->len) {
         PyBuffer_Release(buffer);
+        PyMem_Free(buffer);
         PyErr_SetString(PyExc_ValueError, "buffer is not long enough");
         return NULL;
     }
@@ -730,11 +746,16 @@ static plutobook_stream_status_t stream_write_func(void* closure, const char* da
 
 static int stream_write_conv(PyObject* ob, PyObject** target)
 {
+    if(ob == NULL) {
+        Py_XDECREF(*target);
+        return 1;
+    }
+
     if(PyObject_HasAttrString(ob, "write")) {
         PyObject* write_method = PyObject_GetAttrString(ob, "write");
         if(write_method && PyCallable_Check(write_method)) {
             *target = write_method;
-            return 1;
+            return Py_CLEANUP_SUPPORTED;
         }
 
         Py_XDECREF(write_method);
@@ -746,6 +767,11 @@ static int stream_write_conv(PyObject* ob, PyObject** target)
 
 static int filesystem_path_conv(PyObject* ob, PyObject** target)
 {
+    if(ob == NULL) {
+        Py_XDECREF(*target);
+        return 1;
+    }
+
 #ifdef _WIN32
     PyObject* unicode;
     if(!PyUnicode_FSDecoder(ob, &unicode)) {
@@ -757,7 +783,7 @@ static int filesystem_path_conv(PyObject* ob, PyObject** target)
     if(bytes == NULL)
         return 0;
     *target = bytes;
-    return 1;
+    return Py_CLEANUP_SUPPORTED;
 #else
     return PyUnicode_FSConverter(ob, target);
 #endif
@@ -935,6 +961,8 @@ static PyObject* ResourceData_new(PyTypeObject* type, PyObject* args, PyObject* 
 {
     static char* kwlist[] = { "content", "mime_type", "text_encoding", NULL };
     Py_buffer* content = PyMem_Malloc(sizeof(Py_buffer));
+    if(content == NULL)
+        return PyErr_NoMemory();
     const char* mime_type = "";
     const char* text_encoding = "";
     if(!PyArg_ParseTupleAndKeywords(args, kwds, "s*|ss:ResourceData.__init__", kwlist, content, &mime_type, &text_encoding)) {
@@ -1230,8 +1258,15 @@ static PyObject* Book_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
     return Book_Create(plutobook_create(size, margins, media));
 }
 
+static int Book_traverse(Book_Object* self, visitproc visit, void* arg)
+{
+    Py_VISIT(self->custom_resource_fetcher);
+    return 0;
+}
+
 static void Book_dealloc(Book_Object* self)
 {
+    PyObject_GC_UnTrack(self);
     plutobook_destroy(self->book);
     Py_XDECREF(self->custom_resource_fetcher);
     Object_Del(self);
@@ -1597,7 +1632,8 @@ static PyTypeObject Book_Type = {
     .tp_name = "plutoprint.Book",
     .tp_basicsize = sizeof(Book_Object),
     .tp_dealloc = (destructor)Book_dealloc,
-    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
+    .tp_traverse = (traverseproc)Book_traverse,
     .tp_methods = Book_methods,
     .tp_getset = Book_getset,
     .tp_new = (newfunc)Book_new
