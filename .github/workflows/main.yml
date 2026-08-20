@@ -43,8 +43,11 @@ jobs:
             cp313-manylinux_x86_64
             cp314-manylinux_x86_64
           CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/plutoprint/plutobook-manylinux_2_28_x86_64:v${{ env.PLUTOBOOK_VERSION }}
+          CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: >
-            python -c "import plutoprint; print(plutoprint.__build_info__)"
+            python -c "import plutoprint; print(plutoprint.__build_info__)" &&
+            python -m pytest -v {project}/tests
+
       - name: Upload wheels
         uses: actions/upload-artifact@v7
         with:
@@ -72,8 +75,10 @@ jobs:
             setup-args="-Dplutobook-incdir=${{ runner.temp }}\plutobook\plutobook-win64\include\plutobook"
           CIBW_REPAIR_WHEEL_COMMAND: >
             delvewheel repair -vv -w {dest_dir} {wheel} --add-path ${{ runner.temp }}\plutobook\plutobook-win64\bin
+          CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: >
-            python -c "import plutoprint; print(plutoprint.__build_info__)"
+            python -c "import plutoprint; print(plutoprint.__build_info__)" &&
+            python -m pytest -v {project}\tests
 
       - name: Upload wheels
         uses: actions/upload-artifact@v7
@@ -118,8 +123,10 @@ jobs:
             cp312-macosx_arm64
             cp313-macosx_arm64
             cp314-macosx_arm64
+          CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: >
-            python -c "import plutoprint; print(plutoprint.__build_info__)"
+            python -c "import plutoprint; print(plutoprint.__build_info__)" &&
+            python -m pytest -v {project}/tests
 
       - name: Upload wheels
         uses: actions/upload-artifact@v7
