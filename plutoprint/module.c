@@ -1726,7 +1726,7 @@ PyMODINIT_FUNC PyInit__plutoprint(void)
     PyModule_AddObject(module,
         "__build_info__",
         PyUnicode_FromFormat(
-            "%s\nPlutoPrint version: %s\nPython version: %s\n",
+            "%sPlutoPrint: %s\nPython    : %s\n",
             plutobook_build_info(),
             PLUTOPRINT_VERSION_STRING,
             PY_VERSION
