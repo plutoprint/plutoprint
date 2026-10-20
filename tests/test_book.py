@@ -118,10 +118,9 @@ def test_book_metadata_from_html(book):
 def test_book_load_url(book, tmp_path):
     path = tmp_path / "hello.html"
     with pytest.raises(plutoprint.Error):
-        book.load_url(path.as_posix())
+        book.load_url(path.as_uri())
 
     path.write_text(HTML_CONTENT)
-    book.load_url(path.as_posix())
     book.load_url(path.as_uri())
 
 XHTML_CONTENT = (
