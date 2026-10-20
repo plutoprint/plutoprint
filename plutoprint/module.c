@@ -1362,7 +1362,10 @@ static PyObject* Book_get_metadata(Book_Object* self, PyObject* args)
     PDFMetadata_Object* metadata_ob;
     if(!PyArg_ParseTuple(args, "O!", &PDFMetadata_Type, &metadata_ob))
         return NULL;
-    return PyUnicode_FromString(plutobook_get_metadata(self->book, metadata_ob->value));
+    const char* value = plutobook_get_metadata(self->book, metadata_ob->value);
+    if(value == NULL)
+        Py_RETURN_NONE;
+    return PyUnicode_FromString(value);
 }
 
 static PyObject* Book_load_url(Book_Object* self, PyObject* args, PyObject* kwds)
