@@ -42,6 +42,7 @@ jobs:
             cp312-manylinux_x86_64
             cp313-manylinux_x86_64
             cp314-manylinux_x86_64
+            cp315-manylinux_x86_64
           CIBW_MANYLINUX_X86_64_IMAGE: ghcr.io/plutoprint/plutobook-manylinux_2_28_x86_64:v${{ env.PLUTOBOOK_VERSION }}
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: >
@@ -68,7 +69,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.1
         env:
-          CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64
+          CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64 cp315-win_amd64
           CIBW_BEFORE_BUILD: pip install delvewheel
           CIBW_CONFIG_SETTINGS_WINDOWS: |
             setup-args="-Dplutobook-libdir=${{ runner.temp }}\plutobook\plutobook-win-x64\lib"
@@ -123,6 +124,7 @@ jobs:
             cp312-macosx_arm64
             cp313-macosx_arm64
             cp314-macosx_arm64
+            cp315-macosx_arm64
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: >
             python -c "import plutoprint; print(plutoprint.__build_info__)" &&
