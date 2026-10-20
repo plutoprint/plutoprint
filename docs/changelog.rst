@@ -3,6 +3,69 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-23-0:
+
+PlutoPrint 0.23.0 (2026-10-20)
+------------------------------
+
+- Add support for Python 3.15
+- Update macOS runner and deployment target to macOS 15
+- Bump PlutoBook to v0.20.0
+
+  * Add support for fragmenting flex containers across pages and columns
+  * Add support for pagination in single-column multicolumn layout
+  * Add support for PDF metadata from HTML ``<meta>`` (``author``, ``description``, ``keywords``, ``generator``)
+  * Add support for flex item automatic minimum size (``min-width: auto`` and ``min-height: auto``)
+  * Add support for PDF title from the SVG ``<title>`` of standalone SVG documents
+  * Add default styling for ``<details>``, ``<summary>``, and ``<dialog>``
+  * Add support for non-ASCII CSS identifiers and escapes
+  * Add automatic decompression of compressed HTTP responses
+  * Add support for the case-sensitive ``s`` attribute selector flag
+  * Add built-in ``disclosure-open`` and ``disclosure-closed`` list markers with RTL support
+  * Fix several memory safety and crash issues in HTML parsing, CSS processing, and layout
+  * Fix table row fragmentation with repeated headers and footers
+  * Fix painting order of stacking context backgrounds and negative z-index children
+  * Fix ``:has()`` and descendant selector matching
+  * Fix flex free space distribution, gaps, auto margins, baselines, and ``wrap-reverse``
+  * Fix table column widths with ``colspan``, fixed widths, and percentage columns
+  * Fix table height distribution across rows, rowspans, and sections
+  * Fix replaced element sizing with aspect ratios, min and max constraints, and override sizes
+  * Fix block-in-inline splitting, relative positioning, and painting of split inline boxes
+  * Fix float positioning and stale floats during relayout
+  * Fix propagation of forced breaks from first and last children
+  * Fix metadata from a previously loaded document carrying over to new content
+  * Fix ``text-transform`` to use the element language and ICU word boundaries
+  * Fix bidi handling for RTL blocks containing only Latin text
+  * Fix ``@counter-style`` duplicates, ``extends`` fallback, and negative values
+  * Fix ``list-item`` counter semantics for lists and ``<li value>``
+  * Fix modern and legacy CSS color syntax parsing
+  * Fix media query parsing of unknown media types and ``not`` conditions
+  * Fix HTML tree construction for end tags, duplicate attributes, CDATA, and ``tfoot`` foster parenting
+  * Fix ``data:`` URL parsing and MIME type detection from file extensions
+  * Fix multicolumn column count, ``min-height``, and ``max-height``
+  * Fix out-of-flow positioned boxes being painted as part of multicolumn content
+  * Fix collapsed borders on column groups and rowspan cells
+  * Fix SVG intrinsic sizing when ``width``, ``height``, or ``viewBox`` is missing
+  * Fix percentage vertical margins and padding on positioned boxes
+  * Fix border painting for thin ``double`` borders and short dashed or dotted sides
+  * Replace custom URL parser with Ada for WHATWG-compliant URL handling
+  * Fail HTTP resource fetches on 4xx and 5xx responses
+  * Stop resolving relative URLs against the current working directory when no base URL is given
+  * Resolve custom properties on the declaring element and treat invalid ``var()`` substitutions as ``unset``
+  * Load ``file://`` URLs natively instead of through curl
+  * Resolve logical and physical properties by cascade order
+  * Handle the HTML ``dir`` attribute as a presentational hint
+  * Clip overflow content to rounded borders
+  * Apply the user-agent stylesheet to the root document only
+  * Render unsupported ``<input>`` types as text fields
+  * Limit CSS variable substitution to 65536 tokens
+
+Backers and sponsors:
+
+- `Sveltware Solutions <https://github.com/sveltware>`_
+- `Dino Maric <https://github.com/dixpac>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-22-0:
 
 PlutoPrint 0.22.0 (2026-08-04)
