@@ -89,7 +89,7 @@ jobs:
 
   build_macos_wheels:
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v6
       - name: Checkout PlutoBook
@@ -117,7 +117,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.1
         env:
-          MACOSX_DEPLOYMENT_TARGET: "14.0"
+          MACOSX_DEPLOYMENT_TARGET: "15.0"
           CIBW_BUILD: |
             cp310-macosx_arm64
             cp311-macosx_arm64
