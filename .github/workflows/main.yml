@@ -29,16 +29,6 @@ jobs:
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
       - uses: actions/checkout@v6
-      - name: Download and Extract PlutoBook
-        run: |
-          curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-${{ env.PLUTOBOOK_VERSION }}-linux-x64.tar.gz -o plutobook-linux-x64.tar.gz
-          mkdir -p "$GITHUB_WORKSPACE/plutobook"
-          tar -xzf plutobook-linux-x64.tar.gz -C "$GITHUB_WORKSPACE/plutobook"
-
-      - name: Copy fontconfig files
-        run: |
-          cp -rv "$GITHUB_WORKSPACE/plutobook/plutobook-linux-x64/etc/fonts/"* fontconfig
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.1
         env:
@@ -50,11 +40,15 @@ jobs:
             cp314-manylinux_x86_64
             cp315-manylinux_x86_64
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_BEFORE_ALL_LINUX: >
+            mkdir -p /plutobook &&
+            curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-${{ env.PLUTOBOOK_VERSION }}-linux-x64.tar.gz | tar -xz -C /plutobook &&
+            cp -r /plutobook/plutobook-linux-x64/etc/fonts/* /project/fontconfig
           CIBW_CONFIG_SETTINGS_LINUX: |
-            setup-args="-Dplutobook-libdir={project}/plutobook/plutobook-linux-x64/lib"
-            setup-args="-Dplutobook-incdir={project}/plutobook/plutobook-linux-x64/include/plutobook"
+            setup-args="-Dplutobook-libdir=/plutobook/plutobook-linux-x64/lib"
+            setup-args="-Dplutobook-incdir=/plutobook/plutobook-linux-x64/include/plutobook"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
-            LD_LIBRARY_PATH={project}/plutobook/plutobook-linux-x64/lib
+            LD_LIBRARY_PATH=/plutobook/plutobook-linux-x64/lib
             auditwheel repair -w {dest_dir} {wheel}
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: >
