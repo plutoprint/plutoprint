@@ -3,6 +3,71 @@ Changelog
 
 .. currentmodule:: plutoprint
 
+.. _v0-24-0:
+
+PlutoPrint 0.24.0 (2026-11-27)
+------------------------------
+
+- Lower the macOS deployment target to 14.0
+- Bump PlutoBook to v0.21.0
+
+  * Add support for ``textLength`` on SVG ``textPath``
+  * Add ``word-wrap`` as an alias for ``overflow-wrap``
+  * Add support for WOFF2 fonts
+  * Add ``-pluto-shrink-to-fit`` to control shrinking wide content to fit the page
+  * Apply shrink-to-fit on top of ``-pluto-page-scale``
+  * Change ``-pluto-page-scale`` to a number or percentage and drop ``auto``
+  * Support the ``wrap`` attribute on ``<pre>`` and ``<textarea>``
+  * Display ``<search>`` as a block and hide ``popover`` elements
+  * Update default styles for ``<fieldset>``, buttons, and form controls
+  * Stop shrinking ``<h1>`` inside sectioning elements
+  * Ignore ``display`` on ``::marker`` and ``::first-letter``
+  * Deduplicate ``font-variation-settings`` by tag
+  * Improve layout performance for ``z-index`` layers, tables, and locales
+  * Improve the precision of page and column fragmentation
+  * Improve table fragmentation and break propagation
+  * Fix Cairo font options memory leaks
+  * Fix forced page and column breaks
+  * Fix absolute positioning in paged media
+  * Fix ``:left`` and ``:right`` page selectors, including right-to-left documents
+  * Fix pseudo-elements in running elements
+  * Fix repeated table headers and footers during fragmentation
+  * Fix table rows, captions, and spanning cells across page breaks
+  * Fix flex container fragmentation when flex lines grow
+  * Fix float border fragmentation
+  * Fix ``overflow-wrap`` and ``word-break`` support
+  * Fix line break opportunities around replaced elements, floats, and inline boxes
+  * Fix white space dropped after floats, positioned boxes, list markers, and generated content
+  * Fix hanging white space in line alignment and justification
+  * Fix tab runs in right-to-left text
+  * Fix float placement around overflowing and rewound lines
+  * Fix logical ``float`` and ``clear`` values
+  * Fix collapsed table borders for spanned cells and right-to-left tables
+  * Fix table row heights and overflow with spanning cells
+  * Fix table intrinsic widths, column widths, and fixed table layout
+  * Fix ``border-spacing`` placement and make it inherited
+  * Fix absolutely positioned tables and transformed table rows
+  * Fix intrinsic sizing of flex items and ``min-content``, ``max-content``, and ``fit-content``
+  * Fix sizing of absolutely positioned boxes
+  * Fix percentage heights against indefinite containers
+  * Fix sizing of replaced elements and images without a natural size
+  * Fix image sizing beside floats
+  * Fix ``background-size`` and ``no-repeat`` backgrounds
+  * Fix SVG ``textLength`` and ``lengthAdjust`` with rotated, sideways, and vertical text
+  * Fix SVG text on a path with vertical text, ``startOffset`` units, and glyphs past the path ends
+  * Fix SVG text chunks, ``word-spacing``, and nested ``tspan`` handling
+  * Fix SVG ``viewBox`` and ``preserveAspectRatio`` handling
+  * Fix sizing of SVG images and SVG background tiles
+  * Fix SVG elements with non-invertible transforms
+  * Fix SVG number lists separated by commas
+  * Fix an all-zero ``stroke-dasharray``
+
+Backers and sponsors:
+
+- `Sveltware Solutions <https://github.com/sveltware>`_
+- `Dino Maric <https://github.com/dixpac>`_
+- `Ashish Kulkarni <https://github.com/ashkulz>`_
+
 .. _v0-23-0:
 
 PlutoPrint 0.23.0 (2026-10-20)
