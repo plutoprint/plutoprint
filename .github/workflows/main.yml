@@ -8,9 +8,9 @@ jobs:
   build_sdist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.10'
 
@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4.3.1
+        uses: pypa/cibuildwheel@v4.3.5
         env:
           CIBW_BUILD: |
             cp310-manylinux_x86_64
@@ -65,7 +65,7 @@ jobs:
     runs-on: windows-latest
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Download and Extract PlutoBook
         run: |
           curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-${{ env.PLUTOBOOK_VERSION }}-win-x64.zip -o plutobook-win-x64.zip
@@ -73,7 +73,7 @@ jobs:
           cp -r "${{ runner.temp }}\plutobook\plutobook-win-x64\bin\fonts\*" fontconfig
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4.3.1
+        uses: pypa/cibuildwheel@v4.3.5
         env:
           CIBW_BUILD: cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64 cp315-win_amd64
           CIBW_BEFORE_BUILD: pip install delvewheel
@@ -97,7 +97,7 @@ jobs:
     if: github.ref_type == 'tag' || contains(github.event.head_commit.message, '[build:wheels]')
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Download and Extract PlutoBook
         run: |
           curl -L https://github.com/plutoprint/plutobook/releases/download/v${{ env.PLUTOBOOK_VERSION }}/plutobook-${{ env.PLUTOBOOK_VERSION }}-macos-arm64.tar.gz -o plutobook-macos-arm64.tar.gz
@@ -110,7 +110,7 @@ jobs:
           cp -rv "${{ runner.temp }}/plutobook/plutobook-macos-arm64/etc/fonts/"* fontconfig
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4.3.1
+        uses: pypa/cibuildwheel@v4.3.5
         env:
           MACOSX_DEPLOYMENT_TARGET: "14.0"
           CIBW_BUILD: |
